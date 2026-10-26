@@ -12,16 +12,8 @@
             theme: {
                 extend: {
                     colors: {
-                        slate: {
-                            850: '#1e293b',
-                            900: '#0f172a',
-                            950: '#020617',
-                        },
-                        teal: {
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            400: '#2dd4bf',
-                        }
+                        slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' },
+                        teal: { 500: '#14b8a6', 600: '#0d9488', 400: '#2dd4bf' }
                     }
                 }
             }
@@ -33,6 +25,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- docx.js Library for Client-side Word Generation -->
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -40,10 +34,6 @@
         ::-webkit-scrollbar-thumb { background: rgba(45, 212, 191, 0.3); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(45, 212, 191, 0.6); }
         .kanban-column { min-height: 400px; }
-        @media print {
-            body { background: white !important; color: black !important; }
-            .no-print { display: none !important; }
-        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-slate-950">
@@ -60,7 +50,7 @@
                         <h1 class="text-lg font-bold tracking-tight text-white">Oficina de Propiedad</h1>
                         <span class="text-xs px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-400 font-medium border border-teal-500/30">Inter Ponce</span>
                     </div>
-                    <p class="text-xs text-slate-400">Responsable: <span class="font-medium text-slate-300">Greychel Ocasio Ortiz</span> | <span id="db-status" class="text-amber-400">LocalStorage Mode</span></p>
+                    <p class="text-xs text-slate-400">Responsable: <span class="font-medium text-slate-300">Greychel Ocasio Ortiz</span> | <span id="db-status" class="text-teal-400 font-semibold">Supabase Connected</span></p>
                 </div>
             </div>
 
@@ -79,12 +69,15 @@
             </div>
 
             <!-- Global Action Controls -->
-            <div class="flex items-center gap-3">
-                <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700/80 transition-all text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-print text-xs"></i> Print Report
+            <div class="flex items-center gap-3 flex-wrap">
+                <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="bg-teal-500 text-slate-950 font-semibold px-3.5 py-2 rounded-lg text-xs transition-all shadow-md">
+                    <i class="fa-solid fa-columns mr-1"></i> Dashboard & Kanban
                 </button>
-                <button onclick="openTaskModal()" class="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-slate-950 font-semibold px-4 py-2 rounded-lg shadow-lg shadow-teal-500/20 transition-all transform active:scale-95 flex items-center gap-2 text-sm">
-                    <i class="fa-solid fa-plus"></i> New Task
+                <button onclick="switchTab('precierre')" id="nav-btn-precierre" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all">
+                    <i class="fa-solid fa-file-shield mr-1"></i> Pre-Cierre (37)
+                </button>
+                <button onclick="generateDocxReport()" class="bg-teal-600 hover:bg-teal-500 text-white px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-file-word"></i> Download Report (.docx)
                 </button>
             </div>
         </div>
@@ -93,131 +86,169 @@
     <!-- Main Content -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-6 flex flex-col gap-8">
 
-        <!-- SECTION 1: Compliance Requests Dashboard -->
-        <section class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl pointer-events-none"></div>
-            
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-slate-800/80 pb-4">
-                <div>
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie text-teal-400"></i> Request Compliance Dashboard
-                    </h2>
-                    <p class="text-xs text-slate-400">Track incoming institutional property requests versus completed items for the current cycle.</p>
-                </div>
-                <div class="flex items-center gap-4 bg-slate-950/60 px-4 py-2 rounded-xl border border-slate-800">
-                    <div class="text-center">
-                        <span class="block text-[10px] text-slate-400 uppercase font-semibold">Total Received</span>
-                        <span id="kpi-total-received" class="text-base font-bold text-white">0</span>
+        <!-- TAB 1: DASHBOARD & KANBAN -->
+        <div id="tab-dashboard" class="flex flex-col gap-8">
+            <!-- SECTION 1: Compliance Requests Dashboard -->
+            <section class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-slate-800/80 pb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-teal-400"></i> Request Compliance Dashboard
+                        </h2>
+                        <p class="text-xs text-slate-400">Track incoming institutional property requests versus completed items for the current cycle.</p>
                     </div>
-                    <div class="w-px h-8 bg-slate-800"></div>
-                    <div class="text-center">
-                        <span class="block text-[10px] text-slate-400 uppercase font-semibold">Total Completed</span>
-                        <span id="kpi-total-completed" class="text-base font-bold text-teal-400">0</span>
-                    </div>
-                    <div class="w-px h-8 bg-slate-800"></div>
-                    <div class="text-center">
-                        <span class="block text-[10px] text-slate-400 uppercase font-semibold">Overall Compliance</span>
-                        <span id="kpi-overall-rate" class="text-base font-bold text-emerald-400">0%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Requests Table / Interactive Cards Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="requests-container">
-                <!-- Injected via JavaScript -->
-            </div>
-        </section>
-
-        <!-- SECTION 2: Trello-Style Kanban Board -->
-        <section class="flex flex-col gap-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-columns text-teal-400"></i> Monthly Operational Kanban Board
-                    </h2>
-                    <p class="text-xs text-slate-400">Manage operational tasks, organize workflows, and track status throughout the monthly cycle.</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                            <i class="fa-solid fa-search text-xs"></i>
-                        </span>
-                        <input type="text" id="search-tasks" placeholder="Filter tasks..." 
-                            class="bg-slate-900 text-xs text-slate-200 placeholder-slate-500 pl-9 pr-4 py-2 rounded-lg border border-slate-800 focus:outline-none focus:border-teal-500 w-44 sm:w-56">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kanban Columns Container -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
-                
-                <!-- Backlog -->
-                <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'backlog')">
-                    <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-indigo-400"></span>
-                            <h3 class="font-semibold text-sm text-white">Backlog</h3>
+                    <div class="flex items-center gap-4 bg-slate-950/60 px-4 py-2 rounded-xl border border-slate-800">
+                        <div class="text-center">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Total Received</span>
+                            <span id="kpi-total-received" class="text-base font-bold text-white">0</span>
                         </div>
-                        <span id="count-backlog" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
-                    </div>
-                    <div id="col-backlog" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
-                </div>
-
-                <!-- To Do -->
-                <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'todo')">
-                    <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-sky-400"></span>
-                            <h3 class="font-semibold text-sm text-white">To Do</h3>
+                        <div class="w-px h-8 bg-slate-800"></div>
+                        <div class="text-center">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Total Completed</span>
+                            <span id="kpi-total-completed" class="text-base font-bold text-teal-400">0</span>
                         </div>
-                        <span id="count-todo" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
-                    </div>
-                    <div id="col-todo" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
-                </div>
-
-                <!-- In Progress -->
-                <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'in-progress')">
-                    <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-amber-400"></span>
-                            <h3 class="font-semibold text-sm text-white">In Progress</h3>
+                        <div class="w-px h-8 bg-slate-800"></div>
+                        <div class="text-center">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Overall Compliance</span>
+                            <span id="kpi-overall-rate" class="text-base font-bold text-emerald-400">0%</span>
                         </div>
-                        <span id="count-in-progress" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
                     </div>
-                    <div id="col-in-progress" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
                 </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="requests-container"></div>
+            </section>
 
-                <!-- Completed -->
-                <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'completed')">
-                    <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
-                            <h3 class="font-semibold text-sm text-white">Completed</h3>
+            <!-- SECTION 2: Kanban Board -->
+            <section class="flex flex-col gap-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-columns text-teal-400"></i> Monthly Operational Kanban Board
+                        </h2>
+                        <p class="text-xs text-slate-400">Manage operational tasks, organize workflows, and track status throughout the monthly cycle.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-search text-xs"></i>
+                            </span>
+                            <input type="text" id="search-tasks" placeholder="Filter tasks..." 
+                                class="bg-slate-900 text-xs text-slate-200 placeholder-slate-500 pl-9 pr-4 py-2 rounded-lg border border-slate-800 focus:outline-none focus:border-teal-500 w-44 sm:w-56">
                         </div>
-                        <span id="count-completed" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
+                        <button onclick="openTaskModal()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-4 py-2 rounded-lg text-xs shadow-lg flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> New Task
+                        </button>
                     </div>
-                    <div id="col-completed" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
                 </div>
 
-            </div>
-        </section>
-
-        <!-- SECTION 3: Long-Term Strategic Tasks & Notes Area -->
-        <section class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl">
-            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
-                <div>
-                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-note-sticky text-teal-400"></i> Long-Term Projects & Strategic Notes
-                    </h2>
-                    <p class="text-xs text-slate-400">Dedicated space for strategic objectives, audits, inventories, and cycle observations.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
+                    <!-- Backlog -->
+                    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'backlog')">
+                        <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-indigo-400"></span><h3 class="font-semibold text-sm text-white">Backlog</h3></div>
+                            <span id="count-backlog" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
+                        </div>
+                        <div id="col-backlog" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
+                    </div>
+                    <!-- To Do -->
+                    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'todo')">
+                        <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-sky-400"></span><h3 class="font-semibold text-sm text-white">To Do</h3></div>
+                            <span id="count-todo" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
+                        </div>
+                        <div id="col-todo" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
+                    </div>
+                    <!-- In Progress -->
+                    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'in-progress')">
+                        <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-400"></span><h3 class="font-semibold text-sm text-white">In Progress</h3></div>
+                            <span id="count-in-progress" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
+                        </div>
+                        <div id="col-in-progress" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
+                    </div>
+                    <!-- Completed -->
+                    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'completed')">
+                        <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-400"></span><h3 class="font-semibold text-sm text-white">Completed</h3></div>
+                            <span id="count-completed" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
+                        </div>
+                        <div id="col-completed" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
+                    </div>
                 </div>
-                <button onclick="saveNotes()" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-floppy-disk"></i> Save Notes
-                </button>
-            </div>
-            <textarea id="strategic-notes-area" rows="5" placeholder="Write long-term objectives, property audit notes, equipment replacement plans, or administrative remarks for this cycle..." 
-                class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-teal-500 leading-relaxed"></textarea>
-        </section>
+            </section>
+
+            <!-- SECTION 3: Strategic Notes -->
+            <section class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-note-sticky text-teal-400"></i> Long-Term Projects & Strategic Notes
+                        </h2>
+                        <p class="text-xs text-slate-400">Write detailed sentences (separated by lines) to appear as bullet points in the official downloaded Word report.</p>
+                    </div>
+                    <button onclick="saveNotes()" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Notes
+                    </button>
+                </div>
+                <textarea id="strategic-notes-area" rows="5" placeholder="Escriba aquí cada objetivo o labor detallada..." 
+                    class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-teal-500 leading-relaxed"></textarea>
+            </section>
+        </div>
+
+        <!-- TAB 2: PRE-CIERRE MODULE -->
+        <div id="tab-precierre" class="hidden flex flex-col gap-8">
+            <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-file-shield text-teal-400"></i> Certificación de Inventario Pre-Cierre (37 Informes de Custodios)
+                        </h2>
+                        <p class="text-sm text-slate-400">Control de recepción, evaluación de informes y bitácora de recordatorios enviados a custodios.</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-slate-950 px-4 py-2.5 rounded-xl border border-slate-800">
+                        <div class="text-center">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Informes Recibidos</span>
+                            <span id="precierre-progress-text" class="text-base font-bold text-teal-400">0 / 37 (0%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reminders Log -->
+                <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <h3 class="font-bold text-sm text-teal-300 flex items-center gap-2">
+                            <i class="fa-solid fa-envelope-circle-check"></i> Bitácora de Recordatorios y Comunicaciones Enviadas
+                        </h3>
+                        <button onclick="openReminderModal()" class="bg-slate-800 hover:bg-slate-700 text-teal-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-paper-plane"></i> Registrar Nuevo Recordatorio
+                        </button>
+                    </div>
+                    <div id="reminders-container" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- Custodians Table -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-sm text-slate-200">Seguimiento de Custodios (37 Departamentos / Oficinas)</h3>
+                        <span class="text-xs text-slate-400">Actualice el estatus de recepción y evaluación (Anejos 3, 4, 5, 7)</span>
+                    </div>
+                    <div class="overflow-x-auto border border-slate-800 rounded-xl">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900 text-slate-300 uppercase tracking-wider border-b border-slate-800">
+                                    <th class="p-3.5">Departamento / Custodio</th>
+                                    <th class="p-3.5 text-center">Informe Recibido</th>
+                                    <th class="p-3.5 text-center">Estatus de Evaluación</th>
+                                    <th class="p-3.5">Observaciones / Discrepancias</th>
+                                    <th class="p-3.5 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="custodians-table-body" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
 
     </main>
 
@@ -226,28 +257,23 @@
         Universidad Interamericana de Puerto Rico &bull; Recinto de Ponce &bull; Oficina de Propiedad
     </footer>
 
-    <!-- Task Modal (Create / Edit) -->
+    <!-- Modals -->
     <div id="task-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden transform transition-all">
-            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
                 <h3 id="modal-title" class="font-bold text-lg text-white">Create Operational Task</h3>
-                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-white p-1 rounded-lg transition-colors">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="task-form" onsubmit="handleTaskSubmit(event)" class="p-6 flex flex-col gap-4">
                 <input type="hidden" id="task-id">
-                
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Task Title *</label>
-                    <input type="text" id="task-title" required placeholder="e.g. Auditar laboratorios de computadoras" 
-                        class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-teal-500">
+                    <input type="text" id="task-title" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-teal-500">
                 </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Category</label>
-                        <select id="task-category" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-teal-500">
+                        <select id="task-category" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
                             <option value="Equipos">Equipos</option>
                             <option value="Inventario">Inventario</option>
                             <option value="Reparación">Reparación</option>
@@ -257,18 +283,17 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Priority</label>
-                        <select id="task-priority" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-teal-500">
+                        <select id="task-priority" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
                             <option value="High">🔴 High</option>
                             <option value="Medium" selected>🟡 Medium</option>
                             <option value="Low">🟢 Low</option>
                         </select>
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Column / Status</label>
-                        <select id="task-column" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-teal-500">
+                        <select id="task-column" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
                             <option value="backlog">Backlog</option>
                             <option value="todo">To Do</option>
                             <option value="in-progress">In Progress</option>
@@ -277,24 +302,85 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Due Date</label>
-                        <input type="date" id="task-due" 
-                            class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-teal-500">
+                        <input type="date" id="task-due" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Details / Notes</label>
-                    <textarea id="task-desc" rows="3" placeholder="Add specific buildings, serial numbers, or departmental notes..." 
-                        class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-teal-500"></textarea>
+                    <textarea id="task-desc" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100"></textarea>
                 </div>
-
                 <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
-                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors">
-                        Cancel
-                    </button>
-                    <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-xl text-sm shadow-lg shadow-teal-500/20 transition-all">
-                        Save Task
-                    </button>
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancel</button>
+                    <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-xl text-sm shadow-lg">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reminder Modal -->
+    <div id="reminder-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+                <h3 class="font-bold text-lg text-white">Registrar Recordatorio</h3>
+                <button onclick="closeReminderModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleReminderSubmit(event)" class="p-6 flex flex-col gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Destinatario / Custodios</label>
+                    <input type="text" id="rem-target" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fecha de Envío</label>
+                    <input type="date" id="rem-date" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Asunto / Notas</label>
+                    <textarea id="rem-notes" rows="3" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100"></textarea>
+                </div>
+                <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
+                    <button type="button" onclick="closeReminderModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancel</button>
+                    <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-xl text-sm shadow-lg">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custodian Edit Modal -->
+    <div id="custodian-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+                <h3 class="font-bold text-lg text-white">Editar Estatus de Custodio</h3>
+                <button onclick="closeCustodianModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleCustodianSubmit(event)" class="p-6 flex flex-col gap-4">
+                <input type="hidden" id="cust-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Departamento / Custodio</label>
+                    <input type="text" id="cust-name" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-300">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Informe Recibido</label>
+                    <select id="cust-received" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Recibido">Recibido</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Estatus de Evaluación</label>
+                    <select id="cust-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
+                        <option value="No Evaluado">No Evaluado</option>
+                        <option value="En Revisión">En Revisión</option>
+                        <option value="Aprobado / Conforme">Aprobado / Conforme</option>
+                        <option value="Requiere Corrección">Requiere Corrección</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Observaciones / Discrepancias</label>
+                    <textarea id="cust-notes" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100"></textarea>
+                </div>
+                <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
+                    <button type="button" onclick="closeCustodianModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancel</button>
+                    <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-xl text-sm shadow-lg">Actualizar</button>
                 </div>
             </form>
         </div>
@@ -306,58 +392,38 @@
         <span id="toast-msg" class="text-sm font-medium">Changes saved successfully!</span>
     </div>
 
-    <!-- Application Script with Supabase Integration -->
+    <!-- Application Script (Strictly Supabase) -->
     <script>
         // ==========================================
-        // SUPABASE CONFIGURATION
+        // SUPABASE CONFIGURATION (STRICT REQUIRED)
         // ==========================================
         const SUPABASE_URL = 'https://ncyazwagpqefdlkykdkz.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jeWF6d2FncHFlZmRsa3lrZGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5OTA1MDYsImV4cCI6MjEwODU2NjUwNn0.Bx4DrpCxthOgbUb9M6kdfTy_c1qEunseLnb28YNeP9A';
 
-        let supabaseClient = null;
-        let useSupabase = false;
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
-            try {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                useSupabase = true;
-                document.getElementById('db-status').innerText = 'Supabase Cloud Synced';
-                document.getElementById('db-status').className = 'text-emerald-400 font-semibold';
-            } catch(e) {
-                console.warn('Supabase initialization failed, falling back to LocalStorage.', e);
-            }
-        }
-
-        // Institutional Cycle Calculation Logic (16th to 15th)
         function getCurrentCycleDate() {
             const now = new Date();
             let year = now.getFullYear();
-            let month = now.getMonth(); // 0 - 11
+            let month = now.getMonth();
             let day = now.getDate();
-
             if (day >= 16) {
                 month += 1;
-                if (month > 11) {
-                    month = 0;
-                    year += 1;
-                }
+                if (month > 11) { month = 0; year += 1; }
             }
             return { year, month };
         }
 
         let activeCycle = getCurrentCycleDate();
         const monthNamesFull = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthNamesSpanish = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
         function updateCycleHeader() {
             const endingMonthName = monthNamesFull[activeCycle.month];
             const endingYear = activeCycle.year;
-            
             let startMonth = activeCycle.month - 1;
             let startYear = activeCycle.year;
-            if (startMonth < 0) {
-                startMonth = 11;
-                startYear -= 1;
-            }
+            if (startMonth < 0) { startMonth = 11; startYear -= 1; }
             
             document.getElementById('cycle-title').innerText = `Monthly Report ${endingMonthName} ${endingYear}`;
             document.getElementById('cycle-dates').innerText = `16 ${monthNamesFull[startMonth]} ${startYear} – 15 ${endingMonthName} ${endingYear}`;
@@ -365,17 +431,11 @@
 
         function changeCycle(direction) {
             activeCycle.month += direction;
-            if (activeCycle.month > 11) {
-                activeCycle.month = 0;
-                activeCycle.year += 1;
-            } else if (activeCycle.month < 0) {
-                activeCycle.month = 11;
-                activeCycle.year -= 1;
-            }
+            if (activeCycle.month > 11) { activeCycle.month = 0; activeCycle.year += 1; }
+            else if (activeCycle.month < 0) { activeCycle.month = 11; activeCycle.year -= 1; }
             loadCycleData();
         }
 
-        // Default Request Types for Oficina de Propiedad
         const defaultRequestTypes = [
             { id: 'req_1', title: 'Transferencias de equipos', desc: 'Equipment Transfers between departments or buildings', received: 12, completed: 11 },
             { id: 'req_2', title: 'Uso en gestiones oficiales', desc: 'Official Use Authorizations off-campus or off-hours', received: 8, completed: 8 },
@@ -386,106 +446,104 @@
             { id: 'req_7', title: 'Recogido de equipos', desc: 'Equipment Pickups / Collection from units', received: 15, completed: 14 }
         ];
 
+        function generateDefaultCustodians() {
+            const list = ["Facultad de Administración de Empresas", "Departamento de Ciencias de Computios", "Biblioteca General", "Facultad de Educación", "Departamento de Enfermería", "Decanato de Estudiantes", "Oficina de Admisiones", "Laboratorio de Física", "Laboratorio de Química", "Departamento de Biología", "Oficina de Finanzas", "Recursos Humanos", "Planta Física y Mantenimiento", "Seguridad Institucional", "Audio-Visuales", "Centro de Cómputos", "Educación Continua", "Oficina de Rectoría", "Decanato Académico", "Facultad de Artes y Humanidades"];
+            let custodians = [];
+            for (let i = 1; i <= 37; i++) {
+                custodians.push({
+                    id: `cust_${i}`,
+                    name: list[i-1] || `Departamento / Oficina #${i}`,
+                    received: i <= 4 ? "Recibido" : "Pendiente",
+                    status: i === 1 ? "Aprobado / Conforme" : (i === 2 ? "En Revisión" : (i === 4 ? "Requiere Corrección" : "No Evaluado")),
+                    notes: i === 1 ? "Anejos 3 y 4 conformes." : (i === 4 ? "Falta firma de custodio." : "")
+                });
+            }
+            return custodians;
+        }
+
         let currentData = {
             requests: JSON.parse(JSON.stringify(defaultRequestTypes)),
             tasks: [
                 { id: 'task-1', title: 'Inventario anual de equipos de oficina - Fase 1', category: 'Inventario', priority: 'High', column: 'in-progress', due: '2026-11-05', desc: 'Revisar edificios de Administración y Decanato.' },
-                { id: 'task-2', title: 'Coordinar disposición con finanzas', category: 'Disposición', priority: 'Medium', column: 'todo', due: '2026-11-10', desc: 'Preparar actas de equipo obsoleto para la Junta.' },
-                { id: 'task-3', title: 'Actualizar etiquetas en Biblioteca', category: 'Equipos', priority: 'Low', column: 'backlog', due: '2026-11-14', desc: 'Verificar equipos nuevos recibidos por donación.' }
+                { id: 'task-2', title: 'Coordinar disposición con finanzas', category: 'Disposición', priority: 'Medium', column: 'todo', due: '2026-11-10', desc: 'Preparar actas de equipo obsoleto para la Junta.' }
             ],
-            notes: 'Notas y observaciones para el periodo de informe institucional de la Oficina de Propiedad en la Inter de Ponce.'
+            notes: 'Certificación de Inventario: Se redactó, diseñó y presentó la estructura oficial de correos electrónicos institucionales para el ciclo de certificación, dividida formalmente en 3 fases de seguimiento.\nPlan de Orientación y Capacitación a Custodios: Se presentó el plan de orientación para los custodios enlaces, estableciendo la fecha oficial de convocatoria.\nEvaluación y Propuesta de Procesos de Propiedad: Se presentó formalmente la propuesta integral de evaluación y reestructuración de procesos de administración de propiedad.',
+            custodians: generateDefaultCustodians(),
+            reminders: [
+                { id: 'rem_1', target: 'Todos los Custodios (37)', date: '2026-10-14', notes: 'Aviso de inicio de ciclo de certificación pre-cierre y fecha límite Dic 14.' }
+            ]
         };
 
         async function loadCycleData() {
             updateCycleHeader();
             const cycleKey = `cycle_${activeCycle.year}_${activeCycle.month}`;
 
-            if (useSupabase) {
-                try {
-                    const { data, error } = await supabaseClient
-                        .from('property_cycles')
-                        .select('*')
-                        .eq('cycle_key', cycleKey)
-                        .single();
-
-                    if (data && data.payload) {
-                        currentData = data.payload;
-                    } else {
-                        // If not in DB yet for this cycle, save default
-                        await saveCycleData(false);
-                    }
-                } catch(e) {
-                    console.error('Error fetching from Supabase:', e);
-                }
-            } else {
-                const saved = localStorage.getItem(cycleKey);
-                if (saved) {
-                    currentData = JSON.parse(saved);
+            try {
+                const { data, error } = await supabaseClient.from('property_cycles').select('*').eq('cycle_key', cycleKey).single();
+                if (data && data.payload) {
+                    currentData = data.payload;
                 } else {
-                    saveCycleData(false);
+                    await saveCycleData(false);
                 }
+            } catch(e) {
+                console.error('Supabase load error:', e);
             }
+
+            if (!currentData.custodians) currentData.custodians = generateDefaultCustodians();
+            if (!currentData.reminders) currentData.reminders = [];
 
             renderRequestsDashboard();
             renderKanban();
+            renderPreCierreModule();
             document.getElementById('strategic-notes-area').value = currentData.notes || '';
         }
 
         async function saveCycleData(showNotif = true) {
             const cycleKey = `cycle_${activeCycle.year}_${activeCycle.month}`;
-
-            if (useSupabase) {
-                try {
-                    const { error } = await supabaseClient
-                        .from('property_cycles')
-                        .upsert({ cycle_key: cycleKey, payload: currentData, updated_at: new Date() });
-                    
-                    if (error) console.error('Supabase save error:', error);
-                } catch(e) {
-                    console.error('Supabase exception:', e);
-                }
-            } else {
-                localStorage.setItem(cycleKey, JSON.stringify(currentData));
+            try {
+                const { error } = await supabaseClient.from('property_cycles').upsert({ cycle_key: cycleKey, payload: currentData, updated_at: new Date() });
+                if (error) console.error('Supabase save error:', error);
+            } catch(e) {
+                console.error('Supabase exception:', e);
             }
-
-            if (showNotif) {
-                showToast('Changes saved successfully!');
-            }
+            if (showNotif) { showToast('Changes saved to Supabase!'); }
         }
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = msg;
             toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
         }
 
-        // Render Compliance Requests Dashboard
+        function switchTab(tab) {
+            if (tab === 'dashboard') {
+                document.getElementById('tab-dashboard').classList.remove('hidden');
+                document.getElementById('tab-precierre').classList.add('hidden');
+                document.getElementById('nav-btn-dashboard').className = "bg-teal-500 text-slate-950 font-semibold px-3.5 py-2 rounded-lg text-xs transition-all shadow-md";
+                document.getElementById('nav-btn-precierre').className = "bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all";
+            } else {
+                document.getElementById('tab-dashboard').classList.add('hidden');
+                document.getElementById('tab-precierre').classList.remove('hidden');
+                document.getElementById('nav-btn-dashboard').className = "bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all";
+                document.getElementById('nav-btn-precierre').className = "bg-teal-500 text-slate-950 font-semibold px-3.5 py-2 rounded-lg text-xs transition-all shadow-md";
+            }
+        }
+
         function renderRequestsDashboard() {
             const container = document.getElementById('requests-container');
             container.innerHTML = '';
-
-            let totalRec = 0;
-            let totalComp = 0;
+            let totalRec = 0, totalComp = 0;
 
             currentData.requests.forEach((req, idx) => {
                 totalRec += Number(req.received);
                 totalComp += Number(req.completed);
-
                 const rate = req.received > 0 ? Math.round((req.completed / req.received) * 100) : 100;
                 const pending = Math.max(0, req.received - req.completed);
 
-                let badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-                let barColor = 'bg-emerald-500';
-                if (rate < 75) {
-                    badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
-                    barColor = 'bg-rose-500';
-                } else if (rate < 90) {
-                    badgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-                    barColor = 'bg-amber-500';
-                }
+                let badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30', barColor = 'bg-emerald-500';
+                if (rate < 75) { badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/30'; barColor = 'bg-rose-500'; }
+                else if (rate < 90) { badgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/30'; barColor = 'bg-amber-500'; }
 
                 container.insertAdjacentHTML('beforeend', `
                     <div class="bg-slate-950/50 border border-slate-800/80 rounded-xl p-4 flex flex-col gap-3">
@@ -496,13 +554,9 @@
                             </div>
                             <span class="text-xs px-2.5 py-0.5 rounded-full border ${badgeColor} font-bold whitespace-nowrap">${rate}% Compliance</span>
                         </div>
-
-                        <!-- Progress Bar -->
                         <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
                             <div class="${barColor} h-full transition-all duration-500 rounded-full" style="width: ${Math.min(100, rate)}%"></div>
                         </div>
-
-                        <!-- Inputs & Pending Info -->
                         <div class="flex items-center justify-between pt-2 border-t border-slate-900 text-xs">
                             <div class="flex items-center gap-4">
                                 <div class="flex items-center gap-1.5">
@@ -516,23 +570,18 @@
                                         class="w-14 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-center font-bold text-teal-400 focus:outline-none focus:border-teal-500">
                                 </div>
                             </div>
-                            <div class="text-slate-400 font-medium">
-                                Pendientes: <span class="text-amber-400 font-bold">${pending}</span>
-                            </div>
+                            <div class="text-slate-400 font-medium">Pendientes: <span class="text-amber-400 font-bold">${pending}</span></div>
                         </div>
                     </div>
                 `);
             });
 
-            // Update KPIs
             document.getElementById('kpi-total-received').innerText = totalRec;
             document.getElementById('kpi-total-completed').innerText = totalComp;
             const overallRate = totalRec > 0 ? Math.round((totalComp / totalRec) * 100) : 100;
             const overallEl = document.getElementById('kpi-overall-rate');
             overallEl.innerText = overallRate + '%';
-            if (overallRate >= 90) overallEl.className = 'text-base font-bold text-emerald-400';
-            else if (overallRate >= 75) overallEl.className = 'text-base font-bold text-amber-400';
-            else overallEl.className = 'text-base font-bold text-rose-400';
+            overallEl.className = overallRate >= 90 ? 'text-base font-bold text-emerald-400' : (overallRate >= 75 ? 'text-base font-bold text-amber-400' : 'text-base font-bold text-rose-400');
         }
 
         function updateRequestMetric(index, field, value) {
@@ -545,15 +594,116 @@
             renderRequestsDashboard();
         }
 
-        // Kanban Board Logic
+        function renderPreCierreModule() {
+            const remContainer = document.getElementById('reminders-container');
+            remContainer.innerHTML = '';
+            if (currentData.reminders.length === 0) {
+                remContainer.innerHTML = `<p class="text-xs text-slate-500 italic">No hay recordatorios registrados en este ciclo.</p>`;
+            } else {
+                currentData.reminders.forEach((rem, idx) => {
+                    remContainer.insertAdjacentHTML('beforeend', `
+                        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-3">
+                                <span class="text-teal-400 font-bold"><i class="fa-regular fa-calendar-days"></i> ${rem.date}</span>
+                                <span class="text-slate-200 font-medium">Para: ${rem.target}</span>
+                                <span class="text-slate-400">&bull; ${rem.notes}</span>
+                            </div>
+                            <button onclick="deleteReminder(${idx})" class="text-slate-500 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `);
+                });
+            }
+
+            const tbody = document.getElementById('custodians-table-body');
+            tbody.innerHTML = '';
+            let receivedCount = 0;
+
+            currentData.custodians.forEach((cust, idx) => {
+                if (cust.received === "Recibido") receivedCount++;
+                let recBadge = cust.received === "Recibido" ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+                let statusBadge = 'bg-slate-800 text-slate-300 border-slate-700';
+                if (cust.status === "Aprobado / Conforme") statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+                else if (cust.status === "Requiere Corrección") statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+                else if (cust.status === "En Revisión") statusBadge = 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+
+                tbody.insertAdjacentHTML('beforeend', `
+                    <tr class="hover:bg-slate-900/60 transition">
+                        <td class="p-3.5 font-medium text-white">${cust.name}</td>
+                        <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${recBadge}">${cust.received}</span></td>
+                        <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusBadge}">${cust.status}</span></td>
+                        <td class="p-3.5 text-slate-400 text-xs">${cust.notes || '-'}</td>
+                        <td class="p-3.5 text-center">
+                            <button onclick="openCustodianModal(${idx})" class="bg-slate-800 hover:bg-slate-700 text-teal-400 px-2.5 py-1 rounded-lg text-xs font-semibold border border-slate-700">Editar</button>
+                        </td>
+                    </tr>
+                `);
+            });
+
+            const pct = Math.round((receivedCount / 37) * 100);
+            document.getElementById('precierre-progress-text').innerText = `${receivedCount} / 37 (${pct}%)`;
+        }
+
+        function openReminderModal() {
+            document.getElementById('rem-target').value = '';
+            document.getElementById('rem-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('rem-notes').value = '';
+            document.getElementById('reminder-modal').classList.remove('hidden');
+            document.getElementById('reminder-modal').classList.add('flex');
+        }
+        function closeReminderModal() {
+            document.getElementById('reminder-modal').classList.remove('flex');
+            document.getElementById('reminder-modal').classList.add('hidden');
+        }
+        function handleReminderSubmit(e) {
+            e.preventDefault();
+            currentData.reminders.push({
+                id: 'rem_' + Date.now(),
+                target: document.getElementById('rem-target').value.trim(),
+                date: document.getElementById('rem-date').value,
+                notes: document.getElementById('rem-notes').value.trim()
+            });
+            closeReminderModal();
+            saveCycleData();
+            renderPreCierreModule();
+        }
+        function deleteReminder(idx) {
+            if (confirm('¿Eliminar este recordatorio?')) {
+                currentData.reminders.splice(idx, 1);
+                saveCycleData();
+                renderPreCierreModule();
+            }
+        }
+
+        function openCustodianModal(idx) {
+            const cust = currentData.custodians[idx];
+            document.getElementById('cust-id').value = idx;
+            document.getElementById('cust-name').value = cust.name;
+            document.getElementById('cust-received').value = cust.received;
+            document.getElementById('cust-status').value = cust.status;
+            document.getElementById('cust-notes').value = cust.notes || '';
+            document.getElementById('custodian-modal').classList.remove('hidden');
+            document.getElementById('custodian-modal').classList.add('flex');
+        }
+        function closeCustodianModal() {
+            document.getElementById('custodian-modal').classList.remove('flex');
+            document.getElementById('custodian-modal').classList.add('hidden');
+        }
+        function handleCustodianSubmit(e) {
+            e.preventDefault();
+            const idx = parseInt(document.getElementById('cust-id').value);
+            currentData.custodians[idx].received = document.getElementById('cust-received').value;
+            currentData.custodians[idx].status = document.getElementById('cust-status').value;
+            currentData.custodians[idx].notes = document.getElementById('cust-notes').value.trim();
+            closeCustodianModal();
+            saveCycleData();
+            renderPreCierreModule();
+        }
+
         function renderKanban() {
             const searchQuery = document.getElementById('search-tasks').value.toLowerCase();
             const cols = ['backlog', 'todo', 'in-progress', 'completed'];
             const counts = { backlog: 0, todo: 0, 'in-progress': 0, completed: 0 };
-
-            cols.forEach(colId => {
-                document.getElementById(`col-${colId}`).innerHTML = '';
-            });
+            cols.forEach(colId => { document.getElementById(`col-${colId}`).innerHTML = ''; });
 
             const filteredTasks = currentData.tasks.filter(t => 
                 t.title.toLowerCase().includes(searchQuery) || (t.desc && t.desc.toLowerCase().includes(searchQuery))
@@ -561,14 +711,11 @@
 
             filteredTasks.forEach(task => {
                 counts[task.column] = (counts[task.column] || 0) + 1;
-                const cardHTML = createTaskCardHTML(task);
                 const colEl = document.getElementById(`col-${task.column}`);
-                if (colEl) colEl.insertAdjacentHTML('beforeend', cardHTML);
+                if (colEl) colEl.insertAdjacentHTML('beforeend', createTaskCardHTML(task));
             });
 
-            cols.forEach(colId => {
-                document.getElementById(`count-${colId}`).innerText = counts[colId];
-            });
+            cols.forEach(colId => { document.getElementById(`count-${colId}`).innerText = counts[colId]; });
         }
 
         function createTaskCardHTML(task) {
@@ -588,36 +735,28 @@
                     <div class="flex items-start justify-between gap-2">
                         <span class="text-[10px] px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20 font-medium">${task.category}</span>
                         <div class="flex items-center gap-1 opacity-70 group-hover:opacity-100">
-                            <button onclick="openTaskModal('${task.id}')" class="text-slate-400 hover:text-teal-400 p-1" title="Edit"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="deleteTask('${task.id}')" class="text-slate-400 hover:text-rose-400 p-1" title="Delete"><i class="fa-solid fa-trash text-xs"></i></button>
+                            <button onclick="openTaskModal('${task.id}')" class="text-slate-400 hover:text-teal-400 p-1"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteTask('${task.id}')" class="text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
                         </div>
                     </div>
                     <h4 class="font-semibold text-xs text-slate-100 leading-snug">${escapeHtml(task.title)}</h4>
                     ${task.desc ? `<p class="text-[11px] text-slate-400 line-clamp-2">${escapeHtml(task.desc)}</p>` : ''}
                     <div class="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[11px] text-slate-400">
-                        <div class="flex items-center gap-2">
-                            ${priorityBadge}
-                            ${dueFormatted ? `<span class="flex items-center gap-1"><i class="fa-regular fa-calendar text-[10px]"></i> ${dueFormatted}</span>` : ''}
-                        </div>
-                        <div class="flex items-center gap-1 md:hidden">
-                            <button onclick="moveTaskColumnMobile('${task.id}', -1)" class="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">‹</button>
-                            <button onclick="moveTaskColumnMobile('${task.id}', 1)" class="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">›</button>
-                        </div>
+                        <div class="flex items-center gap-2">${priorityBadge} ${dueFormatted ? `<span><i class="fa-regular fa-calendar text-[10px]"></i> ${dueFormatted}</span>` : ''}</div>
                     </div>
                 </div>
             `;
         }
 
         function escapeHtml(text) {
+            if (!text) return '';
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
 
-        // Modal Controls
         function openTaskModal(taskId = null) {
             const modal = document.getElementById('task-modal');
-            const form = document.getElementById('task-form');
-            form.reset();
+            document.getElementById('task-form').reset();
             document.getElementById('task-id').value = '';
 
             if (taskId) {
@@ -636,16 +775,13 @@
                 document.getElementById('modal-title').innerText = 'Create Operational Task';
                 document.getElementById('task-due').value = new Date().toISOString().split('T')[0];
             }
-
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
-
         function closeTaskModal() {
             document.getElementById('task-modal').classList.remove('flex');
             document.getElementById('task-modal').classList.add('hidden');
         }
-
         function handleTaskSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('task-id').value;
@@ -657,22 +793,16 @@
             const desc = document.getElementById('task-desc').value.trim();
 
             if (!title) return;
-
             if (id) {
                 const idx = currentData.tasks.findIndex(t => t.id === id);
-                if (idx !== -1) {
-                    currentData.tasks[idx] = { id, title, category, priority, column, due, desc };
-                }
+                if (idx !== -1) { currentData.tasks[idx] = { id, title, category, priority, column, due, desc }; }
             } else {
-                const newTask = { id: 'task-' + Date.now(), title, category, priority, column, due, desc };
-                currentData.tasks.push(newTask);
+                currentData.tasks.push({ id: 'task-' + Date.now(), title, category, priority, column, due, desc });
             }
-
             closeTaskModal();
             saveCycleData();
             renderKanban();
         }
-
         function deleteTask(id) {
             if (confirm('¿Desea eliminar esta tarea?')) {
                 currentData.tasks = currentData.tasks.filter(t => t.id !== id);
@@ -681,20 +811,9 @@
             }
         }
 
-        // Drag & Drop
-        function dragTask(ev) {
-            ev.dataTransfer.setData("text/plain", ev.target.dataset.id);
-        }
-
-        function allowDrop(ev) {
-            ev.preventDefault();
-            ev.currentTarget.classList.add('bg-slate-800/60', 'border-teal-500/50');
-        }
-
-        function removeDropStyle(ev) {
-            ev.currentTarget.classList.remove('bg-slate-800/60', 'border-teal-500/50');
-        }
-
+        function dragTask(ev) { ev.dataTransfer.setData("text/plain", ev.target.dataset.id); }
+        function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('bg-slate-800/60', 'border-teal-500/50'); }
+        function removeDropStyle(ev) { ev.currentTarget.classList.remove('bg-slate-800/60', 'border-teal-500/50'); }
         function drop(ev, targetColumn) {
             ev.preventDefault();
             ev.currentTarget.classList.remove('bg-slate-800/60', 'border-teal-500/50');
@@ -707,31 +826,152 @@
             }
         }
 
-        function moveTaskColumnMobile(id, direction) {
-            const cols = ['backlog', 'todo', 'in-progress', 'completed'];
-            const task = currentData.tasks.find(t => t.id === id);
-            if (!task) return;
-            const currentIndex = cols.indexOf(task.column);
-            const newIndex = currentIndex + direction;
-            if (newIndex >= 0 && newIndex < cols.length) {
-                task.column = cols[newIndex];
-                saveCycleData(false);
-                renderKanban();
-            }
-        }
-
-        // Strategic Notes Save
         function saveNotes() {
             currentData.notes = document.getElementById('strategic-notes-area').value;
             saveCycleData();
         }
 
-        document.getElementById('search-tasks').addEventListener('input', renderKanban);
+        // GENERATE WORD DOCUMENT (.DOCX) USING docx.js (Times New Roman 12pt)
+        async function generateDocxReport() {
+            const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, AlignmentType } = window.docx;
 
-        // Initial Load on Window Load
-        window.onload = function() {
-            loadCycleData();
-        };
+            const endingMonthIdx = activeCycle.month;
+            const endingYear = activeCycle.year;
+            let startMonthIdx = endingMonthIdx - 1;
+            let startYear = activeCycle.year;
+            if (startMonthIdx < 0) { startMonthIdx = 11; startYear -= 1; }
+
+            const startMonthName = monthNamesSpanish[startMonthIdx];
+            const endingMonthName = monthNamesSpanish[endingMonthIdx];
+
+            const docChildren = [];
+
+            // Title Header
+            docChildren.push(new Paragraph({
+                children: [new TextRun({ text: "Oficina de Propiedad", bold: true, size: 28, font: "Times New Roman" })],
+                spacing: { after: 6 }
+            }));
+
+            docChildren.push(new Paragraph({
+                children: [new TextRun({ text: `Periodo: 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}`, italics: true, size: 22, font: "Times New Roman", color: "64748B" })],
+                spacing: { after: 200 }
+            }));
+
+            // Opening Paragraph
+            docChildren.push(new Paragraph({
+                children: [new TextRun({ text: `Durante el periodo comprendido del 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:`, size: 24, font: "Times New Roman" })],
+                spacing: { after: 150 }
+            }));
+
+            // Strategic Notes Bullets
+            const notesText = document.getElementById('strategic-notes-area').value.trim();
+            const lines = notesText ? notesText.split(/\r?\n/).filter(l => l.trim().length > 0) : ["Gestiones generales de inventario y control de propiedad."];
+
+            lines.forEach(line => {
+                docChildren.push(new Paragraph({
+                    bullet: { level: 0 },
+                    children: [new TextRun({ text: line.trim(), size: 24, font: "Times New Roman" })],
+                    spacing: { after: 100 }
+                }));
+            });
+
+            // Otros Procesos Relacionados
+            docChildren.push(new Paragraph({
+                children: [new TextRun({ text: "Otros procesos relacionados", bold: true, size: 26, font: "Times New Roman", color: "0D9488" })],
+                spacing: { before: 200, after: 100 }
+            }));
+
+            // Compliance Table
+            const tableRows = [
+                new TableRow({
+                    children: [
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Categoría de Solicitud", bold: true, size: 22, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Completadas / Recibidas", bold: true, size: 22, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Cumplimiento", bold: true, size: 22, font: "Times New Roman" })] })] }),
+                    ]
+                })
+            ];
+
+            currentData.requests.forEach(req => {
+                const rate = req.received > 0 ? Math.round((req.completed / req.received) * 100) + '%' : '—';
+                tableRows.push(new TableRow({
+                    children: [
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: req.title, size: 22, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: `${req.completed} / ${req.received}`, size: 22, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: rate, size: 22, font: "Times New Roman" })] })] }),
+                    ]
+                }));
+            });
+
+            docChildren.push(new Table({
+                rows: tableRows,
+                width: { size: 100, type: WidthType.PERCENTAGE },
+                alignment: AlignmentType.CENTER
+            }));
+
+            // Pequeños Grandes Saberes
+            docChildren.push(new Paragraph({
+                children: [new TextRun({ text: "Pequeños Grandes Saberes", bold: true, size: 26, font: "Times New Roman", color: "0D9488" })],
+                spacing: { before: 300, after: 100 }
+            }));
+
+            docChildren.push(new Paragraph({
+                children: [new TextRun({ text: "Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:", size: 24, font: "Times New Roman" })],
+                spacing: { after: 100 }
+            }));
+
+            const saberes = [
+                "De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.",
+                "Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.",
+                "Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.",
+                "De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.",
+                "Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales."
+            ];
+
+            saberes.forEach(s => {
+                docChildren.push(new Paragraph({
+                    bullet: { level: 0 },
+                    children: [new TextRun({ text: s, size: 24, font: "Times New Roman" })],
+                    spacing: { after: 80 }
+                }));
+            });
+
+            // Quote & Contact
+            docChildren.push(new Paragraph({
+                children: [new TextRun({ text: "“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.", italics: true, size: 24, font: "Times New Roman", color: "475569" })],
+                spacing: { before: 200, after: 100 }
+            }));
+
+            docChildren.push(new Paragraph({
+                children: [new TextRun({ text: "¡Estamos para servirles!", bold: true, size: 24, font: "Times New Roman", color: "0D9488" })],
+                spacing: { after: 200 }
+            }));
+
+            docChildren.push(new Paragraph({
+                children: [
+                    new TextRun({ text: "Greychel Ocasio Ortiz\n", bold: true, size: 22, font: "Times New Roman" }),
+                    new TextRun({ text: "Oficial de Propiedad\n", italics: true, size: 22, font: "Times New Roman" }),
+                    new TextRun({ text: "Directo: (787) 437-7064\nTel. (787) 284-1912, ext. 2005\nContacto: grocasio@ponce.inter.edu / propiedad@ponce.inter.edu", size: 22, font: "Times New Roman" })
+                ],
+                spacing: { after: 100 }
+            }));
+
+            const doc = new Document({
+                sections: [{ properties: {}, children: docChildren }]
+            });
+
+            const blob = await Packer.toBlob(doc);
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Informe_${endingMonthName}_${endingYear}.docx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Informe .docx descargado exitosamente!');
+        }
+
+        document.getElementById('search-tasks').addEventListener('input', renderKanban);
+        window.onload = function() { loadCycleData(); };
     </script>
 </body>
 </html>
