@@ -48,7 +48,7 @@
                         <h1 class="text-lg font-bold tracking-tight text-white">Oficina de Bienes y Propiedad</h1>
                         <span class="text-xs px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-400 font-medium border border-teal-500/30">Inter Ponce</span>
                     </div>
-                    <p class="text-xs text-slate-400">Oficial de Propiedad: <span class="text-slate-400 font-semibold">Greychel Ocasio Ortiz</span></p>
+                    <p class="text-xs text-slate-400">Oficial de Propiedad: <span class="text-teal-400 font-semibold">Greychel Ocasio</span></p>
                 </div>
             </div>
 
@@ -240,7 +240,7 @@
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="font-bold text-sm text-slate-200">Seguimiento de Custodios Enlace (37)</h3>
-                        <span class="text-xs text-slate-400">Actualice el estatus de recepción y evaluación</span>
+                        <span class="text-xs text-slate-400">Actualice el estatus, notas y fechas de recepción y completado</span>
                     </div>
                     <div class="overflow-x-auto border border-slate-800 rounded-xl">
                         <table class="w-full text-left text-xs border-collapse">
@@ -248,6 +248,8 @@
                                 <tr class="bg-slate-900 text-slate-300 uppercase tracking-wider border-b border-slate-800">
                                     <th class="p-3.5">Custodio Enlace</th>
                                     <th class="p-3.5 text-center">Informe Recibido</th>
+                                    <th class="p-3.5 text-center">Fecha Recibido</th>
+                                    <th class="p-3.5 text-center">Fecha Completado</th>
                                     <th class="p-3.5 text-center">Estatus de Evaluación</th>
                                     <th class="p-3.5">Observaciones</th>
                                     <th class="p-3.5 text-center">Acción</th>
@@ -375,6 +377,16 @@
                         <option value="Recibido">Recibido</option>
                     </select>
                 </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fecha Recibido</label>
+                        <input type="date" id="cust-date-rec" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fecha Completado</label>
+                        <input type="date" id="cust-date-comp" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
+                    </div>
+                </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Estatus de Evaluación</label>
                     <select id="cust-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
@@ -473,7 +485,6 @@
             loadCycleData();
         }
 
-        // Exact requested order
         const defaultRequestTypes = [
             { id: 'req_nuevas', title: 'Etiquetas nuevas', desc: 'Emisión y colocación de etiquetas por primera vez.', received: 0, completed: 0 },
             { id: 'req_deterioro', title: 'Etiquetas por deterioro', desc: 'Reemplazo de etiquetas deterioradas o ilegibles.', received: 3, completed: 3 },
@@ -493,6 +504,8 @@
                     id: `cust_${i}`,
                     name: list[i-1] || `Departamento / Oficina #${i}`,
                     received: i <= 4 ? "Recibido" : "Pendiente",
+                    date_received: i <= 4 ? new Date().toISOString().split('T')[0] : "",
+                    date_completed: "",
                     status: i === 1 ? "Aprobado / Conforme" : (i === 2 ? "En Revisión" : (i === 4 ? "Requiere Corrección" : "No Evaluado")),
                     notes: i === 1 ? "Anejos 3 y 4 conformes." : (i === 4 ? "Falta firma de custodio." : "")
                 });
@@ -574,7 +587,7 @@
                 document.getElementById('tab-dashboard').classList.add('hidden');
                 document.getElementById('tab-precierre').classList.remove('hidden');
                 document.getElementById('nav-btn-dashboard').className = "bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all";
-                document.getElementById('nav-btn-precierre').className = "bg-teal-500 text-slate-950 font-semibold px-3.5 py-2 rounded-lg text-xs transition-all shadow-md";
+                document.getElementById('nav-btn-precierre').className = "bg-teal-500 text-slate-950 font-bold px-3.5 py-2 rounded-lg text-xs transition-all shadow-md";
             }
         }
 
@@ -603,7 +616,6 @@
                 totalRec += Number(req.received);
                 totalComp += Number(req.completed);
                 
-                // Fix: if 0 received, progress bar is gray and says 0%
                 let rate = 0;
                 if (req.received > 0) {
                     rate = Math.round((req.completed / req.received) * 100);
@@ -661,7 +673,6 @@
             overallEl.className = overallRate >= 90 ? 'text-base font-bold text-emerald-400' : (overallRate >= 75 ? 'text-base font-bold text-amber-400' : (totalRec > 0 ? 'text-base font-bold text-rose-400' : 'text-base font-bold text-slate-400'));
         }
 
-        // Strict constraint: completed cannot exceed received
         function updateRequestMetric(index, field, value) {
             let val = parseInt(value) || 0;
             if (val < 0) val = 0;
@@ -725,6 +736,8 @@
                     <tr class="hover:bg-slate-900/60 transition">
                         <td class="p-3.5 font-medium text-white">${cust.name}</td>
                         <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${recBadge}">${cust.received}</span></td>
+                        <td class="p-3.5 text-center text-slate-300">${cust.date_received || '-'}</td>
+                        <td class="p-3.5 text-center text-slate-300">${cust.date_completed || '-'}</td>
                         <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusBadge}">${cust.status}</span></td>
                         <td class="p-3.5 text-slate-400 text-xs">${cust.notes || '-'}</td>
                         <td class="p-3.5 text-center">
@@ -779,6 +792,8 @@
             document.getElementById('cust-id').value = idx;
             document.getElementById('cust-name').value = cust.name;
             document.getElementById('cust-received').value = cust.received;
+            document.getElementById('cust-date-rec').value = cust.date_received || '';
+            document.getElementById('cust-date-comp').value = cust.date_completed || '';
             document.getElementById('cust-status').value = cust.status;
             document.getElementById('cust-notes').value = cust.notes || '';
             document.getElementById('custodian-modal').classList.remove('hidden');
@@ -793,6 +808,8 @@
             const idx = parseInt(document.getElementById('cust-id').value);
             const custodiansKey = activePhase === 'precierre' ? 'precierre_custodians' : 'final_custodians';
             currentData[custodiansKey][idx].received = document.getElementById('cust-received').value;
+            currentData[custodiansKey][idx].date_received = document.getElementById('cust-date-rec').value;
+            currentData[custodiansKey][idx].date_completed = document.getElementById('cust-date-comp').value;
             currentData[custodiansKey][idx].status = document.getElementById('cust-status').value;
             currentData[custodiansKey][idx].notes = document.getElementById('cust-notes').value.trim();
             closeCustodianModal();
