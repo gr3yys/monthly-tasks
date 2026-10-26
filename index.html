@@ -48,7 +48,7 @@
                         <h1 class="text-lg font-bold tracking-tight text-white">Oficina de Bienes y Propiedad</h1>
                         <span class="text-xs px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-400 font-medium border border-teal-500/30">Inter Ponce</span>
                     </div>
-                    <p class="text-xs text-slate-400">Oficial de Propiedad: <span class="text-teal-400 font-semibold">Greychel Ocasio</span></p>
+                    <p class="text-xs text-slate-400">Oficial de Propiedad: <span class="text-teal-400 font-semibold">Greychel Ocasio</span> | <span class="text-teal-400 font-semibold">Supabase Connected</span></p>
                 </div>
             </div>
 
@@ -392,8 +392,8 @@
                     <select id="cust-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
                         <option value="No Evaluado">No Evaluado</option>
                         <option value="En Revisión">En Revisión</option>
-                        <option value="Aprobado / Conforme">Aprobado / Conforme</option>
-                        <option value="Requiere Corrección">Requiere Corrección</option>
+                        <option value="Aprobado / Conforme">Evaluado / Completado</option>
+                        <option value="Requiere Corrección">Requiere Acción</option>
                     </select>
                 </div>
                 <div>
@@ -485,29 +485,30 @@
             loadCycleData();
         }
 
+        // Clean initial request types with 0 received/completed
         const defaultRequestTypes = [
             { id: 'req_nuevas', title: 'Etiquetas nuevas', desc: 'Emisión y colocación de etiquetas por primera vez.', received: 0, completed: 0 },
-            { id: 'req_deterioro', title: 'Etiquetas por deterioro', desc: 'Reemplazo de etiquetas deterioradas o ilegibles.', received: 3, completed: 3 },
-            { id: 'req_reparacion', title: 'Reparación fuera de la unidad', desc: 'Solicitud para reparar equipos fuera de la unidad.', received: 4, completed: 3 },
-            { id: 'req_transferencias', title: 'Transferencias de equipos', desc: 'Movimientos de equipos de un espacio a otro.', received: 83, completed: 83 },
-            { id: 'req_gestiones', title: 'Uso en gestiones oficiales', desc: 'Solicitud para utilizar equipos fuera de la unidad en actividades oficiales.', received: 14, completed: 14 },
+            { id: 'req_deterioro', title: 'Etiquetas por deterioro', desc: 'Reemplazo de etiquetas deterioradas o ilegibles.', received: 0, completed: 0 },
+            { id: 'req_reparacion', title: 'Reparación fuera de la unidad', desc: 'Solicitud para reparar equipos fuera de la unidad.', received: 0, completed: 0 },
+            { id: 'req_transferencias', title: 'Transferencias de equipos', desc: 'Movimientos de equipos de un espacio a otro.', received: 0, completed: 0 },
+            { id: 'req_gestiones', title: 'Uso en gestiones oficiales', desc: 'Solicitud para utilizar equipos fuera de la unidad en actividades oficiales.', received: 0, completed: 0 },
             { id: 'req_desaparicion', title: 'Desaparición de equipos', desc: 'Certificación para la desaparición de equipos o propiedad UIPR.', received: 0, completed: 0 },
-            { id: 'req_disposicion', title: 'Disposición de equipos', desc: 'Solicitud para disponer de equipos dañados, obsoletos o inservibles.', received: 7, completed: 7 },
-            { id: 'req_recogido', title: 'Recogido de equipos', desc: 'Recogido de equipos decomisados para disponer.', received: 15, completed: 14 }
+            { id: 'req_disposicion', title: 'Disposición de equipos', desc: 'Solicitud para disponer de equipos dañados, obsoletos o inservibles.', received: 0, completed: 0 },
+            { id: 'req_recogido', title: 'Recogido de equipos', desc: 'Recogido de equipos decomisados para disponer.', received: 0, completed: 0 }
         ];
 
-        function generateDefaultCustodians() {
+        function generateCleanCustodians() {
             const list = ["Ana L. Martínez Santiago", "Karen García Cruzado", "Jessica Castro Santiago", "Wanda I. Andújar Rivas", "Doel Lugo Irizarry", "Marinelly González Guzmán", "Lucila Jorge Cintrón", "Luis G. Felix Morales", "Natasha Borrero Muñíz", "Oscar Díaz Millán", "Amarilys Orozco Andujar", "Joceline Rodríguez Aponte", "María Rivera Ortíz", "María M. Muñoz Dávila", "Cuenta Gen. Propiedad - Greychel Ocasio", "José Lugo Ocasio", "Reinaldo Rosado Vega", "Ernesto Rosado Torres", "Jaime Torres González", "Jennyfer Almodóvar Figueroa", "Jennifer Burgos Ortíz", "Brenda Rodríguez Rosado", "Juan C. Fong Sam", "Liset Rosado Rivera", "Waldemar Colón", "Carlos Herrera Breda", "María De Los A. Silva", "Adriana S. Torres Cruz", "Oscar Mercado Ortiz", "Miguel Lugo Torres", "Cuenta invprop CIT - Miguel Lugo", "Cuenta invprop CIT AV - Walberto Rodríguez", "Nelson Rodríguez", "Milton D. Morales Torres", "Sofía Echevarría Maldonado", "Hilda Stella Munera", "Dilia Rodríguez Besosa"];
             let custodians = [];
             for (let i = 1; i <= 37; i++) {
                 custodians.push({
                     id: `cust_${i}`,
                     name: list[i-1] || `Departamento / Oficina #${i}`,
-                    received: i <= 4 ? "Recibido" : "Pendiente",
-                    date_received: i <= 4 ? new Date().toISOString().split('T')[0] : "",
+                    received: "Pendiente",
+                    date_received: "",
                     date_completed: "",
-                    status: i === 1 ? "Aprobado / Conforme" : (i === 2 ? "En Revisión" : (i === 4 ? "Requiere Corrección" : "No Evaluado")),
-                    notes: i === 1 ? "Anejos 3 y 4 conformes." : (i === 4 ? "Falta firma de custodio." : "")
+                    status: "No Evaluado",
+                    notes: ""
                 });
             }
             return custodians;
@@ -515,19 +516,12 @@
 
         let currentData = {
             requests: JSON.parse(JSON.stringify(defaultRequestTypes)),
-            tasks: [
-                { id: 'task-1', title: 'Inventario anual de equipos de oficina - Fase 1', category: 'Inventario', priority: 'High', column: 'in-progress', due: '2026-11-05', desc: 'Revisar edificios de Administración y Decanato.' },
-                { id: 'task-2', title: 'Coordinar disposición con finanzas', category: 'Disposición', priority: 'Medium', column: 'todo', due: '2026-11-10', desc: 'Preparar actas de equipo obsoleto para la Junta.' }
-            ],
-            notes: 'Certificación de Inventario: Se redactó, diseñó y presentó la estructura oficial de correos electrónicos institucionales para el ciclo de certificación, dividida formalmente en 3 fases de seguimiento.\nPlan de Orientación y Capacitación a Custodios: Se presentó el plan de orientación para los custodios enlaces, estableciendo la fecha oficial de convocatoria.\nEvaluación y Propuesta de Procesos de Propiedad: Se presentó formalmente la propuesta integral de evaluación y reestructuración de procesos de administración de propiedad.',
-            precierre_custodians: generateDefaultCustodians(),
-            precierre_reminders: [
-                { id: 'rem_1', target: 'Todos los Custodios (37)', date: '2026-10-14', notes: 'Aviso de inicio de ciclo de certificación pre-cierre y fecha límite Dic 14.' }
-            ],
-            final_custodians: generateDefaultCustodians(),
-            final_reminders: [
-                { id: 'rem_f1', target: 'Todos los Custodios (37)', date: '2026-12-15', notes: 'Aviso de apertura de ciclo de Certificación Final.' }
-            ]
+            tasks: [],
+            notes: '',
+            precierre_custodians: generateCleanCustodians(),
+            precierre_reminders: [],
+            final_custodians: generateCleanCustodians(),
+            final_reminders: []
         };
 
         async function loadCycleData() {
@@ -542,15 +536,24 @@
                         currentData.requests = JSON.parse(JSON.stringify(defaultRequestTypes));
                     }
                 } else {
+                    currentData = {
+                        requests: JSON.parse(JSON.stringify(defaultRequestTypes)),
+                        tasks: [],
+                        notes: '',
+                        precierre_custodians: generateCleanCustodians(),
+                        precierre_reminders: [],
+                        final_custodians: generateCleanCustodians(),
+                        final_reminders: []
+                    };
                     await saveCycleData(false);
                 }
             } catch(e) {
                 console.error('Supabase load error:', e);
             }
 
-            if (!currentData.precierre_custodians) currentData.precierre_custodians = generateDefaultCustodians();
+            if (!currentData.precierre_custodians) currentData.precierre_custodians = generateCleanCustodians();
             if (!currentData.precierre_reminders) currentData.precierre_reminders = [];
-            if (!currentData.final_custodians) currentData.final_custodians = generateDefaultCustodians();
+            if (!currentData.final_custodians) currentData.final_custodians = generateCleanCustodians();
             if (!currentData.final_reminders) currentData.final_reminders = [];
 
             renderRequestsDashboard();
