@@ -25,8 +25,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- docx.js Library for Client-side Word Generation -->
-    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
+    <!-- docx.js Library from unpkg CDN -->
+    <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -96,7 +96,7 @@
                         <h2 class="text-lg font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-chart-pie text-teal-400"></i>Cumplimiento de tareas
                         </h2>
-                        <p class="text-xs text-slate-400">Solicitudes recibidas y trabajantes durate este periodo.</p>
+                        <p class="text-xs text-slate-400">Solicitudes recibidas y trabajadas durante este periodo.</p>
                     </div>
                     <div class="flex items-center gap-4 bg-slate-950/60 px-4 py-2 rounded-xl border border-slate-800">
                         <div class="text-center">
@@ -182,12 +182,12 @@
                 <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
                     <div>
                         <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-note-sticky text-teal-400"></i> Long-Term Projects & Strategic Notes
+                            <i class="fa-solid fa-note-sticky text-teal-400"></i> Objetivos y Labores Detalladas
                         </h2>
-                        <p class="text-xs text-slate-400">Write detailed sentences (separated by lines) to appear as bullet points in the official downloaded Word report.</p>
+                        <p class="text-xs text-slate-400">Escriba cada labor detallada (separada por líneas) para que aparezca como viñeta en el informe Word.</p>
                     </div>
                     <button onclick="saveNotes()" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-floppy-disk"></i> Save Notes
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar Notas
                     </button>
                 </div>
                 <textarea id="strategic-notes-area" rows="5" placeholder="Escriba aquí cada objetivo o labor detallada..." 
@@ -443,7 +443,7 @@
             { id: 'req_4', title: 'Etiquetas por deterioro y equipos nuevos', desc: 'Duplicidad de etiquetas y emisión de etiquetas por primera vez.', received: 24, completed: 20 },
             { id: 'req_5', title: 'Reparación fuera de la unidad', desc: 'Solicitud para reparar equipos fuera de la unidad.', received: 4, completed: 3 },
             { id: 'req_6', title: 'Desaparición de equipos', desc: 'Certificación para la desaparición de equipos o propiedad UIPR.', received: 2, completed: 1 },
-            { id: 'req_7', title: 'Recogido de equipos', desc: 'Recogido de equipos decomisados para disponer en almacén de propiedad inactia o en el contenedor.', received: 15, completed: 14 }
+            { id: 'req_7', title: 'Recogido de equipos', desc: 'Recogido de equipos decomisados para disponer en almacén de propiedad inactiva o en el contenedor.', received: 15, completed: 14 }
         ];
 
         function generateDefaultCustodians() {
@@ -834,7 +834,7 @@
         // GENERATE WORD DOCUMENT (.DOCX) USING docx.js (Times New Roman 12pt)
         async function generateDocxReport() {
             if (typeof window.docx === 'undefined') {
-                alert('La librería docx.js aún se está cargando o fue bloqueada. Verifique su conexión.');
+                alert('La librería docx.js aún se está cargando. Espere unos segundos e intente nuevamente.');
                 return;
             }
 
@@ -853,18 +853,18 @@
 
             // Title Header
             docChildren.push(new Paragraph({
-                children: [new TextRun({ text: "Oficina de Propiedad", bold: true, size: 12, font: "Times New Roman" })],
+                children: [new TextRun({ text: "Oficina de Propiedad", bold: true, size: 28, font: "Times New Roman" })],
                 spacing: { after: 6 }
             }));
 
             docChildren.push(new Paragraph({
-                children: [new TextRun({ text: `Periodo: 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}`, italics: true, size: 12, font: "Times New Roman", color: "64748B" })],
+                children: [new TextRun({ text: `Periodo: 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}`, italics: true, size: 22, font: "Times New Roman", color: "64748B" })],
                 spacing: { after: 200 }
             }));
 
             // Opening Paragraph
             docChildren.push(new Paragraph({
-                children: [new TextRun({ text: `Durante el periodo comprendido del 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:`, size: 12, font: "Times New Roman" })],
+                children: [new TextRun({ text: `Durante el periodo comprendido del 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:`, size: 24, font: "Times New Roman" })],
                 spacing: { after: 150 }
             }));
 
@@ -875,14 +875,14 @@
             lines.forEach(line => {
                 docChildren.push(new Paragraph({
                     bullet: { level: 0 },
-                    children: [new TextRun({ text: line.trim(), size: 12, font: "Times New Roman" })],
+                    children: [new TextRun({ text: line.trim(), size: 24, font: "Times New Roman" })],
                     spacing: { after: 100 }
                 }));
             });
 
             // Otros Procesos Relacionados
             docChildren.push(new Paragraph({
-                children: [new TextRun({ text: "Otros procesos relacionados", bold: true, size: 12, font: "Times New Roman", color: "0D9488" })],
+                children: [new TextRun({ text: "Otros procesos relacionados", bold: true, size: 26, font: "Times New Roman", color: "0D9488" })],
                 spacing: { before: 200, after: 100 }
             }));
 
@@ -890,9 +890,9 @@
             const tableRows = [
                 new TableRow({
                     children: [
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Categoría de Solicitud", bold: true, size: 12, font: "Times New Roman" })] })] }),
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Completadas / Recibidas", bold: true, size: 12, font: "Times New Roman" })] })] }),
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Cumplimiento", bold: true, size: 12, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Categoría de Solicitud", bold: true, size: 22, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Completadas / Recibidas", bold: true, size: 22, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Cumplimiento", bold: true, size: 22, font: "Times New Roman" })] })] }),
                     ]
                 })
             ];
@@ -901,9 +901,9 @@
                 const rate = req.received > 0 ? Math.round((req.completed / req.received) * 100) + '%' : '—';
                 tableRows.push(new TableRow({
                     children: [
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: req.title, size: 12, font: "Times New Roman" })] })] }),
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: `${req.completed} / ${req.received}`, size: 12, font: "Times New Roman" })] })] }),
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: rate, size: 12, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: req.title, size: 22, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: `${req.completed} / ${req.received}`, size: 22, font: "Times New Roman" })] })] }),
+                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: rate, size: 22, font: "Times New Roman" })] })] }),
                     ]
                 }));
             });
@@ -956,7 +956,7 @@
                 children: [
                     new TextRun({ text: "Greychel Ocasio Ortiz\n", bold: true, size: 22, font: "Times New Roman" }),
                     new TextRun({ text: "Oficial de Propiedad\n", italics: true, size: 22, font: "Times New Roman" }),
-                    new TextRun({ text: "Directo: (787) 437-7064\nTel. (787) 284-1912, ext. 2005\nContacto: grocasio@ponce.inter.edu / propiedad@ponce.inter.edu", size: 12, font: "Times New Roman" })
+                    new TextRun({ text: "Directo: (787) 437-7064\nTel. (787) 284-1912, ext. 2005\nContacto: grocasio@ponce.inter.edu / propiedad@ponce.inter.edu", size: 22, font: "Times New Roman" })
                 ],
                 spacing: { after: 100 }
             }));
