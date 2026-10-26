@@ -1,655 +1,842 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oficina de Propiedad - Trello Compliance & Task Tracker</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .kanban-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-        .kanban-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-        .kanban-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .kanban-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oficina de Propiedad - Trello Compliance & Task Tracker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .kanban-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .kanban-scroll::-webkit-scrollbar-track { background: #0f172a; border-radius: 4px; }
+        .kanban-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .kanban-scroll::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
 
-    <!-- Top Navigation Header -->
-    <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <img src="https://cit.ponce.inter.edu/op/InterPoncelogo.png" alt="Inter Ponce Logo" class="h-10 w-auto object-contain">
-                <div>
-                    <h1 class="text-lg font-bold text-slate-900">Universidad Interamericana - Recinto de Ponce</h1>
-                    <p class="text-xs font-medium text-slate-500">Oficina de Propiedad | Sistema de Gestión y Cumplimiento Mensual</p>
-                </div>
-            </div>
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 border-b border-slate-800 shadow-lg sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <img src="https://cit.ponce.inter.edu/op/InterPoncelogo.png" alt="Inter Ponce Logo" class="h-10 w-auto object-contain bg-white/10 p-1 rounded-lg">
+                <div>
+                    <h1 class="text-lg font-bold text-white">Universidad Interamericana - Recinto de Ponce</h1>
+                    <p class="text-xs font-medium text-slate-400">Oficina de Propiedad | Sistema de Gestión y Cumplimiento Mensual</p>
+                </div>
+            </div>
 
-            <!-- Period & Report Title Display -->
-            <div class="flex items-center bg-blue-50 border border-blue-200 rounded-xl px-4 py-2 shadow-inner">
-                <div class="mr-3 text-blue-600"><i class="fa-solid fa-calendar-days text-lg"></i></div>
-                <div>
-                    <div id="reportTitle" class="text-sm font-bold text-blue-900">Monthly Report November 2026</div>
-                    <div id="periodRange" class="text-xs font-semibold text-blue-700">Period: Oct 16, 2026 – Nov 15, 2026</div>
-                </div>
-            </div>
+            <!-- Period & Report Title Display -->
+            <div class="flex items-center bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 shadow-inner">
+                <div class="mr-3 text-teal-400"><i class="fa-solid fa-calendar-days text-lg"></i></div>
+                <div>
+                    <div id="reportTitle" class="text-sm font-bold text-teal-300">Monthly Report November 2026</div>
+                    <div id="periodRange" class="text-xs font-medium text-slate-400">Period: Oct 16, 2026 – Nov 15, 2026</div>
+                </div>
+            </div>
 
-            <!-- Action Controls -->
-            <div class="flex items-center gap-2">
-                <button onclick="openTaskModal()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-sm transition flex items-center gap-2">
-                    <i class="fa-solid fa-plus"></i> Nueva Tarea
-                </button>
-                <button onclick="toggleView('board')" id="btnBoardView" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-sm font-medium transition active">
-                    <i class="fa-solid fa-columns mr-1"></i> Tablero
-                </button>
-                <button onclick="toggleView('compliance')" id="btnCompView" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-xl text-sm font-medium transition">
-                    <i class="fa-solid fa-chart-pie mr-1"></i> Cumplimiento
-                </button>
-                <button onclick="toggleView('longterm')" id="btnLongView" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-xl text-sm font-medium transition">
-                    <i class="fa-solid fa-list-check mr-1"></i> Tareas Largas
-                </button>
-            </div>
-        </div>
-    </header>
+            <!-- Action Controls -->
+            <div class="flex items-center gap-2 flex-wrap">
+                <button onclick="openTaskModal()" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-2 rounded-xl text-xs font-semibold shadow-md transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Nueva Tarea
+                </button>
+                <button onclick="toggleView('board')" id="btnBoardView" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-medium transition active">
+                    <i class="fa-solid fa-columns mr-1"></i> Tablero
+                </button>
+                <button onclick="toggleView('compliance')" id="btnCompView" class="bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 px-3 py-2 rounded-xl text-xs font-medium transition">
+                    <i class="fa-solid fa-chart-pie mr-1"></i> Cumplimiento
+                </button>
+                <button onclick="toggleView('precierre')" id="btnPreView" class="bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 px-3 py-2 rounded-xl text-xs font-medium transition">
+                    <i class="fa-solid fa-file-shield mr-1"></i> Pre-Cierre (37)
+                </button>
+                <button onclick="toggleView('longterm')" id="btnLongView" class="bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 px-3 py-2 rounded-xl text-xs font-medium transition">
+                    <i class="fa-solid fa-list-check mr-1"></i> Tareas Largas
+                </button>
+            </div>
+        </div>
+    </header>
 
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
 
-        <!-- VIEW 1: KANBAN BOARD -->
-        <div id="viewBoard" class="space-y-6">
-            <!-- Kanban Columns Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 kanban-scroll pb-4">
-                
-                <!-- Backlog -->
-                <div class="bg-slate-200/70 border border-slate-300 rounded-2xl p-4 flex flex-col max-h-[75vh]">
-                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-300">
-                        <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></i></span> Backlog
-                        </h3>
-                        <span id="count-backlog" class="bg-white text-slate-700 font-bold text-xs px-2 py-0.5 rounded-full shadow-xs">0</span>
-                    </div>
-                    <div id="col-backlog" class="flex-1 overflow-y-auto space-y-3 pr-1 kanban-scroll min-h-[200px]"></div>
-                </div>
+        <!-- VIEW 1: KANBAN BOARD -->
+        <div id="viewBoard" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 kanban-scroll pb-4">
+                
+                <!-- Backlog -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col max-h-[75vh]">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
+                        <h3 class="font-bold text-slate-300 text-sm flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span> Backlog
+                        </h3>
+                        <span id="count-backlog" class="bg-slate-800 text-slate-300 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-backlog" class="flex-1 overflow-y-auto space-y-3 pr-1 kanban-scroll min-h-[200px]"></div>
+                </div>
 
-                <!-- To Do / Pendiente -->
-                <div class="bg-slate-200/70 border border-slate-300 rounded-2xl p-4 flex flex-col max-h-[75vh]">
-                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-300">
-                        <h3 class="font-bold text-amber-800 text-sm flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Por Hacer (To Do)
-                        </h3>
-                        <span id="count-todo" class="bg-white text-slate-700 font-bold text-xs px-2 py-0.5 rounded-full shadow-xs">0</span>
-                    </div>
-                    <div id="col-todo" class="flex-1 overflow-y-auto space-y-3 pr-1 kanban-scroll min-h-[200px]"></div>
-                </div>
+                <!-- To Do -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col max-h-[75vh]">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
+                        <h3 class="font-bold text-amber-400 text-sm flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Por Hacer (To Do)
+                        </h3>
+                        <span id="count-todo" class="bg-slate-800 text-amber-300 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-todo" class="flex-1 overflow-y-auto space-y-3 pr-1 kanban-scroll min-h-[200px]"></div>
+                </div>
 
-                <!-- In Progress -->
-                <div class="bg-slate-200/70 border border-slate-300 rounded-2xl p-4 flex flex-col max-h-[75vh]">
-                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-300">
-                        <h3 class="font-bold text-blue-800 text-sm flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> En Proceso
-                        </h3>
-                        <span id="count-inprogress" class="bg-white text-slate-700 font-bold text-xs px-2 py-0.5 rounded-full shadow-xs">0</span>
-                    </div>
-                    <div id="col-inprogress" class="flex-1 overflow-y-auto space-y-3 pr-1 kanban-scroll min-h-[200px]"></div>
-                </div>
+                <!-- In Progress -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col max-h-[75vh]">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
+                        <h3 class="font-bold text-blue-400 text-sm flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> En Proceso
+                        </h3>
+                        <span id="count-inprogress" class="bg-slate-800 text-blue-300 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-inprogress" class="flex-1 overflow-y-auto space-y-3 pr-1 kanban-scroll min-h-[200px]"></div>
+                </div>
 
-                <!-- Completed -->
-                <div class="bg-slate-200/70 border border-slate-300 rounded-2xl p-4 flex flex-col max-h-[75vh]">
-                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-300">
-                        <h3 class="font-bold text-emerald-800 text-sm flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Completado
-                        </h3>
-                        <span id="count-completed" class="bg-white text-slate-700 font-bold text-xs px-2 py-0.5 rounded-full shadow-xs">0</span>
-                    </div>
-                    <div id="col-completed" class="flex-1 overflow-y-auto space-y-3 pr-1 kanban-scroll min-h-[200px]"></div>
-                </div>
+                <!-- Completed -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex flex-col max-h-[75vh]">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
+                        <h3 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Completado
+                        </h3>
+                        <span id="count-completed" class="bg-slate-800 text-emerald-300 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+                    </div>
+                    <div id="col-completed" class="flex-1 overflow-y-auto space-y-3 pr-1 kanban-scroll min-h-[200px]"></div>
+                </div>
 
-            </div>
-        </div>
+            </div>
+        </div>
 
-        <!-- VIEW 2: COMPLIANCE & REQUEST TRACKER -->
-        <div id="viewCompliance" class="hidden space-y-6">
-            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 pb-4 border-b border-slate-200">
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-900">Panel de Cumplimiento de Solicitudes</h2>
-                        <p class="text-sm text-slate-500">Seguimiento de solicitudes recibidas vs. completadas por categoría institucional.</p>
-                    </div>
-                    <button onclick="resetCompliance()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl transition">
-                        <i class="fa-solid fa-rotate-right mr-1"></i> Reiniciar Conteo
-                    </button>
-                </div>
+        <!-- VIEW 2: COMPLIANCE & REQUEST TRACKER -->
+        <div id="viewCompliance" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 pb-4 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Panel de Cumplimiento de Solicitudes</h2>
+                        <p class="text-sm text-slate-400">Seguimiento de solicitudes recibidas vs. completadas por categoría institucional.</p>
+                    </div>
+                    <button onclick="resetCompliance()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold bg-rose-950/40 border border-rose-800 px-3 py-1.5 rounded-xl transition">
+                        <i class="fa-solid fa-rotate-right mr-1"></i> Reiniciar Conteo
+                    </button>
+                </div>
 
-                <div id="complianceGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Dynamic Compliance Cards injected via JS -->
-                </div>
-            </div>
-        </div>
+                <div id="complianceGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            </div>
+        </div>
 
-        <!-- VIEW 3: LONG-TERM TASKS -->
-        <div id="viewLongTerm" class="hidden space-y-6">
-            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-900">Tareas Largas y Proyectos Institucionales</h2>
-                        <p class="text-sm text-slate-500">Espacio dedicado a proyectos extensos y planificación trimestral / anual (ej. Certificación de Inventario).</p>
-                    </div>
-                    <button onclick="openLongTermModal()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-sm transition flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Agregar Proyecto Largo
-                    </button>
-                </div>
+        <!-- VIEW 3: PRE-CIERRE CERTIFICATION (37 REPORTS & REMINDERS) -->
+        <div id="viewPreCierre" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Certificación de Inventario Pre-Cierre (37 Informes de Custodios)</h2>
+                        <p class="text-sm text-slate-400">Control de recepción, evaluación de informes y bitácora de recordatorios enviados.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="bg-slate-800 border border-slate-700 px-4 py-2 rounded-xl text-right">
+                            <div class="text-xs text-slate-400">Progreso Total</div>
+                            <div id="preCierreTotalPct" class="text-sm font-bold text-teal-400">0% Recibidos</div>
+                        </div>
+                        <button onclick="openCustodianModal()" class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-2 rounded-xl text-xs font-semibold shadow-md transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Añadir Custodio / Departamento
+                        </button>
+                    </div>
+                </div>
 
-                <div id="longTermList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Dynamic Long Term Tasks injected via JS -->
-                </div>
-            </div>
-        </div>
+                <!-- Reminders Log Section -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-sm text-teal-300 flex items-center gap-2">
+                            <i class="fa-solid fa-envelope-circle-check"></i> Bitácora de Recordatorios Enviados a Custodios
+                        </h3>
+                        <button onclick="openReminderModal()" class="bg-slate-800 hover:bg-slate-700 text-teal-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-700 transition">
+                            <i class="fa-solid fa-paper-plane mr-1"></i> Registrar Nuevo Recordatorio
+                        </button>
+                    </div>
+                    <div id="reminderList" class="space-y-2 max-h-48 overflow-y-auto pr-1 kanban-scroll">
+                        <!-- Dynamic Reminders -->
+                    </div>
+                </div>
 
-    </main>
+                <!-- Custodians Table / Grid -->
+                <div>
+                    <h3 class="font-bold text-sm text-slate-300 mb-3">Lista de los 37 Custodios y Estado de Informes (Anejos 3, 4, 5, 7)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800/80 text-slate-300 uppercase tracking-wider border-b border-slate-700">
+                                    <th class="p-3">Departamento / Custodio</th>
+                                    <th class="p-3 text-center">Informe Recibido</th>
+                                    <th class="p-3 text-center">Estado de Evaluación</th>
+                                    <th class="p-3">Notas / Observaciones</th>
+                                    <th class="p-3 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="custodiansTableBody" class="divide-y divide-slate-800">
+                                <!-- Dynamic Custodians -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <!-- NEW/EDIT TASK MODAL -->
-    <div id="taskModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 border border-slate-200">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-200">
-                <h3 id="modalTitle" class="text-lg font-bold text-slate-900">Nueva Tarea</h3>
-                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form id="taskForm" onsubmit="saveTask(event)" class="space-y-4">
-                <input type="hidden" id="taskId">
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Título de la Tarea</label>
-                    <input type="text" id="taskTitle" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Descripción / Notas</label>
-                    <textarea id="taskDesc" rows="3" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Columna / Estado</label>
-                        <select id="taskStatus" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-                            <option value="backlog">Backlog</option>
-                            <option value="todo">Por Hacer</option>
-                            <option value="inprogress">En Proceso</option>
-                            <option value="completed">Completado</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Prioridad</label>
-                        <select id="taskPriority" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-                            <option value="Alta">Alta</option>
-                            <option value="Media">Media</option>
-                            <option value="Baja">Baja</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="flex justify-end gap-3 pt-3 border-t border-slate-200">
-                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold rounded-xl shadow-sm">Guardar Tarea</button>
-                </div>
-            </form>
-        </div>
-    </div>
+        <!-- VIEW 4: LONG-TERM TASKS -->
+        <div id="viewLongTerm" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Tareas Largas y Proyectos Institucionales</h2>
+                        <p class="text-sm text-slate-400">Espacio dedicado a proyectos extensos y planificación trimestral / anual.</p>
+                    </div>
+                    <button onclick="openLongTermModal()" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Agregar Proyecto Largo
+                    </button>
+                </div>
 
-    <!-- LONG TERM TASK MODAL -->
-    <div id="longTermModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 border border-slate-200">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-200">
-                <h3 class="text-lg font-bold text-slate-900">Proyecto o Tarea de Largo Plazo</h3>
-                <button onclick="closeLongTermModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form id="longTermForm" onsubmit="saveLongTermTask(event)" class="space-y-4">
-                <input type="hidden" id="ltId">
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nombre del Proyecto / Tarea Larga</label>
-                    <input type="text" id="ltTitle" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Ej. Certificación de Inventario Pre-Cierre 2026">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Detalles, Fases y Bitácora Escrita</label>
-                    <textarea id="ltNotes" rows="5" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Escriba aquí los avances, notas de reuniones, custodios contactados, fases pendientes..."></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Progreso (%)</label>
-                        <input type="number" id="ltProgress" min="0" max="100" value="0" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Estado</label>
-                        <select id="ltStatus" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
-                            <option value="En Progreso">En Progreso</option>
-                            <option value="En Pausa">En Pausa</option>
-                            <option value="Completado">Completado</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="flex justify-end gap-3 pt-3 border-t border-slate-200">
-                    <button type="button" onclick="closeLongTermModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold rounded-xl shadow-sm">Guardar Proyecto</button>
-                </div>
-            </form>
-        </div>
-    </div>
+                <div id="longTermList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            </div>
+        </div>
 
-    <!-- Application Script & Supabase Logic -->
-    <script>
-        // ==========================================
-        // SUPABASE CONFIGURATION (REPLACE WITH YOURS)
-        // ==========================================
-        const SUPABASE_URL = 'https://ncyazwagpqefdlkykdkz.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jeWF6d2FncHFlZmRsa3lrZGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5OTA1MDYsImV4cCI6MjEwODU2NjUwNn0.Bx4DrpCxthOgbUb9M6kdfTy_c1qEunseLnb28YNeP9A';
-        
-        let supabaseClient = null;
-        let useSupabase = false;
+    </main>
 
-        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
-            try {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                useSupabase = true;
-                console.log("Connected to Supabase successfully.");
-            } catch(e) {
-                console.warn("Supabase init failed, falling back to LocalStorage.", e);
-            }
-        }
+    <!-- TASK MODAL -->
+    <div id="taskModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 id="modalTitle" class="text-lg font-bold text-white">Nueva Tarea</h3>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="taskForm" onsubmit="saveTask(event)" class="space-y-4">
+                <input type="hidden" id="taskId">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Título de la Tarea</label>
+                    <input type="text" id="taskTitle" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Descripción / Notas</label>
+                    <textarea id="taskDesc" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Estado</label>
+                        <select id="taskStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                            <option value="backlog">Backlog</option>
+                            <option value="todo">Por Hacer</option>
+                            <option value="inprogress">En Proceso</option>
+                            <option value="completed">Completado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Prioridad</label>
+                        <select id="taskPriority" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                            <option value="Alta">Alta</option>
+                            <option value="Media">Media</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold rounded-xl shadow-md">Guardar Tarea</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // ==========================================
-        // AUTOMATED PERIOD & TITLE LOGIC
-        // ==========================================
-        function updateReportPeriodAndTitle() {
-            const now = new Date();
-            let startDate, endDate, reportMonthName, reportYear;
+    <!-- REMINDER MODAL -->
+    <div id="reminderModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 class="text-lg font-bold text-white">Registrar Recordatorio Enviado</h3>
+                <button onclick="closeReminderModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="reminderForm" onsubmit="saveReminder(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Destinatarios / Custodios</label>
+                    <input type="text" id="remTarget" required placeholder="Ej. Todos los custodios / Facultad de Ciencias" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Fecha de Envío</label>
+                    <input type="date" id="remDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Asunto / Notas del Recordatorio</label>
+                    <textarea id="remNotes" rows="3" required placeholder="Ej. Primer aviso recordatorio fecha límite entrega de Anejos." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="closeReminderModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold rounded-xl shadow-md">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            // If day >= 16, period spans 16th of current month to 15th of next month. Report named after ending month.
-            if (now.getDate() >= 16) {
-                startDate = new Date(now.getFullYear(), now.getMonth(), 16);
-                let nextMonth = now.getMonth() + 1;
-                let nextYear = now.getFullYear();
-                if (nextMonth > 11) { nextMonth = 0; nextYear++; }
-                endDate = new Date(nextYear, nextMonth, 15);
-                reportMonthName = endDate.toLocaleString('es-ES', { month: 'long' });
-                reportYear = nextYear;
-            } else {
-                // Day < 16, spans 16th of previous month to 15th of current month.
-                let prevMonth = now.getMonth() - 1;
-                let prevYear = now.getFullYear();
-                if (prevMonth < 0) { prevMonth = 11; prevYear--; }
-                startDate = new Date(prevYear, prevMonth, 16);
-                endDate = new Date(now.getFullYear(), now.getMonth(), 15);
-                reportMonthName = endDate.toLocaleString('es-ES', { month: 'long' });
-                reportYear = endDate.getFullYear();
-            }
+    <!-- CUSTODIAN MODAL -->
+    <div id="custodianModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 id="custModalTitle" class="text-lg font-bold text-white">Gestionar Custodio / Departamento</h3>
+                <button onclick="closeCustodianModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="custodianForm" onsubmit="saveCustodian(event)" class="space-y-4">
+                <input type="hidden" id="custIndex">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Departamento / Custodio</label>
+                    <input type="text" id="custName" required placeholder="Ej. Administración de Empresas" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Informe Recibido</label>
+                    <select id="custReceived" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Recibido">Recibido</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Estado de Evaluación</label>
+                    <select id="custStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                        <option value="No Evaluado">No Evaluado</option>
+                        <option value="En Revisión">En Revisión</option>
+                        <option value="Aprobado / Conforme">Aprobado / Conforme</option>
+                        <option value="Requiere Corrección">Requiere Corrección</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Notas / Observaciones</label>
+                    <textarea id="custNotes" rows="2" placeholder="Detalles de discrepancias o firmas..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="closeCustodianModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold rounded-xl shadow-md">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            const formatDate = (d) => d.toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' });
-            
-            document.getElementById('periodRange').innerText = `Period: ${formatDate(startDate)} – ${formatDate(endDate)}`;
-            
-            // Capitalize month name for title
-            const capitalizedMonth = reportMonthName.charAt(0).toUpperCase() + reportMonthName.slice(1);
-            document.getElementById('reportTitle').innerText = `Monthly Report ${capitalizedMonth} ${reportYear}`;
-        }
+    <!-- LONG TERM MODAL -->
+    <div id="longTermModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 class="text-lg font-bold text-white">Proyecto o Tarea de Largo Plazo</h3>
+                <button onclick="closeLongTermModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="longTermForm" onsubmit="saveLongTermTask(event)" class="space-y-4">
+                <input type="hidden" id="ltId">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Nombre del Proyecto</label>
+                    <input type="text" id="ltTitle" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Detalles, Fases y Bitácora Escrita</label>
+                    <textarea id="ltNotes" rows="5" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500" placeholder="Escriba aquí los avances, notas de reuniones, custodios contactados..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Progreso (%)</label>
+                        <input type="number" id="ltProgress" min="0" max="100" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Estado</label>
+                        <select id="ltStatus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                            <option value="En Progreso">En Progreso</option>
+                            <option value="En Pausa">En Pausa</option>
+                            <option value="Completado">Completado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="closeLongTermModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold rounded-xl shadow-md">Guardar Proyecto</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // ==========================================
-        // DEFAULT DATA & STATE
-        // ==========================================
-        let tasks = [
-            { id: '1', title: 'Revisión y etiquetado de equipos nuevos', desc: 'Verificar requisiciones y colocar etiquetas de propiedad.', status: 'inprogress', priority: 'Alta' },
-            { id: '2', title: 'Transferencias de equipos entre departamentos', desc: 'Procesar Anejos y actualizar ubicación en sistema.', status: 'todo', priority: 'Media' },
-            { id: '3', title: 'Coordinar recogida de equipos para disposición', desc: 'Coordinar con almacén central retiro de bienes obsoletos.', status: 'backlog', priority: 'Baja' }
-        ];
+    <!-- Application Script & Supabase Logic -->
+    <script>
+        // ==========================================
+        // SUPABASE CONFIGURATION (REPLACE WITH YOURS)
+        // ==========================================
+        const SUPABASE_URL = 'https://ncyazwagpqefdlkykdkz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jeWF6d2FncHFlZmRsa3lrZGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5OTA1MDYsImV4cCI6MjEwODU2NjUwNn0.Bx4DrpCxthOgbUb9M6kdfTy_c1qEunseLnb28YNeP9A';
+        
+        let supabaseClient = null;
+        let useSupabase = false;
 
-        let complianceItems = [
-            { id: 'transferencias', name: 'Transferencias de equipos', received: 12, completed: 10 },
-            { id: 'gestiones', name: 'Uso en gestiones oficiales', received: 8, completed: 8 },
-            { id: 'disposicion', name: 'Disposición de equipos', received: 5, completed: 3 },
-            { id: 'deterioro', name: 'Etiquetas por deterioro y equipos nuevos', received: 15, completed: 14 },
-            { id: 'reparacion', name: 'Reparación fuera de la unidad', received: 4, completed: 2 },
-            { id: 'desaparicion', name: 'Desaparición de equipos', received: 2, completed: 1 },
-            { id: 'recogido', name: 'Recogido de equipos', received: 10, completed: 9 }
-        ];
+        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+            try {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                useSupabase = true;
+                console.log("Connected to Supabase successfully.");
+            } catch(e) { console.warn("Supabase init failed, falling back to LocalStorage.", e); }
+        }
 
-        let longTermTasks = [
-            { id: 'lt-1', title: 'Certificación de Inventario Pre-Cierre 2026-2027', notes: 'Seguimiento con custodios de facultad, revisión de inventario físico y verificación de formularios Anejos 3, 4, 5 y 7.', progress: 65, status: 'En Progreso' }
-        ];
+        // ==========================================
+        // REPORT PERIOD & TITLE
+        // ==========================================
+        function updateReportPeriodAndTitle() {
+            const now = new Date();
+            let startDate, endDate, reportMonthName, reportYear;
 
-        // Load data from LocalStorage or Supabase
-        async function loadData() {
-            updateReportPeriodAndTitle();
-            if (useSupabase) {
-                try {
-                    const { data: tData } = await supabaseClient.from('property_tasks').select('*');
-                    if (tData && tData.length > 0) tasks = tData;
+            if (now.getDate() >= 16) {
+                startDate = new Date(now.getFullYear(), now.getMonth(), 16);
+                let nextMonth = now.getMonth() + 1;
+                let nextYear = now.getFullYear();
+                if (nextMonth > 11) { nextMonth = 0; nextYear++; }
+                endDate = new Date(nextYear, nextMonth, 15);
+                reportMonthName = endDate.toLocaleString('es-ES', { month: 'long' });
+                reportYear = nextYear;
+            } else {
+                let prevMonth = now.getMonth() - 1;
+                let prevYear = now.getFullYear();
+                if (prevMonth < 0) { prevMonth = 11; prevYear--; }
+                startDate = new Date(prevYear, prevMonth, 16);
+                endDate = new Date(now.getFullYear(), now.getMonth(), 15);
+                reportMonthName = endDate.toLocaleString('es-ES', { month: 'long' });
+                reportYear = endDate.getFullYear();
+            }
 
-                    const { data: cData } = await supabaseClient.from('property_compliance').select('*');
-                    if (cData && cData.length > 0) complianceItems = cData;
+            const formatDate = (d) => d.toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' });
+            document.getElementById('periodRange').innerText = `Period: ${formatDate(startDate)} – ${formatDate(endDate)}`;
+            const capitalizedMonth = reportMonthName.charAt(0).toUpperCase() + reportMonthName.slice(1);
+            document.getElementById('reportTitle').innerText = `Monthly Report ${capitalizedMonth} ${reportYear}`;
+        }
 
-                    const { data: lData } = await supabaseClient.from('property_longterm').select('*');
-                    if (lData && lData.length > 0) longTermTasks = lData;
-                } catch(e) { console.error("Error fetching from Supabase", e); }
-            } else {
-                const savedTasks = localStorage.getItem('prop_tasks');
-                if (savedTasks) tasks = JSON.parse(savedTasks);
+        // ==========================================
+        // DATA STATES
+        // ==========================================
+        let tasks = [
+            { id: '1', title: 'Revisión y etiquetado de equipos nuevos', desc: 'Verificar requisiciones y colocar etiquetas de propiedad.', status: 'inprogress', priority: 'Alta' },
+            { id: '2', title: 'Transferencias de equipos entre departamentos', desc: 'Procesar Anejos y actualizar ubicación en sistema.', status: 'todo', priority: 'Media' }
+        ];
 
-                const savedComp = localStorage.getItem('prop_compliance');
-                if (savedComp) complianceItems = JSON.parse(savedComp);
+        let complianceItems = [
+            { id: 'transferencias', name: 'Transferencias de equipos', received: 12, completed: 10 },
+            { id: 'gestiones', name: 'Uso en gestiones oficiales', received: 8, completed: 8 },
+            { id: 'disposicion', name: 'Disposición de equipos', received: 5, completed: 3 },
+            { id: 'deterioro', name: 'Etiquetas por deterioro y equipos nuevos', received: 15, completed: 14 },
+            { id: 'reparacion', name: 'Reparación fuera de la unidad', received: 4, completed: 2 },
+            { id: 'desaparicion', name: 'Desaparición de equipos', received: 2, completed: 1 },
+            { id: 'recogido', name: 'Recogido de equipos', received: 10, completed: 9 }
+        ];
 
-                const savedLong = localStorage.getItem('prop_longterm');
-                if (savedLong) longTermTasks = JSON.parse(savedLong);
-            }
-            renderAll();
-        }
+        // Default 37 Custodians mock sample (expanding up to 37 in real use)
+        let custodians = [
+            { id: 'c-1', name: 'Facultad de Administración de Empresas', received: 'Recibido', status: 'Aprobado / Conforme', notes: 'Anejos 3 y 4 entregados correctamente.' },
+            { id: 'c-2', name: 'Departamento de Ciencias de Computios', received: 'Recibido', status: 'En Revisión', notes: 'Pendiente verificar serie de 2 laptops.' },
+            { id: 'c-3', name: 'Biblioteca General', received: 'Pendiente', status: 'No Evaluado', notes: 'Enviado recordatorio el 20 de oct.' },
+            { id: 'c-4', name: 'Facultad de Educación', received: 'Recibido', status: 'Requiere Corrección', notes: 'Falta firma del custodio en Anejo 5.' }
+        ];
+        // Fill remaining up to 37 for realistic institutional tracking
+        for (let i = 5; i <= 37; i++) {
+            custodians.push({ id: `c-${i}`, name: `Departamento / Oficina Académica #${i}`, received: 'Pendiente', status: 'No Evaluado', notes: 'Pendiente entrega de informe.' });
+        }
 
-        async function saveData() {
-            if (!useSupabase) {
-                localStorage.setItem('prop_tasks', JSON.stringify(tasks));
-                localStorage.setItem('prop_compliance', JSON.stringify(complianceItems));
-                localStorage.setItem('prop_longterm', JSON.stringify(longTermTasks));
-            }
-        }
+        let reminders = [
+            { id: 'r-1', target: 'Todos los Custodios (37)', date: '2026-10-14', notes: 'Aviso de inicio de ciclo de certificación pre-cierre y fecha límite Dic 14.' },
+            { id: 'r-2', target: 'Custodios con informes pendientes', date: '2026-10-22', notes: 'Recordatorio de entrega de Anejos 3, 4, 5 y 7.' }
+        ];
 
-        function renderAll() {
-            renderKanban();
-            renderCompliance();
-            renderLongTerm();
-        }
+        let longTermTasks = [
+            { id: 'lt-1', title: 'Certificación de Inventario Pre-Cierre 2026-2027', notes: 'Revisión y evaluación de los 37 informes de inventario de custodios. Fecha límite final: 14 de diciembre de 2026.', progress: 45, status: 'En Progreso' }
+        ];
 
-        // ==========================================
-        // KANBAN RENDER & ACTIONS
-        // ==========================================
-        function renderKanban() {
-            const cols = { backlog: 'col-backlog', todo: 'col-todo', inprogress: 'col-inprogress', completed: 'col-completed' };
-            const counts = { backlog: 0, todo: 0, inprogress: 0, completed: 0 };
+        // Load / Save Data
+        async function loadData() {
+            updateReportPeriodAndTitle();
+            if (useSupabase) {
+                try {
+                    const { data: t } = await supabaseClient.from('property_tasks').select('*'); if (t && t.length) tasks = t;
+                    const { data: c } = await supabaseClient.from('property_compliance').select('*'); if (c && c.length) complianceItems = c;
+                    const { data: cs } = await supabaseClient.from('property_custodians').select('*'); if (cs && cs.length) custodians = cs;
+                    const { data: rem } = await supabaseClient.from('property_reminders').select('*'); if (rem && rem.length) reminders = rem;
+                    const { data: lt } = await supabaseClient.from('property_longterm').select('*'); if (lt && lt.length) longTermTasks = lt;
+                } catch(e) { console.error("Supabase load error", e); }
+            } else {
+                if (localStorage.getItem('p_tasks')) tasks = JSON.parse(localStorage.getItem('p_tasks'));
+                if (localStorage.getItem('p_comp')) complianceItems = JSON.parse(localStorage.getItem('p_comp'));
+                if (localStorage.getItem('p_cust')) custodians = JSON.parse(localStorage.getItem('p_cust'));
+                if (localStorage.getItem('p_rem')) reminders = JSON.parse(localStorage.getItem('p_rem'));
+                if (localStorage.getItem('p_lt')) longTermTasks = JSON.parse(localStorage.getItem('p_lt'));
+            }
+            renderAll();
+        }
 
-            for (let key in cols) {
-                document.getElementById(cols[key]).innerHTML = '';
-            }
+        async function saveData() {
+            if (!useSupabase) {
+                localStorage.setItem('p_tasks', JSON.stringify(tasks));
+                localStorage.setItem('p_comp', JSON.stringify(complianceItems));
+                localStorage.setItem('p_cust', JSON.stringify(custodians));
+                localStorage.setItem('p_rem', JSON.stringify(reminders));
+                localStorage.setItem('p_lt', JSON.stringify(longTermTasks));
+            }
+        }
 
-            tasks.forEach(t => {
-                counts[t.status] = (counts[t.status] || 0) + 1;
-                const container = document.getElementById(cols[t.status]);
-                if (!container) return;
+        function renderAll() {
+            renderKanban();
+            renderCompliance();
+            renderPreCierre();
+            renderLongTerm();
+        }
 
-                let priorityColor = 'bg-slate-100 text-slate-700 border-slate-200';
-                if (t.priority === 'Alta') priorityColor = 'bg-rose-50 text-rose-700 border-rose-200';
-                if (t.priority === 'Media') priorityColor = 'bg-amber-50 text-amber-700 border-amber-200';
-                if (t.priority === 'Baja') priorityColor = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        // ==========================================
+        // KANBAN RENDER & ACTIONS
+        // ==========================================
+        function renderKanban() {
+            const cols = { backlog: 'col-backlog', todo: 'col-todo', inprogress: 'col-inprogress', completed: 'col-completed' };
+            const counts = { backlog: 0, todo: 0, inprogress: 0, completed: 0 };
+            for (let k in cols) document.getElementById(cols[k]).innerHTML = '';
 
-                const card = document.createElement('div');
-                card.className = "bg-white border border-slate-200 rounded-xl p-4 shadow-xs hover:shadow-md transition space-y-2 relative group";
-                card.innerHTML = `
-                    <div class="flex justify-between items-start gap-2">
-                        <h4 class="font-bold text-slate-800 text-sm leading-snug">${escapeHtml(t.title)}</h4>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${priorityColor}">${t.priority}</span>
-                    </div>
-                    ${t.desc ? `<p class="text-xs text-slate-500 line-clamp-2">${escapeHtml(t.desc)}</p>` : ''}
-                    <div class="flex justify-between items-center pt-2 border-t border-slate-100 mt-2">
-                        <div class="flex gap-1 text-xs">
-                            <select onchange="changeTaskStatus('${t.id}', this.value)" class="bg-slate-50 border border-slate-200 text-slate-700 rounded-lg px-2 py-1 text-xs font-medium focus:outline-none">
-                                <option value="backlog" ${t.status==='backlog'?'selected':''}>Backlog</option>
-                                <option value="todo" ${t.status==='todo'?'selected':''}>Por Hacer</option>
-                                <option value="inprogress" ${t.status==='inprogress'?'selected':''}>En Proceso</option>
-                                <option value="completed" ${t.status==='completed'?'selected':''}>Completado</option>
-                            </select>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <button onclick="editTask('${t.id}')" class="text-slate-400 hover:text-blue-600 p-1"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="deleteTask('${t.id}')" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+            tasks.forEach(t => {
+                counts[t.status] = (counts[t.status] || 0) + 1;
+                const container = document.getElementById(cols[t.status]);
+                if (!container) return;
 
-            for (let key in counts) {
-                document.getElementById(`count-${key}`).innerText = counts[key];
-            }
-        }
+                let pColor = 'bg-slate-800 text-slate-300 border-slate-700';
+                if (t.priority === 'Alta') pColor = 'bg-rose-950 text-rose-300 border-rose-800';
+                if (t.priority === 'Media') pColor = 'bg-amber-950 text-amber-300 border-amber-800';
+                if (t.priority === 'Baja') pColor = 'bg-emerald-950 text-emerald-300 border-emerald-800';
 
-        async function changeTaskStatus(id, newStatus) {
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                task.status = newStatus;
-                await saveData();
-                renderKanban();
-            }
-        }
+                const card = document.createElement('div');
+                card.className = "bg-slate-950 border border-slate-800 rounded-xl p-4 shadow-md space-y-2";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2">
+                        <h4 class="font-bold text-white text-sm">${escapeHtml(t.title)}</h4>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${pColor}">${t.priority}</span>
+                    </div>
+                    ${t.desc ? `<p class="text-xs text-slate-400">${escapeHtml(t.desc)}</p>` : ''}
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-800 mt-2">
+                        <select onchange="changeTaskStatus('${t.id}', this.value)" class="bg-slate-900 border border-slate-700 text-slate-300 rounded-lg px-2 py-1 text-xs">
+                            <option value="backlog" ${t.status==='backlog'?'selected':''}>Backlog</option>
+                            <option value="todo" ${t.status==='todo'?'selected':''}>Por Hacer</option>
+                            <option value="inprogress" ${t.status==='inprogress'?'selected':''}>En Proceso</option>
+                            <option value="completed" ${t.status==='completed'?'selected':''}>Completado</option>
+                        </select>
+                        <div class="flex gap-2">
+                            <button onclick="openTaskModal('${t.id}')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteTask('${t.id}')" class="text-slate-400 hover:text-rose-400"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            for (let k in counts) document.getElementById(`count-${k}`).innerText = counts[k];
+        }
 
-        function openTaskModal(id = null) {
-            document.getElementById('taskForm').reset();
-            document.getElementById('taskId').value = '';
-            document.getElementById('modalTitle').innerText = 'Nueva Tarea';
-            if (id) {
-                const t = tasks.find(x => x.id === id);
-                if (t) {
-                    document.getElementById('taskId').value = t.id;
-                    document.getElementById('taskTitle').value = t.title;
-                    document.getElementById('taskDesc').value = t.desc || '';
-                    document.getElementById('taskStatus').value = t.status;
-                    document.getElementById('taskPriority').value = t.priority;
-                    document.getElementById('modalTitle').innerText = 'Editar Tarea';
-                }
-            }
-            document.getElementById('taskModal').classList.remove('hidden');
-        }
+        async function changeTaskStatus(id, status) {
+            const t = tasks.find(x => x.id === id);
+            if (t) { t.status = status; await saveData(); renderKanban(); }
+        }
 
-        function closeTaskModal() {
-            document.getElementById('taskModal').classList.add('hidden');
-        }
+        function openTaskModal(id = null) {
+            document.getElementById('taskForm').reset();
+            document.getElementById('taskId').value = '';
+            document.getElementById('modalTitle').innerText = 'Nueva Tarea';
+            if (id) {
+                const t = tasks.find(x => x.id === id);
+                if (t) {
+                    document.getElementById('taskId').value = t.id;
+                    document.getElementById('taskTitle').value = t.title;
+                    document.getElementById('taskDesc').value = t.desc || '';
+                    document.getElementById('taskStatus').value = t.status;
+                    document.getElementById('taskPriority').value = t.priority;
+                    document.getElementById('modalTitle').innerText = 'Editar Tarea';
+                }
+            }
+            document.getElementById('taskModal').classList.remove('hidden');
+        }
+        function closeTaskModal() { document.getElementById('taskModal').classList.add('hidden'); }
 
-        async function saveTask(e) {
-            e.preventDefault();
-            const id = document.getElementById('taskId').value;
-            const title = document.getElementById('taskTitle').value;
-            const desc = document.getElementById('taskDesc').value;
-            const status = document.getElementById('taskStatus').value;
-            const priority = document.getElementById('taskPriority').value;
+        async function saveTask(e) {
+            e.preventDefault();
+            const id = document.getElementById('taskId').value;
+            const title = document.getElementById('taskTitle').value;
+            const desc = document.getElementById('taskDesc').value;
+            const status = document.getElementById('taskStatus').value;
+            const priority = document.getElementById('taskPriority').value;
 
-            if (id) {
-                const t = tasks.find(x => x.id === id);
-                if (t) { t.title = title; t.desc = desc; t.status = status; t.priority = priority; }
-            } else {
-                const newTask = { id: Date.now().toString(), title, desc, status, priority };
-                tasks.push(newTask);
-            }
+            if (id) {
+                const t = tasks.find(x => x.id === id);
+                if (t) { t.title = title; t.desc = desc; t.status = status; t.priority = priority; }
+            } else {
+                tasks.push({ id: Date.now().toString(), title, desc, status, priority });
+            }
+            await saveData(); closeTaskModal(); renderKanban();
+        }
 
-            await saveData();
-            closeTaskModal();
-            renderKanban();
-        }
+        async function deleteTask(id) {
+            if (confirm('¿Eliminar tarea?')) {
+                tasks = tasks.filter(x => x.id !== id);
+                await saveData(); renderKanban();
+            }
+        }
 
-        async function editTask(id) { openTaskModal(id); }
+        // ==========================================
+        // COMPLIANCE RENDER
+        // ==========================================
+        function renderCompliance() {
+            const grid = document.getElementById('complianceGrid');
+            grid.innerHTML = '';
+            complianceItems.forEach(item => {
+                const pct = item.received > 0 ? Math.round((item.completed / item.received) * 100) : 0;
+                let bColor = 'bg-teal-500';
+                if (pct < 50) bColor = 'bg-amber-500';
+                if (pct === 100) bColor = 'bg-emerald-500';
 
-        async function deleteTask(id) {
-            if (confirm('¿Desea eliminar esta tarea?')) {
-                tasks = tasks.filter(t => t.id !== id);
-                await saveData();
-                renderKanban();
-            }
-        }
+                const card = document.createElement('div');
+                card.className = "bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-md";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-white text-sm">${item.name}</h4>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300">${pct}% Cumplimiento</span>
+                    </div>
+                    <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden">
+                        <div class="${bColor} h-2.5 rounded-full transition-all duration-500" style="width: ${pct > 100 ? 100 : pct}%"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-slate-400">
+                        <div class="flex items-center gap-2">
+                            <span>Recibidas:</span>
+                            <button onclick="adjustComp('${item.id}', 'received', -1)" class="w-6 h-6 bg-slate-900 border border-slate-700 rounded-lg text-white font-bold">-</button>
+                            <span class="font-bold text-white w-6 text-center">${item.received}</span>
+                            <button onclick="adjustComp('${item.id}', 'received', 1)" class="w-6 h-6 bg-slate-900 border border-slate-700 rounded-lg text-white font-bold">+</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span>Completadas:</span>
+                            <button onclick="adjustComp('${item.id}', 'completed', -1)" class="w-6 h-6 bg-slate-900 border border-slate-700 rounded-lg text-white font-bold">-</button>
+                            <span class="font-bold text-white w-6 text-center">${item.completed}</span>
+                            <button onclick="adjustComp('${item.id}', 'completed', 1)" class="w-6 h-6 bg-slate-900 border border-slate-700 rounded-lg text-white font-bold">+</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-        // ==========================================
-        // COMPLIANCE RENDER & ACTIONS
-        // ==========================================
-        function renderCompliance() {
-            const grid = document.getElementById('complianceGrid');
-            grid.innerHTML = '';
+        async function adjustComp(id, field, delta) {
+            const item = complianceItems.find(x => x.id === id);
+            if (item) {
+                item[field] = Math.max(0, item[field] + delta);
+                if (field === 'received' && item.completed > item.received) item.completed = item.received;
+                await saveData(); renderCompliance();
+            }
+        }
 
-            complianceItems.forEach(item => {
-                const percentage = item.received > 0 ? Math.round((item.completed / item.received) * 100) : 0;
-                let barColor = 'bg-teal-600';
-                if (percentage < 50) barColor = 'bg-amber-500';
-                if (percentage === 100) barColor = 'bg-emerald-600';
+        async function resetCompliance() {
+            if (confirm('¿Reiniciar todos los contadores de solicitudes?')) {
+                complianceItems.forEach(i => { i.received = 0; i.completed = 0; });
+                await saveData(); renderCompliance();
+            }
+        }
 
-                const card = document.createElement('div');
-                card.className = "bg-slate-50 border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3";
-                card.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-slate-800 text-sm">${item.name}</h4>
-                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-700">${percentage}% Cumplimiento</span>
-                    </div>
-                    <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-                        <div class="${barColor} h-2.5 rounded-full transition-all duration-500" style="width: ${percentage > 100 ? 100 : percentage}%"></div>
-                    </div>
-                    <div class="flex justify-between items-center pt-1 text-xs font-medium text-slate-600">
-                        <div class="flex items-center gap-2">
-                            <span>Recibidas:</span>
-                            <button onclick="adjustCount('${item.id}', 'received', -1)" class="w-6 h-6 bg-white border border-slate-300 rounded-lg font-bold hover:bg-slate-100">-</button>
-                            <span class="font-bold text-slate-900 w-6 text-center">${item.received}</span>
-                            <button onclick="adjustCount('${item.id}', 'received', 1)" class="w-6 h-6 bg-white border border-slate-300 rounded-lg font-bold hover:bg-slate-100">+</button>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span>Completadas:</span>
-                            <button onclick="adjustCount('${item.id}', 'completed', -1)" class="w-6 h-6 bg-white border border-slate-300 rounded-lg font-bold hover:bg-slate-100">-</button>
-                            <span class="font-bold text-slate-900 w-6 text-center">${item.completed}</span>
-                            <button onclick="adjustCount('${item.id}', 'completed', 1)" class="w-6 h-6 bg-white border border-slate-300 rounded-lg font-bold hover:bg-slate-100">+</button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
+        // ==========================================
+        // PRE-CIERRE 37 REPORTS & REMINDERS RENDER
+        // ==========================================
+        function renderPreCierre() {
+            // Calculate total received percentage out of 37
+            const receivedCount = custodians.filter(c => c.received === 'Recibido').length;
+            const totalPct = Math.round((receivedCount / 37) * 100);
+            document.getElementById('preCierreTotalPct').innerText = `${receivedCount}/37 (${totalPct}%) Recibidos`;
 
-        async function adjustCount(id, field, delta) {
-            const item = complianceItems.find(x => x.id === id);
-            if (item) {
-                item[field] = Math.max(0, item[field] + delta);
-                if (field === 'received' && item.completed > item.received) {
-                    item.completed = item.received;
-                }
-                await saveData();
-                renderCompliance();
-            }
-        }
+            // Render Reminders
+            const remList = document.getElementById('reminderList');
+            remList.innerHTML = '';
+            reminders.forEach(r => {
+                const item = document.createElement('div');
+                item.className = "bg-slate-900 border border-slate-800 rounded-xl p-3 flex justify-between items-center text-xs";
+                item.innerHTML = `
+                    <div>
+                        <span class="font-bold text-teal-300 mr-2">[${r.date}]</span>
+                        <span class="text-white font-medium mr-2">Para: ${escapeHtml(r.target)}</span>
+                        <span class="text-slate-400">${escapeHtml(r.notes)}</span>
+                    </div>
+                    <button onclick="deleteReminder('${r.id}')" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash"></i></button>
+                `;
+                remList.appendChild(item);
+            });
 
-        async function resetCompliance() {
-            if (confirm('¿Desea reiniciar todos los contadores de solicitudes a 0?')) {
-                complianceItems.forEach(i => { i.received = 0; i.completed = 0; });
-                await saveData();
-                renderCompliance();
-            }
-        }
+            // Render Custodians Table
+            const tbody = document.getElementById('custodiansTableBody');
+            tbody.innerHTML = '';
+            custodians.forEach((c, idx) => {
+                let badgeRec = c.received === 'Recibido' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-amber-950 text-amber-300 border-amber-800';
+                let badgeStatus = 'bg-slate-800 text-slate-300 border-slate-700';
+                if (c.status === 'Aprobado / Conforme') badgeStatus = 'bg-emerald-950 text-emerald-300 border-emerald-800';
+                if (c.status === 'Requiere Corrección') badgeStatus = 'bg-rose-950 text-rose-300 border-rose-800';
+                if (c.status === 'En Revisión') badgeStatus = 'bg-blue-950 text-blue-300 border-blue-800';
 
-        // ==========================================
-        // LONG TERM TASKS RENDER & ACTIONS
-        // ==========================================
-        function renderLongTerm() {
-            const list = document.getElementById('longTermList');
-            list.innerHTML = '';
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/50 transition";
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-white">${escapeHtml(c.name)}</td>
+                    <td class="p-3 text-center"><span class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold ${badgeRec}">${c.received}</span></td>
+                    <td class="p-3 text-center"><span class="px-2.5 py-0.5 rounded-full border text-[10px] font-bold ${badgeStatus}">${c.status}</span></td>
+                    <td class="p-3 text-slate-400">${escapeHtml(c.notes || '-')}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="openCustodianModal(${idx})" class="text-slate-400 hover:text-white p-1"><i class="fa-solid fa-pen text-xs"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-            longTermTasks.forEach(lt => {
-                const card = document.createElement('div');
-                card.className = "bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4";
-                card.innerHTML = `
-                    <div class="flex justify-between items-start gap-3">
-                        <div>
-                            <h4 class="font-bold text-slate-900 text-base">${escapeHtml(lt.title)}</h4>
-                            <span class="inline-block mt-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">${lt.status}</span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <button onclick="openLongTermModal('${lt.id}')" class="text-slate-400 hover:text-blue-600 p-1"><i class="fa-solid fa-pen text-sm"></i></button>
-                            <button onclick="deleteLongTerm('${lt.id}')" class="text-slate-400 hover:text-rose-600 p-1"><i class="fa-solid fa-trash text-sm"></i></button>
-                        </div>
-                    </div>
-                    <div class="bg-white border border-slate-200 rounded-xl p-3 text-xs text-slate-700 whitespace-pre-line leading-relaxed">${escapeHtml(lt.notes)}</div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold text-slate-600">
-                            <span>Progreso General</span>
-                            <span>${lt.progress}%</span>
-                        </div>
-                        <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                            <div class="bg-teal-600 h-2 rounded-full transition-all duration-500" style="width: ${lt.progress}%"></div>
-                        </div>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-        }
+        function openReminderModal() {
+            document.getElementById('reminderForm').reset();
+            document.getElementById('remDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('reminderModal').classList.remove('hidden');
+        }
+        function closeReminderModal() { document.getElementById('reminderModal'].classList.add('hidden'); }
 
-        function openLongTermModal(id = null) {
-            document.getElementById('longTermForm').reset();
-            document.getElementById('ltId').value = '';
-            if (id) {
-                const lt = longTermTasks.find(x => x.id === id);
-                if (lt) {
-                    document.getElementById('ltId').value = lt.id;
-                    document.getElementById('ltTitle').value = lt.title;
-                    document.getElementById('ltNotes').value = lt.notes;
-                    document.getElementById('ltProgress').value = lt.progress;
-                    document.getElementById('ltStatus').value = lt.status;
-                }
-            }
-            document.getElementById('longTermModal').classList.remove('hidden');
-        }
+        async function saveReminder(e) {
+            e.preventDefault();
+            reminders.push({
+                id: 'rem-' + Date.now(),
+                target: document.getElementById('remTarget').value,
+                date: document.getElementById('remDate').value,
+                notes: document.getElementById('remNotes').value
+            });
+            await saveData(); closeReminderModal(); renderPreCierre();
+        }
 
-        function closeLongTermModal() {
-            document.getElementById('longTermModal').classList.add('hidden');
-        }
+        async function deleteReminder(id) {
+            reminders = reminders.filter(x => x.id !== id);
+            await saveData(); renderPreCierre();
+        }
 
-        async function saveLongTermTask(e) {
-            e.preventDefault();
-            const id = document.getElementById('ltId').value;
-            const title = document.getElementById('ltTitle').value;
-            const notes = document.getElementById('ltNotes').value;
-            const progress = parseInt(document.getElementById('ltProgress').value) || 0;
-            const status = document.getElementById('ltStatus').value;
+        function openCustodianModal(idx) {
+            document.getElementById('custodianForm').reset();
+            document.getElementById('custIndex').value = idx;
+            const c = custodians[idx];
+            document.getElementById('custName').value = c.name;
+            document.getElementById('custReceived').value = c.received;
+            document.getElementById('custStatus').value = c.status;
+            document.getElementById('custNotes').value = c.notes || '';
+            document.getElementById('custodianModal').classList.remove('hidden');
+        }
+        function closeCustodianModal() { document.getElementById('custodianModal').classList.add('hidden'); }
 
-            if (id) {
-                const lt = longTermTasks.find(x => x.id === id);
-                if (lt) { lt.title = title; lt.notes = notes; lt.progress = progress; lt.status = status; }
-            } else {
-                const newLt = { id: 'lt-' + Date.now(), title, notes, progress, status };
-                longTermTasks.push(newLt);
-            }
+        async function saveCustodian(e) {
+            e.preventDefault();
+            const idx = parseInt(document.getElementById('custIndex').value);
+            custodians[idx].name = document.getElementById('custName').value;
+            custodians[idx].received = document.getElementById('custReceived').value;
+            custodians[idx].status = document.getElementById('custStatus').value;
+            custodians[idx].notes = document.getElementById('custNotes').value;
+            await saveData(); closeCustodianModal(); renderPreCierre();
+        }
 
-            await saveData();
-            closeLongTermModal();
-            renderLongTerm();
-        }
+        // ==========================================
+        // LONG TERM TASKS RENDER
+        // ==========================================
+        function renderLongTerm() {
+            const list = document.getElementById('longTermList');
+            list.innerHTML = '';
+            longTermTasks.forEach(lt => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-md space-y-4";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-3">
+                        <div>
+                            <h4 class="font-bold text-white text-base">${escapeHtml(lt.title)}</h4>
+                            <span class="inline-block mt-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-950 text-blue-300 border border-blue-800">${lt.status}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="openLongTermModal('${lt.id}')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-pen text-sm"></i></button>
+                            <button onclick="deleteLongTerm('${lt.id}')" class="text-slate-400 hover:text-rose-400"><i class="fa-solid fa-trash text-sm"></i></button>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 whitespace-pre-line leading-relaxed">${escapeHtml(lt.notes)}</div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold text-slate-400">
+                            <span>Progreso General</span>
+                            <span>${lt.progress}%</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                            <div class="bg-teal-500 h-2 rounded-full transition-all duration-500" style="width: ${lt.progress}%"></div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
 
-        async function deleteLongTerm(id) {
-            if (confirm('¿Desea eliminar este proyecto largo?')) {
-                longTermTasks = longTermTasks.filter(x => x.id !== id);
-                await saveData();
-                renderLongTerm();
-            }
-        }
+        function openLongTermModal(id = null) {
+            document.getElementById('longTermForm').reset();
+            document.getElementById('ltId').value = '';
+            if (id) {
+                const lt = longTermTasks.find(x => x.id === id);
+                if (lt) {
+                    document.getElementById('ltId').value = lt.id;
+                    document.getElementById('ltTitle').value = lt.title;
+                    document.getElementById('ltNotes').value = lt.notes;
+                    document.getElementById('ltProgress').value = lt.progress;
+                    document.getElementById('ltStatus').value = lt.status;
+                }
+            }
+            document.getElementById('longTermModal').classList.remove('hidden');
+        }
+        function closeLongTermModal() { document.getElementById('longTermModal').classList.add('hidden'); }
 
-        // ==========================================
-        // VIEW NAVIGATION & HELPERS
-        // ==========================================
-        function toggleView(view) {
-            document.getElementById('viewBoard').classList.add('hidden');
-            document.getElementById('viewCompliance').classList.add('hidden');
-            document.getElementById('viewLongTerm').classList.add('hidden');
+        async function saveLongTermTask(e) {
+            e.preventDefault();
+            const id = document.getElementById('ltId').value;
+            const title = document.getElementById('ltTitle').value;
+            const notes = document.getElementById('ltNotes').value;
+            const progress = parseInt(document.getElementById('ltProgress').value) || 0;
+            const status = document.getElementById('ltStatus').value;
 
-            document.getElementById('btnBoardView').className = "bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-xl text-sm font-medium transition";
-            document.getElementById('btnCompView').className = "bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-xl text-sm font-medium transition";
-            document.getElementById('btnLongView').className = "bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-xl text-sm font-medium transition";
+            if (id) {
+                const lt = longTermTasks.find(x => x.id === id);
+                if (lt) { lt.title = title; lt.notes = notes; lt.progress = progress; lt.status = status; }
+            } else {
+                longTermTasks.push({ id: 'lt-' + Date.now(), title, notes, progress, status });
+            }
+            await saveData(); closeLongTermModal(); renderLongTerm();
+        }
 
-            if (view === 'board') {
-                document.getElementById('viewBoard').classList.remove('hidden');
-                document.getElementById('btnBoardView').className = "bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-sm font-medium transition";
-            } else if (view === 'compliance') {
-                document.getElementById('viewCompliance').classList.remove('hidden');
-                document.getElementById('btnCompView').className = "bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-sm font-medium transition";
-            } else if (view === 'longterm') {
-                document.getElementById('viewLongTerm').classList.remove('hidden');
-                document.getElementById('btnLongView').className = "bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-sm font-medium transition";
-            }
-        }
+        async function deleteLongTerm(id) {
+            if (confirm('¿Eliminar proyecto?')) {
+                longTermTasks = longTermTasks.filter(x => x.id !== id);
+                await saveData(); renderLongTerm();
+            }
+        }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
+        // ==========================================
+        // VIEW NAVIGATION & HELPERS
+        // ==========================================
+        function toggleView(view) {
+            ['viewBoard', 'viewCompliance', 'viewPreCierre', 'viewLongTerm'].forEach(v => document.getElementById(v).classList.add('hidden'));
+            ['btnBoardView', 'btnCompView', 'btnPreView', 'btnLongView'].forEach(b => document.getElementById(b).className = "bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 px-3 py-2 rounded-xl text-xs font-medium transition");
 
-        // Initialize App on load
-        window.onload = loadData;
-    </script>
+            if (view === 'board') {
+                document.getElementById('viewBoard').classList.remove('hidden');
+                document.getElementById('btnBoardView').className = "bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-medium transition";
+            } else if (view === 'compliance') {
+                document.getElementById('viewCompliance').classList.remove('hidden');
+                document.getElementById('btnCompView').className = "bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-medium transition";
+            } else if (view === 'precierre') {
+                document.getElementById('viewPreCierre').classList.remove('hidden');
+                document.getElementById('btnPreView').className = "bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-medium transition";
+            } else if (view === 'longterm') {
+                document.getElementById('viewLongTerm').classList.remove('hidden');
+                document.getElementById('btnLongView').className = "bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-medium transition";
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        window.onload = loadData;
+    </script>
 </body>
 </html>
