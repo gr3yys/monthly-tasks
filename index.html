@@ -391,7 +391,7 @@
                     <select id="cust-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
                         <option value="No Evaluado">No Evaluado</option>
                         <option value="En Revisión">En Revisión</option>
-                        <option value="Evaluado / Completado">Evaluado / Completado</option>
+                        <option value="Completado">Completado</option>
                         <option value="Requiere Acción">Requiere Acción</option>
                     </select>
                 </div>
@@ -506,7 +506,7 @@
                     received: "Pendiente",
                     date_received: "",
                     date_completed: "",
-                    status: "No Evaluado",
+                    status: "",
                     notes: ""
                 });
             }
@@ -730,7 +730,7 @@
                 if (cust.received === "Recibido") receivedCount++;
                 let recBadge = cust.received === "Recibido" ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30';
                 let statusBadge = 'bg-slate-800 text-slate-300 border-slate-700';
-                if (cust.status === "Evaluado / Completado") statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+                if (cust.status === "Completado") statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
                 else if (cust.status === "Requiere Acción") statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
                 else if (cust.status === "En Revisión") statusBadge = 'bg-blue-500/10 text-blue-400 border-blue-500/30';
 
