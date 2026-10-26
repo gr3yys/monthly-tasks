@@ -25,8 +25,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- docx.js Library from unpkg CDN -->
-    <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -50,7 +48,7 @@
                         <h1 class="text-lg font-bold tracking-tight text-white">Oficina de Bienes y Propiedad</h1>
                         <span class="text-xs px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-400 font-medium border border-teal-500/30">Inter Ponce</span>
                     </div>
-                    <p class="text-xs text-slate-400">Oficial de Propiedad: <span class="text-teal-400 font-semibold">Greychel Ocasio</span></p>
+                    <p class="text-xs text-slate-400">Oficial de Propiedad: <span class="text-teal-400 font-semibold">Greychel Ocasio</span> | <span class="text-teal-400 font-semibold">Supabase Connected</span></p>
                 </div>
             </div>
 
@@ -76,7 +74,7 @@
                 <button onclick="switchTab('precierre')" id="nav-btn-precierre" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all">
                     <i class="fa-solid fa-file-shield mr-1"></i> Pre-Cierre
                 </button>
-                <button onclick="generateDocxReport()" class="bg-teal-600 hover:bg-teal-500 text-white px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md">
+                <button onclick="generateWordReport()" class="bg-teal-600 hover:bg-teal-500 text-white px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md">
                     <i class="fa-solid fa-file-word"></i> Descargar informe
                 </button>
             </div>
@@ -392,10 +390,10 @@
         <span id="toast-msg" class="text-sm font-medium">Cambios guardados exitosamente!</span>
     </div>
 
-    <!-- Application Script (Strictly Supabase & Robust Docx Download) -->
+    <!-- Application Script -->
     <script>
         // ==========================================
-        // SUPABASE CONFIGURATION (STRICT REQUIRED)
+        // SUPABASE CONFIGURATION
         // ==========================================
         const SUPABASE_URL = 'https://ncyazwagpqefdlkykdkz.supabase.co'; 
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jeWF6d2FncHFlZmRsa3lrZGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5OTA1MDYsImV4cCI6MjEwODU2NjUwNn0.Bx4DrpCxthOgbUb9M6kdfTy_c1qEunseLnb28YNeP9A'; 
@@ -425,7 +423,7 @@
             let startYear = activeCycle.year;
             if (startMonth < 0) { startMonth = 11; startYear -= 1; }
             
-            document.getElementById('cycle-title').innerText = `Monthly Report ${endingMonthName} ${endingYear}`;
+            document.getElementById('cycle-title').innerText = `Informe Mensual ${endingMonthName} ${endingYear}`;
             document.getElementById('cycle-dates').innerText = `16 ${monthNamesFull[startMonth]} ${startYear} – 15 ${endingMonthName} ${endingYear}`;
         }
 
@@ -817,7 +815,7 @@
         function drop(ev, targetColumn) {
             ev.preventDefault();
             ev.currentTarget.classList.remove('bg-slate-800/60', 'border-teal-500/50');
-            const taskId = ev.dataTransfer.getData("text/plain");
+            const taskId = ev.dataTransfer.setData("text/plain");
             const task = currentData.tasks.find(t => t.id === taskId);
             if (task) {
                 task.column = targetColumn;
@@ -831,15 +829,8 @@
             saveCycleData();
         }
 
-        // GENERATE WORD DOCUMENT (.DOCX) USING docx.js (Times New Roman 12pt)
-        async function generateDocxReport() {
-            if (typeof window.docx === 'undefined') {
-                alert('La librería docx.js aún se está cargando. Espere unos segundos e intente nuevamente.');
-                return;
-            }
-
-            const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, AlignmentType } = window.docx;
-
+        // GENERATE WORD REPORT VIA NATIVE HTML-TO-WORD (NO CORRUPTED HEADERS)
+        function generateWordReport() {
             const endingMonthIdx = activeCycle.month;
             const endingYear = activeCycle.year;
             let startMonthIdx = endingMonthIdx - 1;
@@ -849,130 +840,98 @@
             const startMonthName = monthNamesSpanish[startMonthIdx];
             const endingMonthName = monthNamesSpanish[endingMonthIdx];
 
-            const docChildren = [];
-
-            // Title Header
-            docChildren.push(new Paragraph({
-                children: [new TextRun({ text: "Oficina de Propiedad", bold: true, size: 28, font: "Times New Roman" })],
-                spacing: { after: 6 }
-            }));
-
-            docChildren.push(new Paragraph({
-                children: [new TextRun({ text: `Periodo: 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}`, italics: true, size: 22, font: "Times New Roman", color: "64748B" })],
-                spacing: { after: 200 }
-            }));
-
-            // Opening Paragraph
-            docChildren.push(new Paragraph({
-                children: [new TextRun({ text: `Durante el periodo comprendido del 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:`, size: 24, font: "Times New Roman" })],
-                spacing: { after: 150 }
-            }));
-
-            // Strategic Notes Bullets
             const notesText = document.getElementById('strategic-notes-area').value.trim();
             const lines = notesText ? notesText.split(/\r?\n/).filter(l => l.trim().length > 0) : ["Gestiones generales de inventario y control de propiedad."];
-
+            
+            let bulletsHtml = "";
             lines.forEach(line => {
-                docChildren.push(new Paragraph({
-                    bullet: { level: 0 },
-                    children: [new TextRun({ text: line.trim(), size: 24, font: "Times New Roman" })],
-                    spacing: { after: 100 }
-                }));
+                bulletsHtml += `<li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:6pt;">${escapeHtml(line.trim())}</li>`;
             });
 
-            // Otros Procesos Relacionados
-            docChildren.push(new Paragraph({
-                children: [new TextRun({ text: "Otros procesos relacionados", bold: true, size: 26, font: "Times New Roman", color: "0D9488" })],
-                spacing: { before: 200, after: 100 }
-            }));
-
-            // Compliance Table
-            const tableRows = [
-                new TableRow({
-                    children: [
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Categoría de Solicitud", bold: true, size: 22, font: "Times New Roman" })] })] }),
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Completadas / Recibidas", bold: true, size: 22, font: "Times New Roman" })] })] }),
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Cumplimiento", bold: true, size: 22, font: "Times New Roman" })] })] }),
-                    ]
-                })
-            ];
-
+            let requestsRowsHtml = "";
             currentData.requests.forEach(req => {
                 const rate = req.received > 0 ? Math.round((req.completed / req.received) * 100) + '%' : '—';
-                tableRows.push(new TableRow({
-                    children: [
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: req.title, size: 22, font: "Times New Roman" })] })] }),
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: `${req.completed} / ${req.received}`, size: 22, font: "Times New Roman" })] })] }),
-                        new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: rate, size: 22, font: "Times New Roman" })] })] }),
-                    ]
-                }));
+                requestsRowsHtml += `
+                    <tr>
+                        <td style="font-family:'Times New Roman',serif; font-size:12pt; padding:6pt; border-bottom:1px solid #cbd5e1;">${req.title}</td>
+                        <td style="font-family:'Times New Roman',serif; font-size:12pt; padding:6pt; border-bottom:1px solid #cbd5e1; text-align:center;">${req.completed} / ${req.received}</td>
+                        <td style="font-family:'Times New Roman',serif; font-size:12pt; padding:6pt; border-bottom:1px solid #cbd5e1; text-align:center;">${rate}</td>
+                    </tr>
+                `;
             });
 
-            docChildren.push(new Table({
-                rows: tableRows,
-                width: { size: 100, type: WidthType.PERCENTAGE },
-                alignment: AlignmentType.CENTER
-            }));
+            const htmlContent = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                    <title>Informe Mensual</title>
+                    <style>
+                        body { font-family: 'Times New Roman', serif; font-size: 12pt; color: #000000; line-height: 1.15; margin: 1in; }
+                        h1 { font-size: 16pt; font-weight: bold; margin-bottom: 2pt; }
+                        p { font-size: 12pt; margin-bottom: 12pt; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Oficina de Propiedad</h1>
+                    <p style="font-size: 11pt; font-style: italic; color: #64748b; margin-bottom: 18pt;">Periodo: 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}</p>
+                    
+                    <p>Durante el periodo comprendido del 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p>
+                    
+                    <ul style="margin-top: 0; margin-bottom: 18pt; padding-left: 20pt;">
+                        ${bulletsHtml}
+                    </ul>
 
-            // Pequeños Grandes Saberes
-            docChildren.push(new Paragraph({
-                children: [new TextRun({ text: "Pequeños Grandes Saberes", bold: true, size: 26, font: "Times New Roman", color: "0D9488" })],
-                spacing: { before: 300, after: 100 }
-            }));
+                    <p style="font-size: 14pt; font-weight: bold; color: #0d9488; margin-top: 18pt; margin-bottom: 8pt;">Otros procesos relacionados</p>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24pt;">
+                        <thead>
+                            <tr style="background-color: #f1f5f9;">
+                                <th style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; padding:8pt; border-bottom:2px solid #94a3b8; text-align:left;">Categoría de Solicitud</th>
+                                <th style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; padding:8pt; border-bottom:2px solid #94a3b8; text-align:center;">Completadas / Recibidas</th>
+                                <th style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; padding:8pt; border-bottom:2px solid #94a3b8; text-align:center;">Cumplimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${requestsRowsHtml}
+                        </tbody>
+                    </table>
 
-            docChildren.push(new Paragraph({
-                children: [new TextRun({ text: "Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:", size: 24, font: "Times New Roman" })],
-                spacing: { after: 100 }
-            }));
+                    <p style="font-size: 14pt; font-weight: bold; color: #0d9488; margin-top: 24pt; margin-bottom: 8pt;">Pequeños Grandes Saberes</p>
+                    <p>Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p>
+                    
+                    <ul style="margin-top: 0; margin-bottom: 18pt; padding-left: 20pt;">
+                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.</li>
+                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.</li>
+                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.</li>
+                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.</li>
+                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales.</li>
+                    </ul>
 
-            const saberes = [
-                "De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.",
-                "Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.",
-                "Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.",
-                "De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.",
-                "Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales."
-            ];
+                    <p style="font-style: italic; color: #475569; text-align: center; margin-top: 18pt; margin-bottom: 12pt;">“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.</p>
+                    <p style="font-weight: bold; color: #0d9488; text-align: center; margin-bottom: 24pt;">¡Estamos para servirles!</p>
 
-            saberes.forEach(s => {
-                docChildren.push(new Paragraph({
-                    bullet: { level: 0 },
-                    children: [new TextRun({ text: s, size: 24, font: "Times New Roman" })],
-                    spacing: { after: 80 }
-                }));
-            });
+                    <div style="font-size: 11pt; line-height: 1.2;">
+                        <p style="font-weight: bold; margin: 0;">Greychel Ocasio Ortiz</p>
+                        <p style="font-style: italic; margin: 0 0 4pt 0;">Oficial de Propiedad</p>
+                        <p style="margin: 0;">Directo: (787) 437-7064</p>
+                        <p style="margin: 0;">Tel. (787) 284-1912, ext. 2005</p>
+                        <p style="margin: 0;">Contacto: grocasio@ponce.inter.edu / propiedad@ponce.inter.edu</p>
+                    </div>
+                </body>
+                </html>
+            `;
 
-            // Quote & Contact
-            docChildren.push(new Paragraph({
-                children: [new TextRun({ text: "“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.", italics: true, size: 24, font: "Times New Roman", color: "475569" })],
-                spacing: { before: 200, after: 100 }
-            }));
-
-            docChildren.push(new Paragraph({
-                children: [new TextRun({ text: "¡Estamos para servirles!", bold: true, size: 24, font: "Times New Roman", color: "0D9488" })],
-                spacing: { after: 200 }
-            }));
-
-            docChildren.push(new Paragraph({
-                children: [
-                    new TextRun({ text: "Greychel Ocasio Ortiz\n", bold: true, size: 22, font: "Times New Roman" }),
-                    new TextRun({ text: "Oficial de Propiedad\n", italics: true, size: 22, font: "Times New Roman" }),
-                    new TextRun({ text: "Directo: (787) 437-7064\nTel. (787) 284-1912, ext. 2005\nContacto: grocasio@ponce.inter.edu / propiedad@ponce.inter.edu", size: 22, font: "Times New Roman" })
-                ],
-                spacing: { after: 100 }
-            }));
-
-            const doc = new Document({
-                sections: [{ properties: {}, children: docChildren }]
-            });
-
-            const blob = await Packer.toBlob(doc);
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `Informe_${endingMonthName}_${endingYear}.docx`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Informe .docx descargado exitosamente!');
+            // Using Word-compatible MIME type so it opens seamlessly in Microsoft Word
+            const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Informe_${endingMonthName}_${endingYear}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('¡Informe descargado exitosamente!');
         }
 
         document.getElementById('search-tasks').addEventListener('input', renderKanban);
