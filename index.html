@@ -69,6 +69,7 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 .toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--ac);border-radius:12px;padding:10px 16px;font-weight:600;opacity:0;transform:translateY(20px);transition:.25s;z-index:60}.toast.on{opacity:1;transform:none}
 @media(max-width:760px){.rq{grid-template-columns:1fr 1fr}.rq>:first-child,.rq>.pbw{grid-column:1/-1}.cyc .mid{min-width:150px}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 </head>
 <body>
 <div class="top">
@@ -211,14 +212,43 @@ function addCust(){modal("Añadir custodio",`<label class="f">Nombre del custodi
 S.roster=[...roster(),n];[d.pre,d.fin].forEach(p=>p.c.push({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""}));q="";filt="all";save();render();const s=$(".scr");if(s)s.scrollTop=s.scrollHeight;toast("Custodio añadido")},"Añadir")}
 function remCust(i){const nm=D()[ph].c[i].n;ask(`¿Eliminar a <b>${esc(nm)}</b> de la lista de custodios? Se quitará de Pre-Cierre y de Certificación Final.`,()=>{const d=D();[d.pre,d.fin].forEach(p=>p.c=p.c.filter(c=>c.n!==nm));S.roster=roster().filter(x=>x!==nm);save();render();toast("Custodio eliminado")})}
 /* ---------- Informe ---------- */
-function reportHtml(){const d=D(),sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1,per="16 de "+MES[sm]+(sy!==cy.y?" de "+sy:"")+" al 15 de "+MES[cy.m]+" de "+cy.y;
-const ls=d.notes.split(/\r?\n/).filter(x=>x.trim()),done=d.tasks.filter(t=>t.col==="done");
-return`<p style="text-align:center"><b>Oficina de Propiedad</b><br><i>Periodo: ${per}</i></p><p>Durante el periodo comprendido del ${per}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p>
-<ul>${(ls.length?ls:["Gestiones generales de inventario y control de propiedad."]).map(l=>`<li>${esc(l)}</li>`).join("")}</ul>
-<h4>Tareas mensuales completadas</h4><ul>${done.length?done.map(t=>`<li>${esc(t.t)}${t.d?" - "+esc(t.d):""}</li>`).join(""):"<li>No se registraron tareas adicionales completadas en este ciclo.</li>"}</ul>
+const SAB=["De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.","Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.","Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.","De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.","Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales."];
+const QUOTE="“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.";
+function repData(){const d=D(),sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1,per="16 de "+MES[sm]+(sy!==cy.y?" de "+sy:"")+" al 15 de "+MES[cy.m]+" de "+cy.y;
+const ls=d.notes.split(/\r?\n/).filter(x=>x.trim());
+return{d,per,ls:ls.length?ls:["Gestiones generales de inventario y control de propiedad."],done:d.tasks.filter(t=>t.col==="done").map(t=>t.t+(t.s||t.cd||t.du?" ("+[t.s?"Inicio: "+fmt(t.s):"",(t.cd||t.du)?"Fin: "+fmt(t.cd||t.du):""].filter(Boolean).join(" - ")+")":"")+(t.d?" - "+t.d:""))}}
+function reportHtml(){const{d,per,ls,done}=repData();
+return`<p style="text-align:center;font-family:Arial,sans-serif;opacity:.6">Universidad Interamericana de Puerto Rico<br>Recinto de Ponce<br><br>Decanato de Administración</p><p style="text-align:center"><b>Oficina de Propiedad</b></p><p><i>Periodo: ${per}</i></p><p>Durante el periodo comprendido del ${per}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p>
+<ul>${ls.map(l=>`<li>${esc(l)}</li>`).join("")}</ul>
+<h4>Tareas mensuales completadas</h4><ul>${done.length?done.map(t=>`<li>${esc(t)}</li>`).join(""):"<li>No se registraron tareas adicionales completadas en este ciclo.</li>"}</ul>
 <h4>Otros procesos relacionados</h4><table><tr><th align="left">Categoría de solicitud</th><th>Completadas / Recibidas</th><th>Cumplimiento</th></tr>${d.req.map(r=>`<tr><td>${esc(r.t)}</td><td align="center">${r.c} / ${r.r}</td><td align="center">${r.r?Math.round(r.c/r.r*100)+"%":"—"}</td></tr>`).join("")}</table>
-<p style="text-align:center;margin-top:16px"><b>¡Estamos para servirles!</b></p><p><b>Greychel Ocasio Ortiz</b><br><i>Oficial de Propiedad</i></p>`}
-function preview(){const h=reportHtml();modal("Vista previa del informe",`<div class="paper">${h}</div>`,()=>{const b=new Blob(["\ufeff<html><head><meta charset='utf-8'></head><body style=\"font-family:'Times New Roman';font-size:12pt\">"+h+"</body></html>"],{type:"application/msword"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Informe_"+MES[cy.m]+"_"+cy.y+".doc";document.body.appendChild(a);a.click();a.remove();toast("Informe descargado")},"Descargar .doc")}
+<h4>Pequeños Grandes Saberes</h4><p>Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p><ul>${SAB.map(s=>`<li>${s}</li>`).join("")}</ul><p style="text-align:center;font-style:italic;color:#444;margin-top:16px">${QUOTE}</p><p style="color:#0d9488"><b>¡Estamos para servirles!</b></p><p><b>Greychel Ocasio Ortiz</b><br><i>Oficial de Propiedad</i><br>Directo: (787) 437-7064<br>Tel. (787) 284-1912, ext. 2005<br>Contacto: <a href="mailto:grocasio@ponce.inter.edu">grocasio@ponce.inter.edu</a> / <a href="mailto:propiedad@ponce.inter.edu">propiedad@ponce.inter.edu</a></p>`}
+async function docxReport(){const{Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,AlignmentType,BorderStyle,Header,LevelFormat,ExternalHyperlink}=docx,{d,per,ls,done}=repData(),F="Times New Roman",T="0D9488",C=AlignmentType.CENTER;
+const tr=(t,o={})=>new TextRun({text:t,font:F,size:24,...o}),
+p=(t,o={},r={})=>new Paragraph({spacing:{after:120},...o,children:[tr(t,r)]}),
+bl=t=>new Paragraph({numbering:{reference:"b",level:0},spacing:{after:80},children:[tr(t)]}),
+h=t=>new Paragraph({keepNext:true,spacing:{before:280,after:80},children:[tr(t,{bold:true,color:T})]}),
+hp=t=>new Paragraph({alignment:C,children:[tr(t,{bold:true})]}),
+hn=t=>new Paragraph({alignment:C,children:[tr(t,{font:"Arial",color:"666666"})]}),
+mail=e=>new ExternalHyperlink({link:"mailto:"+e,children:[tr(e,{color:"0563C1",underline:{}})]}),
+no={style:BorderStyle.NONE,size:0,color:"FFFFFF"},ln={style:BorderStyle.SINGLE,size:4,color:"CBD5E1"},hd={style:BorderStyle.SINGLE,size:12,color:"000000"},W=[4680,2340,2340],
+cell=(t,i,b,o)=>new TableCell({width:{size:W[i],type:WidthType.DXA},margins:{top:60,bottom:60,left:120,right:120},borders:{top:no,left:no,right:no,bottom:b},children:[new Paragraph({alignment:i?C:undefined,children:[tr(t,o)]})]}),
+row=(a,b,o)=>new TableRow({children:a.map((t,i)=>cell(t,i,b,o))}),
+rows=[row(["Categoría de Solicitud","Completadas / Recibidas","Cumplimiento"],hd,{bold:true}),...d.req.map(r=>row([r.t,r.c+" / "+r.r,r.r?Math.round(r.c/r.r*100)+"%":"—"],ln))];
+const doc=new Document({styles:{default:{document:{run:{font:F,size:24}}}},numbering:{config:[{reference:"b",levels:[{level:0,format:LevelFormat.BULLET,text:"•",alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:720,hanging:360}}}}]}]},
+sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:1440,right:1440,bottom:1440,left:1440}}},
+headers:{default:new Header({children:[hn("Universidad Interamericana de Puerto Rico"),hn("Recinto de Ponce"),hn(""),hn("Decanato de Administración")]})},
+children:[hp("Oficina de Propiedad"),new Paragraph({spacing:{after:280},children:[tr("Periodo: "+per,{italics:true,color:"555555"})]}),
+p("Durante el periodo comprendido del "+per+", la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:"),...ls.map(bl),
+h("Tareas mensuales completadas"),...(done.length?done:["No se registraron tareas adicionales completadas en este ciclo."]).map(bl),
+h("Otros procesos relacionados"),new Table({width:{size:9360,type:WidthType.DXA},columnWidths:W,borders:{top:no,bottom:no,left:no,right:no,insideHorizontal:no,insideVertical:no},rows}),
+h("Pequeños Grandes Saberes"),p("Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:"),...SAB.map(bl),
+new Paragraph({alignment:C,spacing:{before:360,after:160},children:[tr(QUOTE,{italics:true,color:"444444"})]}),
+new Paragraph({spacing:{after:360},children:[tr("¡Estamos para servirles!",{bold:true,color:T})]}),
+p("Greychel Ocasio Ortiz",{spacing:{after:0}},{bold:true}),p("Oficial de Propiedad",{spacing:{after:80}},{italics:true}),
+p("Directo: (787) 437-7064",{spacing:{after:0}}),p("Tel. (787) 284-1912, ext. 2005",{spacing:{after:0}}),new Paragraph({children:[tr("Contacto: "),mail("grocasio@ponce.inter.edu"),tr(" / "),mail("propiedad@ponce.inter.edu")]})]}]});
+const b=await Packer.toBlob(doc),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Informe_"+MES[cy.m]+"_"+cy.y+".docx";document.body.appendChild(a);a.click();a.remove();toast("Informe descargado")}
+function preview(){const h=reportHtml();modal("Vista previa del informe",`<div class="paper">${h}</div>`,()=>{if(window.docx){docxReport();return}const b=new Blob(["\ufeff<html><head><meta charset='utf-8'></head><body style=\"font-family:'Times New Roman';font-size:12pt\">"+h+"</body></html>"],{type:"application/msword"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Informe_"+MES[cy.m]+"_"+cy.y+".doc";document.body.appendChild(a);a.click();a.remove();toast("Informe descargado")},"Descargar .docx")}
 $("#calb").innerHTML=I.cal;
 document.addEventListener("click",e=>{if(!e.composedPath().includes($("#cyc")))closePop()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop()});
