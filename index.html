@@ -589,7 +589,7 @@
                 document.getElementById('tab-dashboard').classList.add('hidden');
                 document.getElementById('tab-precierre').classList.remove('hidden');
                 document.getElementById('nav-btn-dashboard').className = "bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all";
-                document.getElementById('nav-btn-precierre').className = "bg-teal-500 text-slate-950 font-bold px-3.5 py-2 rounded-lg text-xs transition-all shadow-md";
+                document.getElementById('nav-btn-precierre').className = "bg-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md";
             }
         }
 
@@ -740,7 +740,7 @@
                         <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${recBadge}">${cust.received}</span></td>
                         <td class="p-3.5 text-center text-slate-300">${cust.date_received || '-'}</td>
                         <td class="p-3.5 text-center text-slate-300">${cust.date_completed || '-'}</td>
-                        <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusBadge}">${cust.status}</span></td>
+                        <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusBadge}">${cust.status || '-'}</span></td>
                         <td class="p-3.5 text-slate-400 text-xs">${cust.notes || '-'}</td>
                         <td class="p-3.5 text-center">
                             <button onclick="openCustodianModal(${idx})" class="bg-slate-800 hover:bg-slate-700 text-teal-400 px-2.5 py-1 rounded-lg text-xs font-semibold border border-slate-700">Editar</button>
@@ -796,7 +796,7 @@
             document.getElementById('cust-received').value = cust.received;
             document.getElementById('cust-date-rec').value = cust.date_received || '';
             document.getElementById('cust-date-comp').value = cust.date_completed || '';
-            document.getElementById('cust-status').value = cust.status;
+            document.getElementById('cust-status').value = cust.status || 'No Evaluado';
             document.getElementById('cust-notes').value = cust.notes || '';
             document.getElementById('custodian-modal').classList.remove('hidden');
             document.getElementById('custodian-modal').classList.add('flex');
@@ -951,13 +951,19 @@
             saveCycleData();
         }
 
+        // ==========================================
         // GENERATE WORD REPORT VIA NATIVE HTML-TO-WORD (.doc)
+        // (Smaller compact table rows with tighter padding)
+        // ==========================================
         function generateWordReport() {
             const endingMonthIdx = activeCycle.month;
             const endingYear = activeCycle.year;
             let startMonthIdx = endingMonthIdx - 1;
-            let startYear = activeCycle.year;
-            if (startMonthIdx < 0) { startMonthIdx = 11; startYear -= 1; }
+            let startYear = endingYear;
+            if (startMonthIdx < 0) {
+                startMonthIdx = 11;
+                startYear -= 1;
+            }
 
             const startMonthName = monthNamesSpanish[startMonthIdx];
             const endingMonthName = monthNamesSpanish[endingMonthIdx];
@@ -967,17 +973,28 @@
             
             let bulletsHtml = "";
             lines.forEach(line => {
-                bulletsHtml += `<li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:6pt;">${escapeHtml(line.trim())}</li>`;
+                bulletsHtml += `<li style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; margin-bottom:4pt; line-height:1.15;">${escapeHtml(line.trim())}</li>`;
             });
+
+            // Completed Tasks from Kanban Board ("Completado" column)
+            const completedTasks = currentData.tasks.filter(t => t.column === 'completed');
+            let completedTasksHtml = "";
+            if (completedTasks.length > 0) {
+                completedTasks.forEach(t => {
+                    completedTasksHtml += `<li style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; margin-bottom:4pt; line-height:1.15;">${escapeHtml(t.title)}${t.desc ? ' - ' + escapeHtml(t.desc) : ''}</li>`;
+                });
+            } else {
+                completedTasksHtml = `<li style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; margin-bottom:4pt; line-height:1.15;">No se registraron tareas adicionales completadas en este ciclo.</li>`;
+            }
 
             let requestsRowsHtml = "";
             currentData.requests.forEach(req => {
                 const rate = req.received > 0 ? Math.round((req.completed / req.received) * 100) + '%' : '—';
                 requestsRowsHtml += `
-                    <tr>
-                        <td style="font-family:'Times New Roman',serif; font-size:12pt; padding:6pt; border-bottom:1px solid #cbd5e1;">${req.title}</td>
-                        <td style="font-family:'Times New Roman',serif; font-size:12pt; padding:6pt; border-bottom:1px solid #cbd5e1; text-align:center;">${req.completed} / ${req.received}</td>
-                        <td style="font-family:'Times New Roman',serif; font-size:12pt; padding:6pt; border-bottom:1px solid #cbd5e1; text-align:center;">${rate}</td>
+                    <tr style="page-break-inside: avoid; height: 16pt;">
+                        <td style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; padding:3pt 6pt; border-bottom:1px solid #94a3b8; line-height:1.1;">${req.title}</td>
+                        <td style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; padding:3pt 6pt; border-bottom:1px solid #cbd5e1; text-align:center; line-height:1.1;">${req.completed} / ${req.received}</td>
+                        <td style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; padding:3pt 6pt; border-bottom:1px solid #cbd5e1; text-align:center; line-height:1.1;">${rate}</td>
                     </tr>
                 `;
             });
@@ -987,57 +1004,95 @@
                 <head>
                     <meta charset="utf-8">
                     <title>Informe Mensual</title>
+                    <!--[if gte mso 9]>
+                    <xml>
+                        <w:WordDocument>
+                            <w:View>Print</w:View>
+                            <w:Zoom>100</w:Zoom>
+                            <w:DoNotOptimizeForBrowser/>
+                        </w:WordDocument>
+                    </xml>
+                    <![endif]-->
                     <style>
-                        body { font-family: 'Times New Roman', serif; font-size: 12pt; color: #000000; line-height: 1.15; margin: 1in; }
-                        h1 { font-size: 16pt; font-weight: bold; margin-bottom: 2pt; }
-                        p { font-size: 12pt; margin-bottom: 12pt; }
+                        @page Section1 {
+                            size: 8.5in 11in;
+                            margin: 1in 1in 1in 1in;
+                            mso-header: h1;
+                            mso-header-margin: 0.3in;
+                            mso-footer-margin: 0.3in;
+                        }
+                        div.Section1 { page: Section1; }
+                        body { font-family: 'Times New Roman', serif; font-size: 12pt; color: #000000; line-height: 1.15; margin: 0; }
+                        h1 { font-family: 'Times New Roman', serif; font-size: 12pt; font-weight: bold; margin-bottom: 2pt; }
+                        h2 { font-family: 'Times New Roman', serif; font-size: 12pt; font-weight: bold; margin-top: 14pt; margin-bottom: 4pt; page-break-after: avoid; }
+                        p { font-family: 'Times New Roman', serif; font-size: 12pt; margin-bottom: 8pt; line-height: 1.15; }
+                        li { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.15; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 8pt; margin-bottom: 16pt; page-break-inside: avoid; }
+                        th { font-family: 'Times New Roman', serif; font-size: 12pt; font-weight: bold; padding: 4pt 6pt; border-bottom: 2px solid #000000; text-align: left; }
+                        td { font-family: 'Times New Roman', serif; font-size: 12pt; padding: 3pt 6pt; }
+                        .MsoHeader { font-family: 'Arial', serif; font-size: 12pt; margin: 0; padding: 0; line-height: 1.15; text-align: center; color:#555555;}
                     </style>
                 </head>
                 <body>
-                    <h1>Oficina de Propiedad</h1>
-                    <p style="font-size: 11pt; font-style: italic; color: #64748b; margin-bottom: 18pt;">Periodo: 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}</p>
-                    
-                    <p>Durante el periodo comprendido del 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p>
-                    
-                    <ul style="margin-top: 0; margin-bottom: 18pt; padding-left: 20pt;">
-                        ${bulletsHtml}
-                    </ul>
+                    <div style="mso-element:header" id="h1">
+                        <p class="MsoHeader">
+                            Universidad Interamericana de Puerto Rico<br>
+                            Recinto de Ponce<br><br>
+                            Decanato de Administración
+                        </p>
+                    </div>
 
-                    <p style="font-size: 14pt; font-weight: bold; color: #0d9488; margin-top: 18pt; margin-bottom: 4pt;">Otros procesos relacionados</p>
-                    
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 24pt;">
-                        <thead>
-                            <tr style="background-color: #f1f5f9;">
-                                <th style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; padding:8pt; border-bottom:2px solid #94a3b8; text-align:left;">Categoría de Solicitud</th>
-                                <th style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; padding:8pt; border-bottom:2px solid #94a3b8; text-align:center;">Completadas / Recibidas</th>
-                                <th style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; padding:8pt; border-bottom:2px solid #94a3b8; text-align:center;">Cumplimiento</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${requestsRowsHtml}
-                        </tbody>
-                    </table>
+                    <div class="Section1">
+                        <p style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; margin-bottom:2pt; text-align:center;">Oficina de Propiedad</p>
+                        <p style="font-family:'Times New Roman',serif; font-size:12pt; font-style:italic; color: #555555; margin-bottom: 14pt;">Periodo: 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}</p>
+                        
+                        <p style="font-family:'Times New Roman',serif; font-size:12pt;">Durante el periodo comprendido del <strong>16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}</strong>, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p>
+                        
+                        <ul style="margin-top: 0; margin-bottom: 14pt; padding-left: 20pt;">
+                            ${bulletsHtml}
+                        </ul>
 
-                    <p style="font-size: 12pt; font-weight: bold; color: #0d9488; margin-top: 24pt; margin-bottom: 8pt;">Pequeños Grandes Saberes</p>
-                    <p>Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p>
-                    
-                    <ul style="margin-top: 0; margin-bottom: 18pt; padding-left: 20pt;">
-                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.</li>
-                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.</li>
-                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.</li>
-                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.</li>
-                        <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales.</li>
-                    </ul>
+                        <h2 style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; color: #0d9488;">Tareas mensuales completadas</h2>
+                        <ul style="margin-top: 0; margin-bottom: 14pt; padding-left: 20pt;">
+                            ${completedTasksHtml}
+                        </ul>
 
-                    <p style="font-style: italic; color: #475569; text-align: center; margin-top: 18pt; margin-bottom: 12pt;">“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.</p>
-                    <p style="font-weight: bold; color: #0d9488; text-align: center; margin-bottom: 24pt;">¡Estamos para servirles!</p>
+                        <h2 style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; color: #0d9488;">Otros procesos relacionados</h2>
+                        
+                        <table>
+                            <thead>
+                                <tr style="height: 18pt;">
+                                    <th style="font-family:'Times New Roman',serif; font-size:12pt; padding: 4pt 6pt;">Categoría de Solicitud</th>
+                                    <th style="font-family:'Times New Roman',serif; font-size:12pt; padding: 4pt 6pt; text-align:center;">Completadas / Recibidas</th>
+                                    <th style="font-family:'Times New Roman',serif; font-size:12pt; padding: 4pt 6pt; text-align:center;">Cumplimiento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${requestsRowsHtml}
+                            </tbody>
+                        </table>
 
-                    <div style="font-size: 11pt; line-height: 1.2;">
-                        <p style="font-weight: bold; margin: 0;">Greychel Ocasio Ortiz</p>
-                        <p style="font-style: italic; margin: 0 0 4pt 0;">Oficial de Propiedad</p>
-                        <p style="margin: 0;">Directo: (787) 437-7064</p>
-                        <p style="margin: 0;">Tel. (787) 284-1912, ext. 2005</p>
-                        <p style="margin: 0;">Contacto: grocasio@ponce.inter.edu / propiedad@ponce.inter.edu</p>
+                        <h2 style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; color: #0d9488;">Pequeños Grandes Saberes</h2>
+                        <p style="font-family:'Times New Roman',serif; font-size:12pt;">Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p>
+                        
+                        <ul style="margin-top: 0; margin-bottom: 14pt; padding-left: 20pt;">
+                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.</li>
+                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.</li>
+                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.</li>
+                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.</li>
+                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales.</li>
+                        </ul>
+
+                        <p style="font-family:'Times New Roman',serif; font-size:12pt; font-style: italic; color: #444444; text-align: center; margin-top: 18pt; margin-bottom: 8pt; page-break-inside: avoid;">“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.</p>
+                        <p style="font-family:'Times New Roman',serif; font-size:12pt; font-weight: bold; color: #0d9488; margin-bottom: 18pt; page-break-inside: avoid;">¡Estamos para servirles!</p>
+
+                        <div style="font-family:'Times New Roman',serif; font-size:12pt; line-height: 1.2; page-break-inside: avoid;">
+                            <p style="font-family:'Times New Roman',serif; font-size:12pt; font-weight: bold; margin: 0;">Greychel Ocasio Ortiz</p>
+                            <p style="font-family:'Times New Roman',serif; font-size:12pt; font-style: italic; margin: 0 0 4pt 0;">Oficial de Propiedad</p>
+                            <p style="font-family:'Times New Roman',serif; font-size:12pt; margin: 0;">Directo: (787) 437-7064</p>
+                            <p style="font-family:'Times New Roman',serif; font-size:12pt; margin: 0;">Tel. (787) 284-1912, ext. 2005</p>
+                            <p style="font-family:'Times New Roman',serif; font-size:12pt; margin: 0;">Contacto: <a href="mailto:grocasio@ponce.inter.edu">grocasio@ponce.inter.edu</a> / <a href="mailto:propiedad@ponce.inter.edu">propiedad@ponce.inter.edu</a></p>
+                        </div>
                     </div>
                 </body>
                 </html>
@@ -1051,7 +1106,7 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
             showToast('¡Informe descargado exitosamente!');
         }
 
