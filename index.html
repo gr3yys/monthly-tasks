@@ -1,1117 +1,228 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tareas Mensuales | Oficina de Propiedad</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' },
-                        teal: { 500: '#14b8a6', 600: '#0d9488', 400: '#2dd4bf' }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(45, 212, 191, 0.3); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(45, 212, 191, 0.6); }
-        .kanban-column { min-height: 400px; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tareas Mensuales | Oficina de Propiedad</title>
+<style>
+:root{--bg:#f4f7fa;--sf:#fff;--sf2:#eaf0f5;--bd:#d3dbe4;--tx:#0f172a;--tx2:#475569;--ac:#0d9488;--acx:#fff;--ok:#047857;--okb:#d1fae5;--wr:#92400e;--wrb:#fef3c7;--er:#be123c;--erb:#ffe4e6;--in:#1d4ed8;--inb:#dbeafe;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--sf:#111a2b;--sf2:#18233a;--bd:#2a3956;--tx:#f1f5f9;--tx2:#b8c4d4;--ac:#2dd4bf;--acx:#04201c;--ok:#6ee7b7;--okb:#0e3a2c;--wr:#fcd34d;--wrb:#3d2f0a;--er:#fda4af;--erb:#4a1522;--in:#93c5fd;--inb:#14305a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1220;--sf:#111a2b;--sf2:#18233a;--bd:#2a3956;--tx:#f1f5f9;--tx2:#b8c4d4;--ac:#2dd4bf;--acx:#04201c;--ok:#6ee7b7;--okb:#0e3a2c;--wr:#fcd34d;--wrb:#3d2f0a;--er:#fda4af;--erb:#4a1522;--in:#93c5fd;--inb:#14305a;color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0}
+body{font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--sf);z-index:30}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--sf);border-bottom:1px solid var(--bd)}
+.wrap{max-width:1180px;margin:0 auto;padding:16px 20px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}
+h1{font-size:17px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0}
+.mu{color:var(--tx2);font-size:13px;margin:2px 0 0}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:40px;height:40px;border-radius:10px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-size:20px}
+.cyc{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:4px}
+.cyc .mid{text-align:center;padding:0 10px;min-width:210px}.cyc b{display:block;font-size:14px}.cyc small{color:var(--tx2);font-size:12px}
+.pop{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(300px,92vw);background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:12px;box-shadow:0 12px 32px rgba(2,6,23,.28);z-index:40}.pop[hidden]{display:none}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mg button{border:1px solid transparent;background:var(--sf2);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:600}.mg button:hover{border-color:var(--ac)}.mg .cur{background:var(--ac);color:var(--acx)}.mg .now{border-color:var(--ac);color:var(--ac)}
+.btn{border:1px solid var(--bd);background:var(--sf);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:13px}
+.btn:hover{background:var(--sf2)}.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}.btn.pri:hover{filter:brightness(1.08)}.btn.sm{padding:5px 10px;font-weight:500}
+.ic{border:0;background:transparent;cursor:pointer;border-radius:8px;width:34px;height:34px;font-size:16px;color:var(--tx2)}.ic:hover{background:var(--sf2);color:var(--tx)}.ic svg{display:block;margin:auto;width:20px;height:20px}.ic:disabled{opacity:.35;cursor:default}
+.tabs{display:flex;gap:4px;max-width:1180px;margin:0 auto;padding:0 20px;overflow-x:auto}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 16px;cursor:pointer;font-weight:600;color:var(--tx2);white-space:nowrap}
+.tabs button[aria-selected=true]{color:var(--tx);border-color:var(--ac)}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;margin-bottom:18px}.pad{padding:18px}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--sf2);color:var(--tx2)}
+.chip.ok{background:var(--okb);color:var(--ok)}.chip.wr{background:var(--wrb);color:var(--wr)}.chip.er{background:var(--erb);color:var(--er)}.chip.in{background:var(--inb);color:var(--in)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.kpi{background:var(--sf2);border-radius:12px;padding:12px 14px}.kpi span{font-size:12px;color:var(--tx2);display:block}.kpi b{font-size:24px}
+.bar{height:8px;background:var(--sf2);border-radius:99px;overflow:hidden;border:1px solid var(--bd)}.bar i{display:block;height:100%;background:var(--ac);border-radius:99px}.bar.lg{height:12px}
+.rq{display:grid;grid-template-columns:minmax(200px,1.4fr) minmax(190px,1fr) auto auto;gap:14px;align-items:center;padding:12px 4px;border-top:1px solid var(--bd)}
+.rq small{display:block;color:var(--tx2);font-size:12.5px}
+.stp{display:inline-flex;align-items:center;gap:2px;background:var(--sf2);border-radius:10px;padding:2px}
+.stp button{width:30px;height:30px;border:0;border-radius:8px;background:var(--sf);cursor:pointer;font-size:17px;font-weight:700;border:1px solid var(--bd)}.stp button:hover{background:var(--bd)}
+.stp input{width:54px;text-align:center;border:0;background:transparent;font-weight:700;padding:4px 0;-moz-appearance:textfield}.stp input::-webkit-outer-spin-button,.stp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.stp input:focus{background:var(--sf);border-radius:6px}
+.lbl{font-size:12px;color:var(--tx2);display:block;margin-bottom:2px}.pb{display:flex;align-items:center;gap:10px}.pb .bar{flex:1}
+.board{background:var(--ac);background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 38%,var(--sf)),color-mix(in srgb,var(--ac) 22%,var(--sf)));border-radius:18px;padding:16px;overflow-x:auto}.kb{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:14px;align-items:start}
+.col{background:var(--sf2);border-radius:14px;padding:10px;border:2px solid transparent}.col.over{border-color:var(--ac)}
+.col h3{display:flex;justify-content:space-between;padding:4px 6px 10px}
+.empty{border:2px dashed var(--bd);border-radius:10px;padding:18px;text-align:center;color:var(--tx2);font-size:13px}
+.tk{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 2px rgba(9,30,66,.25);font-weight:500;height:96px;display:flex;flex-direction:column;justify-content:space-between}.tt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}.tk:hover{border-color:var(--ac)}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;overflow:hidden;margin-top:8px}.mi{color:var(--tx2);display:inline-flex}
+.dt{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--tx2);padding:2px 6px;border-radius:6px}.dt.ok{background:var(--okb);color:var(--ok)}.dt.er{background:var(--erb);color:var(--er)}
+.add{display:flex;gap:8px;align-items:center;width:100%;background:none;border:0;border-radius:8px;padding:8px;cursor:pointer;color:var(--tx2);font-weight:600;margin-top:4px}.add:hover{background:var(--bd);color:var(--tx)}
+.sel,.in,textarea{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:7px 10px;width:100%}.sel.mv{width:auto;font-size:12.5px;padding:4px 6px;margin-top:8px}
+textarea{resize:vertical;line-height:1.5}
+.tb{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:14px 16px;border-bottom:1px solid var(--bd)}.tb .in{max-width:280px}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:10px;overflow:hidden}.seg button{border:0;background:var(--sf);padding:7px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--tx2)}.seg button.on{background:var(--ac);color:var(--acx)}
+.scr{max-height:560px;overflow:auto}table{width:100%;border-collapse:collapse;font-size:14px;min-width:860px}
+th{position:sticky;top:0;background:var(--sf2);text-align:left;font-size:12.5px;padding:10px 12px;border-bottom:1px solid var(--bd);z-index:1}
+td{padding:9px 12px;border-bottom:1px solid var(--bd)}tr:hover td{background:var(--sf2)}.c{text-align:center}.ob{color:var(--tx2);max-width:240px;font-size:13px}
+.sw{position:relative;display:inline-block;width:42px;height:24px;vertical-align:middle}.sw input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer;z-index:1}
+.sw span{position:absolute;inset:0;background:var(--bd);border-radius:99px;transition:.15s}.sw span:after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s}
+.sw input:checked+span{background:var(--ac)}.sw input:checked+span:after{transform:translateX(18px);background:var(--acx)}.sw input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
+.sel.s{width:auto;padding:4px 8px;font-size:13px;font-weight:600}.s-Completado{background:var(--okb);color:var(--ok)}.s-Requiere{background:var(--erb);color:var(--er)}.s-Revisión{background:var(--inb);color:var(--in)}
+details summary{cursor:pointer;font-weight:600}.rem{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--bd);font-size:14px}
+dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:var(--tx);padding:0;width:min(520px,94vw)}dialog::backdrop{background:rgba(2,6,23,.6)}
+.mh{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--bd)}.mb{padding:18px 20px;display:grid;gap:12px;max-height:68vh;overflow:auto}.mf{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--bd)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}label.f{font-size:12.5px;font-weight:600;color:var(--tx2);display:grid;gap:4px}
+.paper{background:#fff;color:#000;font:13.5px/1.5 "Times New Roman",serif;padding:28px;border:1px solid var(--bd);border-radius:6px}.paper h4{margin:14px 0 4px}.paper table{min-width:0;font-size:13px}.paper td,.paper th{padding:3px 6px;background:none;position:static}
+.toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--ac);border-radius:12px;padding:10px 16px;font-weight:600;opacity:0;transform:translateY(20px);transition:.25s;z-index:60}.toast.on{opacity:1;transform:none}
+@media(max-width:760px){.rq{grid-template-columns:1fr 1fr}.rq>:first-child,.rq>.pbw{grid-column:1/-1}.cyc .mid{min-width:150px}}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-slate-950">
-
-    <!-- Header / Navbar -->
-    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="bg-gradient-to-tr from-teal-600 to-teal-400 p-2.5 rounded-xl shadow-lg shadow-teal-900/30 text-slate-950 font-bold text-xl flex items-center justify-center">
-                    <i class="fa-solid fa-building-columns"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-lg font-bold tracking-tight text-white">Oficina de Bienes y Propiedad</h1>
-                    </div>
-                    <p class="text-xs text-slate-400">Oficial de Propiedad: <span class="text-slate-400 font-semibold">Greychel Ocasio</span></p>
-                </div>
-            </div>
-
-            <!-- Interactive Clickable Cycle Period Switcher & Title (2026 and after) -->
-            <div onclick="openCyclePicker()" class="flex items-center bg-slate-800/80 border border-slate-700/60 rounded-xl p-1.5 shadow-inner cursor-pointer hover:border-teal-500/50 transition relative" title="Haga clic para seleccionar periodo (2026 en adelante)">
-                <button onclick="event.stopPropagation(); changeCycle(-1)" class="p-2 text-slate-400 hover:text-teal-400 rounded-lg transition-colors" title="Mes Anterior">
-                    <i class="fa-solid fa-chevron-left text-xs"></i>
-                </button>
-                <div class="px-4 text-center">
-                    <h2 id="cycle-title" class="text-sm font-bold text-white tracking-wide">Informe Mensual noviembre 2026</h2>
-                    <p id="cycle-dates" class="text-[11px] text-teal-400 font-medium">16 oct 2026 – 15 nov 2026</p>
-                </div>
-                <button onclick="event.stopPropagation(); changeCycle(1)" class="p-2 text-slate-400 hover:text-teal-400 rounded-lg transition-colors" title="Mes Siguiente">
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
-                </button>
-                <input type="month" id="month-picker" min="2026-01" onchange="onMonthPicked(this.value)" class="absolute inset-0 opacity-0 cursor-pointer pointer-events-none">
-            </div>
-
-            <!-- Global Action Controls -->
-            <div class="flex items-center gap-3 flex-wrap">
-                <button onclick="switchTab('dashboard')" id="nav-btn-dashboard" class="bg-teal-500 text-slate-950 font-semibold px-3.5 py-2 rounded-lg text-xs transition-all shadow-md">
-                    <i class="fa-solid fa-columns mr-1"></i> Dashboard
-                </button>
-                <button onclick="switchTab('precierre')" id="nav-btn-precierre" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all">
-                    <i class="fa-solid fa-file-shield mr-1"></i> Pre-Cierre & Final
-                </button>
-                <button onclick="generateWordReport()" class="bg-teal-600 hover:bg-teal-500 text-white px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md">
-                    <i class="fa-solid fa-file-word"></i> Descargar informe
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6 flex flex-col gap-8">
-
-        <!-- TAB 1: DASHBOARD & KANBAN -->
-        <div id="tab-dashboard" class="flex flex-col gap-8">
-            <!-- SECTION 1: Compliance Requests Dashboard -->
-            <section class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-slate-800/80 pb-4">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-chart-pie text-teal-400"></i>Cumplimiento de tareas
-                        </h2>
-                        <p class="text-xs text-slate-400">Solicitudes recibidas y trabajadas durante este periodo.</p>
-                    </div>
-                    <div class="flex items-center gap-4 bg-slate-950/60 px-4 py-2 rounded-xl border border-slate-800">
-                        <div class="text-center">
-                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Total Recibidas</span>
-                            <span id="kpi-total-received" class="text-base font-bold text-white">0</span>
-                        </div>
-                        <div class="w-px h-8 bg-slate-800"></div>
-                        <div class="text-center">
-                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Total Completadas</span>
-                            <span id="kpi-total-completed" class="text-base font-bold text-teal-400">0</span>
-                        </div>
-                        <div class="w-px h-8 bg-slate-800"></div>
-                        <div class="text-center">
-                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Cumplimiento General</span>
-                            <span id="kpi-overall-rate" class="text-base font-bold text-emerald-400">0%</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="requests-container"></div>
-            </section>
-
-            <!-- SECTION 2: Kanban Board -->
-            <section class="flex flex-col gap-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-columns text-teal-400"></i>Tareas mensuales
-                        </h2>
-                        <p class="text-xs text-slate-400">Manejar tareas, organizar flujo de trabajo y ver el estatus durante el mes.</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                                <i class="fa-solid fa-search text-xs"></i>
-                            </span>
-                            <input type="text" id="search-tasks" placeholder="Filtrar tareas..." 
-                                class="bg-slate-900 text-xs text-slate-200 placeholder-slate-500 pl-9 pr-4 py-2 rounded-lg border border-slate-800 focus:outline-none focus:border-teal-500 w-44 sm:w-56">
-                        </div>
-                        <button onclick="openTaskModal()" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-4 py-2 rounded-lg text-xs shadow-lg flex items-center gap-1.5">
-                            <i class="fa-solid fa-plus"></i>Nueva tarea
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
-                    <!-- Backlog -->
-                    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'backlog')">
-                        <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-indigo-400"></span><h3 class="font-semibold text-sm text-white">Pendiente</h3></div>
-                            <span id="count-backlog" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
-                        </div>
-                        <div id="col-backlog" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
-                    </div>
-                    <!-- To Do -->
-                    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'todo')">
-                        <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-sky-400"></span><h3 class="font-semibold text-sm text-white">Tareas</h3></div>
-                            <span id="count-todo" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
-                        </div>
-                        <div id="col-todo" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
-                    </div>
-                    <!-- In Progress -->
-                    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'in-progress')">
-                        <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-400"></span><h3 class="font-semibold text-sm text-white">En Progreso</h3></div>
-                            <span id="count-in-progress" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
-                        </div>
-                        <div id="col-in-progress" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
-                    </div>
-                    <!-- Completed -->
-                    <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl flex flex-col kanban-column" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'completed')">
-                        <div class="p-4 border-b border-slate-800/60 flex items-center justify-between bg-slate-900/80 rounded-t-2xl">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-400"></span><h3 class="font-semibold text-sm text-white">Completado</h3></div>
-                            <span id="count-completed" class="text-xs px-2 py-0.5 bg-slate-800 text-slate-300 font-bold rounded-full">0</span>
-                        </div>
-                        <div id="col-completed" class="p-3 flex-1 flex flex-col gap-3 overflow-y-auto"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECTION 3: Strategic Notes -->
-            <section class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl">
-                <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-note-sticky text-teal-400"></i> Objetivos y Tareas
-                        </h2>
-                        <p class="text-xs text-slate-400">Escriba cada tarea detalladamente.</p>
-                    </div>
-                    <button onclick="saveNotes()" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-floppy-disk"></i> Guardar Notas
-                    </button>
-                </div>
-                <textarea id="strategic-notes-area" rows="5" placeholder="Escriba aquí cada tarea detalladamente." 
-                    class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-teal-500 leading-relaxed"></textarea>
-            </section>
-        </div>
-
-        <!-- TAB 2: PRE-CIERRE & CERTIFICACIÓN FINAL MODULE -->
-        <div id="tab-precierre" class="hidden flex flex-col gap-8">
-            <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-                <!-- Sub-tabs for Pre-Cierre vs Certificación Final -->
-                <div class="flex items-center justify-between border-b border-slate-800 pb-4 flex-wrap gap-4">
-                    <div class="flex items-center gap-2">
-                        <button onclick="switchPhase('precierre')" id="phase-btn-precierre" class="bg-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md">
-                            <i class="fa-solid fa-file-shield mr-1.5"></i> Pre-Cierre (37 Informes)
-                        </button>
-                        <button onclick="switchPhase('final')" id="phase-btn-final" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition-all border border-slate-700">
-                            <i class="fa-solid fa-square-check mr-1.5"></i> Certificación Final (37 Informes)
-                        </button>
-                    </div>
-                    <div class="flex items-center gap-4 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
-                        <div class="text-center">
-                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Informes Recibidos</span>
-                            <span id="phase-progress-text" class="text-base font-bold text-teal-400">0 / 37 (0%)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Phase Title & Desc Header -->
-                <div>
-                    <h2 id="phase-title" class="text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-file-shield text-teal-400"></i> Certificación de Inventario Pre-Cierre
-                    </h2>
-                    <p id="phase-desc" class="text-sm text-slate-400">Control de recepción, evaluación de informes y bitácora de recordatorios enviados a custodios para el pre-cierre.</p>
-                </div>
-
-                <!-- Reminders Log -->
-                <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-5 space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                        <h3 class="font-bold text-sm text-teal-300 flex items-center gap-2">
-                            <i class="fa-solid fa-envelope-circle-check"></i> Bitácora de Recordatorios y Comunicaciones
-                        </h3>
-                        <button onclick="openReminderModal()" class="bg-slate-800 hover:bg-slate-700 text-teal-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-paper-plane"></i> Registrar Nuevo Recordatorio
-                        </button>
-                    </div>
-                    <div id="reminders-container" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
-                </div>
-
-                <!-- Custodians Table -->
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h3 class="font-bold text-sm text-slate-200">Seguimiento de Custodios Enlace (37)</h3>
-                        <span class="text-xs text-slate-400">Actualice el estatus, notas y fechas de recepción y completado</span>
-                    </div>
-                    <div class="overflow-x-auto border border-slate-800 rounded-xl">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-slate-900 text-slate-300 uppercase tracking-wider border-b border-slate-800">
-                                    <th class="p-3.5">Custodio Enlace</th>
-                                    <th class="p-3.5 text-center">Informe Recibido</th>
-                                    <th class="p-3.5 text-center">Fecha Recibido</th>
-                                    <th class="p-3.5 text-center">Fecha Completado</th>
-                                    <th class="p-3.5 text-center">Estatus de Evaluación</th>
-                                    <th class="p-3.5">Observaciones</th>
-                                    <th class="p-3.5 text-center">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody id="custodians-table-body" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="mt-auto py-4 text-center text-xs text-slate-500 border-t border-slate-900">
-        Universidad Interamericana de Puerto Rico &bull; Recinto de Ponce &bull; Oficina de Propiedad
-    </footer>
-
-    <!-- Modals -->
-    <div id="task-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-                <h3 id="modal-title" class="font-bold text-lg text-white">Create Operational Task</h3>
-                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form id="task-form" onsubmit="handleTaskSubmit(event)" class="p-6 flex flex-col gap-4">
-                <input type="hidden" id="task-id">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Título de tarea *</label>
-                    <input type="text" id="task-title" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-teal-500">
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Categoría</label>
-                        <select id="task-category" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
-                            <option value="Equipos">Equipos</option>
-                            <option value="Inventario">Inventario</option>
-                            <option value="Reparación">Reparación</option>
-                            <option value="Disposición">Disposición</option>
-                            <option value="General">General</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Prioridad</label>
-                        <select id="task-priority" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
-                            <option value="High">🔴 Alta</option>
-                            <option value="Medium" selected>🟡 Media</option>
-                            <option value="Low">🟢 Baja</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Columna / Estatus</label>
-                        <select id="task-column" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
-                            <option value="backlog">Pendiente</option>
-                            <option value="todo">Tareas</option>
-                            <option value="in-progress">En Progreso</option>
-                            <option value="completed">Completado</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fecha de Entrega</label>
-                        <input type="date" id="task-due" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Detalles / Notas</label>
-                    <textarea id="task-desc" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100"></textarea>
-                </div>
-                <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
-                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancelar</button>
-                    <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-xl text-sm shadow-lg">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Reminder Modal -->
-    <div id="reminder-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-                <h3 class="font-bold text-lg text-white">Registrar Recordatorio</h3>
-                <button onclick="closeReminderModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="handleReminderSubmit(event)" class="p-6 flex flex-col gap-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Destinatario / Custodios</label>
-                    <input type="text" id="rem-target" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fecha de Envío</label>
-                    <input type="date" id="rem-date" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Asunto / Notas</label>
-                    <textarea id="rem-notes" rows="3" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100"></textarea>
-                </div>
-                <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
-                    <button type="button" onclick="closeReminderModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancel</button>
-                    <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-xl text-sm shadow-lg">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Custodian Edit Modal -->
-    <div id="custodian-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-                <h3 class="font-bold text-lg text-white">Editar Estatus de Custodio</h3>
-                <button onclick="closeCustodianModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="handleCustodianSubmit(event)" class="p-6 flex flex-col gap-4">
-                <input type="hidden" id="cust-id">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Departamento / Custodio</label>
-                    <input type="text" id="cust-name" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-300">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Informe Recibido</label>
-                    <select id="cust-received" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Recibido">Recibido</option>
-                    </select>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fecha Recibido</label>
-                        <input type="date" id="cust-date-rec" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Fecha Completado</label>
-                        <input type="date" id="cust-date-comp" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Estatus de Evaluación</label>
-                    <select id="cust-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-100">
-                        <option value="No Evaluado">No Evaluado</option>
-                        <option value="En Revisión">En Revisión</option>
-                        <option value="Completado">Completado</option>
-                        <option value="Requiere Acción">Requiere Acción</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Observaciones</label>
-                    <textarea id="cust-notes" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100"></textarea>
-                </div>
-                <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t border-slate-800">
-                    <button type="button" onclick="closeCustodianModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800">Cancelar</button>
-                    <button type="submit" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-5 py-2 rounded-xl text-sm shadow-lg">Actualizar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border border-teal-500/40 text-slate-100 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3">
-        <i class="fa-solid fa-circle-check text-teal-400 text-lg"></i>
-        <span id="toast-msg" class="text-sm font-medium">Cambios guardados exitosamente!</span>
-    </div>
-
-    <!-- Application Script -->
-    <script>
-        // ==========================================
-        // SUPABASE CONFIGURATION
-        // ==========================================
-        const SUPABASE_URL = 'https://ncyazwagpqefdlkykdkz.supabase.co'; 
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jeWF6d2FncHFlZmRsa3lrZGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5OTA1MDYsImV4cCI6MjEwODU2NjUwNn0.Bx4DrpCxthOgbUb9M6kdfTy_c1qEunseLnb28YNeP9A'; 
-
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        function getCurrentCycleDate() {
-            const now = new Date();
-            let year = now.getFullYear();
-            if (year < 2026) year = 2026;
-            let month = now.getMonth();
-            let day = now.getDate();
-            if (day >= 16) {
-                month += 1;
-                if (month > 11) { month = 0; year += 1; }
-            }
-            return { year, month };
-        }
-
-        let activeCycle = getCurrentCycleDate();
-        let activePhase = 'precierre'; // 'precierre' or 'final'
-
-        const monthNamesFull = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const monthNamesSpanish = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-
-        function updateCycleHeader() {
-            const endingMonthName = monthNamesSpanish[activeCycle.month];
-            const capitalizedMonth = endingMonthName.charAt(0).toUpperCase() + endingMonthName.slice(1);
-            const endingYear = activeCycle.year;
-            
-            let startMonth = activeCycle.month - 1;
-            let startYear = activeCycle.year;
-            if (startMonth < 0) { startMonth = 11; startYear -= 1; }
-            const startMonthName = monthNamesSpanish[startMonth];
-            
-            document.getElementById('cycle-title').innerText = `Informe Mensual ${capitalizedMonth} ${endingYear}`;
-            document.getElementById('cycle-dates').innerText = `16 ${startMonthName} ${startYear} – 15 ${endingMonthName} ${endingYear}`;
-        }
-
-        function changeCycle(direction) {
-            activeCycle.month += direction;
-            if (activeCycle.month > 11) { activeCycle.month = 0; activeCycle.year += 1; }
-            else if (activeCycle.month < 0) { activeCycle.month = 11; activeCycle.year -= 1; }
-            if (activeCycle.year < 2026) {
-                activeCycle.year = 2026;
-                activeCycle.month = 0;
-            }
-            loadCycleData();
-        }
-
-        function openCyclePicker() {
-            const picker = document.getElementById('month-picker');
-            const mStr = String(activeCycle.month + 1).padStart(2, '0');
-            picker.value = `${activeCycle.year}-${mStr}`;
-            picker.showPicker ? picker.showPicker() : picker.click();
-        }
-
-        function onMonthPicked(val) {
-            if (!val) return;
-            const parts = val.split('-');
-            let yr = parseInt(parts[0]);
-            if (yr < 2026) yr = 2026;
-            activeCycle.year = yr;
-            activeCycle.month = parseInt(parts[1]) - 1;
-            loadCycleData();
-        }
-
-        // Clean initial request types with 0 received/completed
-        const defaultRequestTypes = [
-            { id: 'req_nuevas', title: 'Etiquetas nuevas', desc: 'Emisión y colocación de etiquetas por primera vez.', received: 0, completed: 0 },
-            { id: 'req_deterioro', title: 'Etiquetas por deterioro', desc: 'Reemplazo de etiquetas deterioradas o ilegibles.', received: 0, completed: 0 },
-            { id: 'req_reparacion', title: 'Reparación fuera de la unidad', desc: 'Solicitud para reparar equipos fuera de la unidad.', received: 0, completed: 0 },
-            { id: 'req_transferencias', title: 'Transferencias de equipos', desc: 'Movimientos de equipos de un espacio a otro.', received: 0, completed: 0 },
-            { id: 'req_gestiones', title: 'Uso en gestiones oficiales', desc: 'Solicitud para utilizar equipos fuera de la unidad en actividades oficiales.', received: 0, completed: 0 },
-            { id: 'req_desaparicion', title: 'Desaparición de equipos', desc: 'Certificación para la desaparición de equipos o propiedad UIPR.', received: 0, completed: 0 },
-            { id: 'req_disposicion', title: 'Disposición de equipos', desc: 'Solicitud para disponer de equipos dañados, obsoletos o inservibles.', received: 0, completed: 0 },
-            { id: 'req_recogido', title: 'Recogido de equipos', desc: 'Recogido de equipos decomisados para disponer.', received: 0, completed: 0 }
-        ];
-
-        function generateCleanCustodians() {
-            const list = ["Ana L. Martínez Santiago", "Karen García Cruzado", "Jessica Castro Santiago", "Wanda I. Andújar Rivas", "Doel Lugo Irizarry", "Marinelly González Guzmán", "Lucila Jorge Cintrón", "Luis G. Felix Morales", "Natasha Borrero Muñíz", "Oscar Díaz Millán", "Amarilys Orozco Andujar", "Joceline Rodríguez Aponte", "María Rivera Ortíz", "María M. Muñoz Dávila", "Cuenta Gen. Propiedad - Greychel Ocasio", "José Lugo Ocasio", "Reinaldo Rosado Vega", "Ernesto Rosado Torres", "Jaime Torres González", "Jennyfer Almodóvar Figueroa", "Jennifer Burgos Ortíz", "Brenda Rodríguez Rosado", "Juan C. Fong Sam", "Liset Rosado Rivera", "Waldemar Colón", "Carlos Herrera Breda", "María De Los A. Silva", "Adriana S. Torres Cruz", "Oscar Mercado Ortiz", "Miguel Lugo Torres", "Cuenta invprop CIT - Miguel Lugo", "Cuenta invprop CIT AV - Walberto Rodríguez", "Nelson Rodríguez", "Milton D. Morales Torres", "Sofía Echevarría Maldonado", "Hilda Stella Munera", "Dilia Rodríguez Besosa"];
-            let custodians = [];
-            for (let i = 1; i <= 37; i++) {
-                custodians.push({
-                    id: `cust_${i}`,
-                    name: list[i-1] || `Departamento / Oficina #${i}`,
-                    received: "Pendiente",
-                    date_received: "",
-                    date_completed: "",
-                    status: "",
-                    notes: ""
-                });
-            }
-            return custodians;
-        }
-
-        let currentData = {
-            requests: JSON.parse(JSON.stringify(defaultRequestTypes)),
-            tasks: [],
-            notes: '',
-            precierre_custodians: generateCleanCustodians(),
-            precierre_reminders: [],
-            final_custodians: generateCleanCustodians(),
-            final_reminders: []
-        };
-
-        async function loadCycleData() {
-            updateCycleHeader();
-            const cycleKey = `cycle_${activeCycle.year}_${activeCycle.month}`;
-
-            try {
-                const { data, error } = await supabaseClient.from('property_cycles').select('*').eq('cycle_key', cycleKey).single();
-                if (data && data.payload) {
-                    currentData = data.payload;
-                    if (!currentData.requests || currentData.requests.length < 8) {
-                        currentData.requests = JSON.parse(JSON.stringify(defaultRequestTypes));
-                    }
-                } else {
-                    currentData = {
-                        requests: JSON.parse(JSON.stringify(defaultRequestTypes)),
-                        tasks: [],
-                        notes: '',
-                        precierre_custodians: generateCleanCustodians(),
-                        precierre_reminders: [],
-                        final_custodians: generateCleanCustodians(),
-                        final_reminders: []
-                    };
-                    await saveCycleData(false);
-                }
-            } catch(e) {
-                console.error('Supabase load error:', e);
-            }
-
-            if (!currentData.precierre_custodians) currentData.precierre_custodians = generateCleanCustodians();
-            if (!currentData.precierre_reminders) currentData.precierre_reminders = [];
-            if (!currentData.final_custodians) currentData.final_custodians = generateCleanCustodians();
-            if (!currentData.final_reminders) currentData.final_reminders = [];
-
-            renderRequestsDashboard();
-            renderKanban();
-            renderPhaseModule();
-            document.getElementById('strategic-notes-area').value = currentData.notes || '';
-        }
-
-        async function saveCycleData(showNotif = true) {
-            const cycleKey = `cycle_${activeCycle.year}_${activeCycle.month}`;
-            try {
-                const { error } = await supabaseClient.from('property_cycles').upsert({ cycle_key: cycleKey, payload: currentData, updated_at: new Date() });
-                if (error) console.error('Supabase save error:', error);
-            } catch(e) {
-                console.error('Supabase exception:', e);
-            }
-            if (showNotif) { showToast('Changes saved to Supabase!'); }
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
-        }
-
-        function switchTab(tab) {
-            if (tab === 'dashboard') {
-                document.getElementById('tab-dashboard').classList.remove('hidden');
-                document.getElementById('tab-precierre').classList.add('hidden');
-                document.getElementById('nav-btn-dashboard').className = "bg-teal-500 text-slate-950 font-semibold px-3.5 py-2 rounded-lg text-xs transition-all shadow-md";
-                document.getElementById('nav-btn-precierre').className = "bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all";
-            } else {
-                document.getElementById('tab-dashboard').classList.add('hidden');
-                document.getElementById('tab-precierre').classList.remove('hidden');
-                document.getElementById('nav-btn-dashboard').className = "bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg border border-slate-700 font-semibold text-xs transition-all";
-                document.getElementById('nav-btn-precierre').className = "bg-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md";
-            }
-        }
-
-        function switchPhase(phase) {
-            activePhase = phase;
-            if (phase === 'precierre') {
-                document.getElementById('phase-btn-precierre').className = "bg-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md";
-                document.getElementById('phase-btn-final').className = "bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition-all border border-slate-700";
-                document.getElementById('phase-title').innerHTML = `<i class="fa-solid fa-file-shield text-teal-400"></i> Certificación de Inventario Pre-Cierre`;
-                document.getElementById('phase-desc').innerText = `Control de recepción, evaluación de informes y bitácora de recordatorios para el pre-cierre.`;
-            } else {
-                document.getElementById('phase-btn-precierre').className = "bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition-all border border-slate-700";
-                document.getElementById('phase-btn-final').className = "bg-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md";
-                document.getElementById('phase-title').innerHTML = `<i class="fa-solid fa-square-check text-teal-400"></i> Certificación Final de Inventario`;
-                document.getElementById('phase-desc').innerText = `Control de recepción y evaluación de informes finales de inventario de los 37 custodios.`;
-            }
-            renderPhaseModule();
-        }
-
-        function renderRequestsDashboard() {
-            const container = document.getElementById('requests-container');
-            container.innerHTML = '';
-            let totalRec = 0, totalComp = 0;
-
-            currentData.requests.forEach((req, idx) => {
-                totalRec += Number(req.received);
-                totalComp += Number(req.completed);
-                
-                let rate = 0;
-                if (req.received > 0) {
-                    rate = Math.round((req.completed / req.received) * 100);
-                }
-                const pending = Math.max(0, req.received - req.completed);
-
-                let badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30', barColor = 'bg-emerald-500';
-                if (req.received === 0) {
-                    badgeColor = 'bg-slate-800 text-slate-400 border-slate-700';
-                    barColor = 'bg-slate-600';
-                } else if (rate < 75) { 
-                    badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/30'; 
-                    barColor = 'bg-rose-500'; 
-                } else if (rate < 90) { 
-                    badgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/30'; 
-                    barColor = 'bg-amber-500'; 
-                }
-
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="bg-slate-950/50 border border-slate-800/80 rounded-xl p-4 flex flex-col gap-3">
-                        <div class="flex items-start justify-between gap-2">
-                            <div>
-                                <h4 class="font-semibold text-sm text-slate-100">${req.title}</h4>
-                                <p class="text-[11px] text-slate-400">${req.desc}</p>
-                            </div>
-                            <span class="text-xs px-2.5 py-0.5 rounded-full border ${badgeColor} font-bold whitespace-nowrap">${rate}% Cumplimiento</span>
-                        </div>
-                        <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
-                            <div class="${barColor} h-full transition-all duration-500 rounded-full" style="width: ${Math.min(100, rate)}%"></div>
-                        </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-slate-900 text-xs">
-                            <div class="flex items-center gap-4">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-slate-400">Recibidas:</span>
-                                    <input type="number" min="0" value="${req.received}" onchange="updateRequestMetric(${idx}, 'received', this.value)"
-                                        class="w-14 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-center font-bold text-white focus:outline-none focus:border-teal-500">
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-slate-400">Completadas:</span>
-                                    <input type="number" min="0" value="${req.completed}" onchange="updateRequestMetric(${idx}, 'completed', this.value)"
-                                        class="w-14 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-center font-bold text-teal-400 focus:outline-none focus:border-teal-500">
-                                </div>
-                            </div>
-                            <div class="text-slate-400 font-medium">Pendientes: <span class="text-amber-400 font-bold">${pending}</span></div>
-                        </div>
-                    </div>
-                `);
-            });
-
-            document.getElementById('kpi-total-received').innerText = totalRec;
-            document.getElementById('kpi-total-completed').innerText = totalComp;
-            const overallRate = totalRec > 0 ? Math.round((totalComp / totalRec) * 100) : 0;
-            const overallEl = document.getElementById('kpi-overall-rate');
-            overallEl.innerText = overallRate + '%';
-            overallEl.className = overallRate >= 90 ? 'text-base font-bold text-emerald-400' : (overallRate >= 75 ? 'text-base font-bold text-amber-400' : (totalRec > 0 ? 'text-base font-bold text-rose-400' : 'text-base font-bold text-slate-400'));
-        }
-
-        function updateRequestMetric(index, field, value) {
-            let val = parseInt(value) || 0;
-            if (val < 0) val = 0;
-
-            const req = currentData.requests[index];
-            if (field === 'received') {
-                req.received = val;
-                if (req.completed > req.received) {
-                    req.completed = req.received;
-                }
-            } else if (field === 'completed') {
-                if (val > req.received) {
-                    val = req.received;
-                }
-                req.completed = val;
-            }
-
-            saveCycleData(false);
-            renderRequestsDashboard();
-        }
-
-        function renderPhaseModule() {
-            const remindersKey = activePhase === 'precierre' ? 'precierre_reminders' : 'final_reminders';
-            const custodiansKey = activePhase === 'precierre' ? 'precierre_custodians' : 'final_custodians';
-
-            const remContainer = document.getElementById('reminders-container');
-            remContainer.innerHTML = '';
-            const rems = currentData[remindersKey] || [];
-            
-            if (rems.length === 0) {
-                remContainer.innerHTML = `<p class="text-xs text-slate-500 italic">No hay recordatorios registrados en esta fase.</p>`;
-            } else {
-                rems.forEach((rem, idx) => {
-                    remContainer.insertAdjacentHTML('beforeend', `
-                        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center justify-between text-xs">
-                            <div class="flex items-center gap-3">
-                                <span class="text-teal-400 font-bold"><i class="fa-regular fa-calendar-days"></i> ${rem.date}</span>
-                                <span class="text-slate-200 font-medium">Para: ${rem.target}</span>
-                                <span class="text-slate-400">&bull; ${rem.notes}</span>
-                            </div>
-                            <button onclick="deleteReminder(${idx})" class="text-slate-500 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    `);
-                });
-            }
-
-            const tbody = document.getElementById('custodians-table-body');
-            tbody.innerHTML = '';
-            let receivedCount = 0;
-            const custs = currentData[custodiansKey] || [];
-
-            custs.forEach((cust, idx) => {
-                if (cust.received === "Recibido") receivedCount++;
-                let recBadge = cust.received === "Recibido" ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border-amber-500/30';
-                let statusBadge = 'bg-slate-800 text-slate-300 border-slate-700';
-                if (cust.status === "Completado") statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-                else if (cust.status === "Requiere Acción") statusBadge = 'bg-rose-500/10 text-rose-400 border-rose-500/30';
-                else if (cust.status === "En Revisión") statusBadge = 'bg-blue-500/10 text-blue-400 border-blue-500/30';
-
-                tbody.insertAdjacentHTML('beforeend', `
-                    <tr class="hover:bg-slate-900/60 transition">
-                        <td class="p-3.5 font-medium text-white">${cust.name}</td>
-                        <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${recBadge}">${cust.received}</span></td>
-                        <td class="p-3.5 text-center text-slate-300">${cust.date_received || '-'}</td>
-                        <td class="p-3.5 text-center text-slate-300">${cust.date_completed || '-'}</td>
-                        <td class="p-3.5 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${statusBadge}">${cust.status || '-'}</span></td>
-                        <td class="p-3.5 text-slate-400 text-xs">${cust.notes || '-'}</td>
-                        <td class="p-3.5 text-center">
-                            <button onclick="openCustodianModal(${idx})" class="bg-slate-800 hover:bg-slate-700 text-teal-400 px-2.5 py-1 rounded-lg text-xs font-semibold border border-slate-700">Editar</button>
-                        </td>
-                    </tr>
-                `);
-            });
-
-            const pct = Math.round((receivedCount / 37) * 100);
-            document.getElementById('phase-progress-text').innerText = `${receivedCount} / 37 (${pct}%)`;
-        }
-
-        function openReminderModal() {
-            document.getElementById('rem-target').value = '';
-            document.getElementById('rem-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('rem-notes').value = '';
-            document.getElementById('reminder-modal').classList.remove('hidden');
-            document.getElementById('reminder-modal').classList.add('flex');
-        }
-        function closeReminderModal() {
-            document.getElementById('reminder-modal').classList.remove('flex');
-            document.getElementById('reminder-modal').classList.add('hidden');
-        }
-        function handleReminderSubmit(e) {
-            e.preventDefault();
-            const remindersKey = activePhase === 'precierre' ? 'precierre_reminders' : 'final_reminders';
-            if (!currentData[remindersKey]) currentData[remindersKey] = [];
-
-            currentData[remindersKey].push({
-                id: 'rem_' + Date.now(),
-                target: document.getElementById('rem-target').value.trim(),
-                date: document.getElementById('rem-date').value,
-                notes: document.getElementById('rem-notes').value.trim()
-            });
-            closeReminderModal();
-            saveCycleData();
-            renderPhaseModule();
-        }
-        function deleteReminder(idx) {
-            if (confirm('¿Eliminar este recordatorio?')) {
-                const remindersKey = activePhase === 'precierre' ? 'precierre_reminders' : 'final_reminders';
-                currentData[remindersKey].splice(idx, 1);
-                saveCycleData();
-                renderPhaseModule();
-            }
-        }
-
-        function openCustodianModal(idx) {
-            const custodiansKey = activePhase === 'precierre' ? 'precierre_custodians' : 'final_custodians';
-            const cust = currentData[custodiansKey][idx];
-            document.getElementById('cust-id').value = idx;
-            document.getElementById('cust-name').value = cust.name;
-            document.getElementById('cust-received').value = cust.received;
-            document.getElementById('cust-date-rec').value = cust.date_received || '';
-            document.getElementById('cust-date-comp').value = cust.date_completed || '';
-            document.getElementById('cust-status').value = cust.status || 'No Evaluado';
-            document.getElementById('cust-notes').value = cust.notes || '';
-            document.getElementById('custodian-modal').classList.remove('hidden');
-            document.getElementById('custodian-modal').classList.add('flex');
-        }
-        function closeCustodianModal() {
-            document.getElementById('custodian-modal').classList.remove('flex');
-            document.getElementById('custodian-modal').classList.add('hidden');
-        }
-        function handleCustodianSubmit(e) {
-            e.preventDefault();
-            const idx = parseInt(document.getElementById('cust-id').value);
-            const custodiansKey = activePhase === 'precierre' ? 'precierre_custodians' : 'final_custodians';
-            currentData[custodiansKey][idx].received = document.getElementById('cust-received').value;
-            currentData[custodiansKey][idx].date_received = document.getElementById('cust-date-rec').value;
-            currentData[custodiansKey][idx].date_completed = document.getElementById('cust-date-comp').value;
-            currentData[custodiansKey][idx].status = document.getElementById('cust-status').value;
-            currentData[custodiansKey][idx].notes = document.getElementById('cust-notes').value.trim();
-            closeCustodianModal();
-            saveCycleData();
-            renderPhaseModule();
-        }
-
-        function renderKanban() {
-            const searchQuery = document.getElementById('search-tasks').value.toLowerCase();
-            const cols = ['backlog', 'todo', 'in-progress', 'completed'];
-            const counts = { backlog: 0, todo: 0, 'in-progress': 0, completed: 0 };
-            cols.forEach(colId => { document.getElementById(`col-${colId}`).innerHTML = ''; });
-
-            const filteredTasks = currentData.tasks.filter(t => 
-                t.title.toLowerCase().includes(searchQuery) || (t.desc && t.desc.toLowerCase().includes(searchQuery))
-            );
-
-            filteredTasks.forEach(task => {
-                counts[task.column] = (counts[task.column] || 0) + 1;
-                const colEl = document.getElementById(`col-${task.column}`);
-                if (colEl) colEl.insertAdjacentHTML('beforeend', createTaskCardHTML(task));
-            });
-
-            cols.forEach(colId => { document.getElementById(`count-${colId}`).innerText = counts[colId]; });
-        }
-
-        function createTaskCardHTML(task) {
-            let priorityBadge = '<span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium">Medium</span>';
-            if (task.priority === 'High') priorityBadge = '<span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium">High</span>';
-            if (task.priority === 'Low') priorityBadge = '<span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">Low</span>';
-
-            let dueFormatted = '';
-            if (task.due) {
-                const d = new Date(task.due + 'T00:00:00');
-                dueFormatted = d.toLocaleDateString('es-PR', { month: 'short', day: 'numeric' });
-            }
-
-            return `
-                <div draggable="true" ondragstart="dragTask(event)" data-id="${task.id}"
-                    class="bg-slate-900 border border-slate-800 hover:border-teal-500/40 rounded-xl p-3.5 shadow-md flex flex-col gap-2.5 cursor-grab active:cursor-grabbing group">
-                    <div class="flex items-start justify-between gap-2">
-                        <span class="text-[10px] px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20 font-medium">${task.category}</span>
-                        <div class="flex items-center gap-1 opacity-70 group-hover:opacity-100">
-                            <button onclick="openTaskModal('${task.id}')" class="text-slate-400 hover:text-teal-400 p-1"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="deleteTask('${task.id}')" class="text-slate-400 hover:text-rose-400 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
-                        </div>
-                    </div>
-                    <h4 class="font-semibold text-xs text-slate-100 leading-snug">${escapeHtml(task.title)}</h4>
-                    ${task.desc ? `<p class="text-[11px] text-slate-400 line-clamp-2">${escapeHtml(task.desc)}</p>` : ''}
-                    <div class="flex items-center justify-between pt-2 border-t border-slate-800/60 text-[11px] text-slate-400">
-                        <div class="flex items-center gap-2">${priorityBadge} ${dueFormatted ? `<span><i class="fa-regular fa-calendar text-[10px]"></i> ${dueFormatted}</span>` : ''}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-        }
-
-        function openTaskModal(taskId = null) {
-            const modal = document.getElementById('task-modal');
-            document.getElementById('task-form').reset();
-            document.getElementById('task-id').value = '';
-
-            if (taskId) {
-                document.getElementById('modal-title').innerText = 'Edit Task';
-                const task = currentData.tasks.find(t => t.id === taskId);
-                if (task) {
-                    document.getElementById('task-id').value = task.id;
-                    document.getElementById('task-title').value = task.title;
-                    document.getElementById('task-category').value = task.category;
-                    document.getElementById('task-priority').value = task.priority;
-                    document.getElementById('task-column').value = task.column;
-                    document.getElementById('task-due').value = task.due || '';
-                    document.getElementById('task-desc').value = task.desc || '';
-                }
-            } else {
-                document.getElementById('modal-title').innerText = 'Create Operational Task';
-                document.getElementById('task-due').value = new Date().toISOString().split('T')[0];
-            }
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-        function closeTaskModal() {
-            document.getElementById('task-modal').classList.remove('flex');
-            document.getElementById('task-modal').classList.add('hidden');
-        }
-        function handleTaskSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('task-id').value;
-            const title = document.getElementById('task-title').value.trim();
-            const category = document.getElementById('task-category').value;
-            const priority = document.getElementById('task-priority').value;
-            const column = document.getElementById('task-column').value;
-            const due = document.getElementById('task-due').value;
-            const desc = document.getElementById('task-desc').value.trim();
-
-            if (!title) return;
-            if (id) {
-                const idx = currentData.tasks.findIndex(t => t.id === id);
-                if (idx !== -1) { currentData.tasks[idx] = { id, title, category, priority, column, due, desc }; }
-            } else {
-                currentData.tasks.push({ id: 'task-' + Date.now(), title, category, priority, column, due, desc });
-            }
-            closeTaskModal();
-            saveCycleData();
-            renderKanban();
-        }
-        function deleteTask(id) {
-            if (confirm('¿Desea eliminar esta tarea?')) {
-                currentData.tasks = currentData.tasks.filter(t => t.id !== id);
-                saveCycleData();
-                renderKanban();
-            }
-        }
-
-        function dragTask(ev) { ev.dataTransfer.setData("text/plain", ev.target.dataset.id); }
-        function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('bg-slate-800/60', 'border-teal-500/50'); }
-        function removeDropStyle(ev) { ev.currentTarget.classList.remove('bg-slate-800/60', 'border-teal-500/50'); }
-        function drop(ev, targetColumn) {
-            ev.preventDefault();
-            ev.currentTarget.classList.remove('bg-slate-800/60', 'border-teal-500/50');
-            const taskId = ev.dataTransfer.getData("text/plain");
-            const task = currentData.tasks.find(t => t.id === taskId);
-            if (task) {
-                task.column = targetColumn;
-                saveCycleData(false);
-                renderKanban();
-            }
-        }
-
-        function saveNotes() {
-            currentData.notes = document.getElementById('strategic-notes-area').value;
-            saveCycleData();
-        }
-
-        // ==========================================
-        // GENERATE WORD REPORT VIA NATIVE HTML-TO-WORD (.doc)
-        // (Smaller compact table rows with tighter padding)
-        // ==========================================
-        function generateWordReport() {
-            const endingMonthIdx = activeCycle.month;
-            const endingYear = activeCycle.year;
-            let startMonthIdx = endingMonthIdx - 1;
-            let startYear = endingYear;
-            if (startMonthIdx < 0) {
-                startMonthIdx = 11;
-                startYear -= 1;
-            }
-
-            const startMonthName = monthNamesSpanish[startMonthIdx];
-            const endingMonthName = monthNamesSpanish[endingMonthIdx];
-
-            const notesText = document.getElementById('strategic-notes-area').value.trim();
-            const lines = notesText ? notesText.split(/\r?\n/).filter(l => l.trim().length > 0) : ["Gestiones generales de inventario y control de propiedad."];
-            
-            let bulletsHtml = "";
-            lines.forEach(line => {
-                bulletsHtml += `<li style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; margin-bottom:4pt; line-height:1.15;">${escapeHtml(line.trim())}</li>`;
-            });
-
-            // Completed Tasks from Kanban Board ("Completado" column)
-            const completedTasks = currentData.tasks.filter(t => t.column === 'completed');
-            let completedTasksHtml = "";
-            if (completedTasks.length > 0) {
-                completedTasks.forEach(t => {
-                    completedTasksHtml += `<li style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; margin-bottom:4pt; line-height:1.15;">${escapeHtml(t.title)}${t.desc ? ' - ' + escapeHtml(t.desc) : ''}</li>`;
-                });
-            } else {
-                completedTasksHtml = `<li style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; margin-bottom:4pt; line-height:1.15;">No se registraron tareas adicionales completadas en este ciclo.</li>`;
-            }
-
-            let requestsRowsHtml = "";
-            currentData.requests.forEach(req => {
-                const rate = req.received > 0 ? Math.round((req.completed / req.received) * 100) + '%' : '—';
-                requestsRowsHtml += `
-                    <tr style="page-break-inside: avoid; height: 16pt;">
-                        <td style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; padding:3pt 6pt; border-bottom:1px solid #94a3b8; line-height:1.1;">${req.title}</td>
-                        <td style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; padding:3pt 6pt; border-bottom:1px solid #cbd5e1; text-align:center; line-height:1.1;">${req.completed} / ${req.received}</td>
-                        <td style="font-family:'Times New Roman',serif; font-size:12pt; mso-ansi-font-size:12pt; padding:3pt 6pt; border-bottom:1px solid #cbd5e1; text-align:center; line-height:1.1;">${rate}</td>
-                    </tr>
-                `;
-            });
-
-            const htmlContent = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-                <head>
-                    <meta charset="utf-8">
-                    <title>Informe Mensual</title>
-                    <!--[if gte mso 9]>
-                    <xml>
-                        <w:WordDocument>
-                            <w:View>Print</w:View>
-                            <w:Zoom>100</w:Zoom>
-                            <w:DoNotOptimizeForBrowser/>
-                        </w:WordDocument>
-                    </xml>
-                    <![endif]-->
-                    <style>
-                        @page Section1 {
-                            size: 8.5in 11in;
-                            margin: 1in 1in 1in 1in;
-                            mso-header: h1;
-                            mso-header-margin: 0.3in;
-                            mso-footer-margin: 0.3in;
-                        }
-                        div.Section1 { page: Section1; }
-                        body { font-family: 'Times New Roman', serif; font-size: 12pt; color: #000000; line-height: 1.15; margin: 0; }
-                        h1 { font-family: 'Times New Roman', serif; font-size: 12pt; font-weight: bold; margin-bottom: 2pt; }
-                        h2 { font-family: 'Times New Roman', serif; font-size: 12pt; font-weight: bold; margin-top: 14pt; margin-bottom: 4pt; page-break-after: avoid; }
-                        p { font-family: 'Times New Roman', serif; font-size: 12pt; margin-bottom: 8pt; line-height: 1.15; }
-                        li { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.15; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 8pt; margin-bottom: 16pt; page-break-inside: avoid; }
-                        th { font-family: 'Times New Roman', serif; font-size: 12pt; font-weight: bold; padding: 4pt 6pt; border-bottom: 2px solid #000000; text-align: left; }
-                        td { font-family: 'Times New Roman', serif; font-size: 12pt; padding: 3pt 6pt; }
-                        .MsoHeader { font-family: 'Arial', serif; font-size: 12pt; margin: 0; padding: 0; line-height: 1.15; text-align: center; color:#555555;}
-                    </style>
-                </head>
-                <body>
-                    <div style="mso-element:header" id="h1">
-                        <p class="MsoHeader">
-                            Universidad Interamericana de Puerto Rico<br>
-                            Recinto de Ponce<br><br>
-                            Decanato de Administración
-                        </p>
-                    </div>
-
-                    <div class="Section1">
-                        <p style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; margin-bottom:2pt; text-align:center;">Oficina de Propiedad</p>
-                        <p style="font-family:'Times New Roman',serif; font-size:12pt; font-style:italic; color: #555555; margin-bottom: 14pt;">Periodo: 16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}</p>
-                        
-                        <p style="font-family:'Times New Roman',serif; font-size:12pt;">Durante el periodo comprendido del <strong>16 de ${startMonthName} al 15 de ${endingMonthName} de ${endingYear}</strong>, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p>
-                        
-                        <ul style="margin-top: 0; margin-bottom: 14pt; padding-left: 20pt;">
-                            ${bulletsHtml}
-                        </ul>
-
-                        <h2 style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; color: #0d9488;">Tareas mensuales completadas</h2>
-                        <ul style="margin-top: 0; margin-bottom: 14pt; padding-left: 20pt;">
-                            ${completedTasksHtml}
-                        </ul>
-
-                        <h2 style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; color: #0d9488;">Otros procesos relacionados</h2>
-                        
-                        <table>
-                            <thead>
-                                <tr style="height: 18pt;">
-                                    <th style="font-family:'Times New Roman',serif; font-size:12pt; padding: 4pt 6pt;">Categoría de Solicitud</th>
-                                    <th style="font-family:'Times New Roman',serif; font-size:12pt; padding: 4pt 6pt; text-align:center;">Completadas / Recibidas</th>
-                                    <th style="font-family:'Times New Roman',serif; font-size:12pt; padding: 4pt 6pt; text-align:center;">Cumplimiento</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${requestsRowsHtml}
-                            </tbody>
-                        </table>
-
-                        <h2 style="font-family:'Times New Roman',serif; font-size:12pt; font-weight:bold; color: #0d9488;">Pequeños Grandes Saberes</h2>
-                        <p style="font-family:'Times New Roman',serif; font-size:12pt;">Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p>
-                        
-                        <ul style="margin-top: 0; margin-bottom: 14pt; padding-left: 20pt;">
-                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.</li>
-                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.</li>
-                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.</li>
-                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.</li>
-                            <li style="font-family:'Times New Roman',serif; font-size:12pt; margin-bottom:4pt;">Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales.</li>
-                        </ul>
-
-                        <p style="font-family:'Times New Roman',serif; font-size:12pt; font-style: italic; color: #444444; text-align: center; margin-top: 18pt; margin-bottom: 8pt; page-break-inside: avoid;">“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.</p>
-                        <p style="font-family:'Times New Roman',serif; font-size:12pt; font-weight: bold; color: #0d9488; margin-bottom: 18pt; page-break-inside: avoid;">¡Estamos para servirles!</p>
-
-                        <div style="font-family:'Times New Roman',serif; font-size:12pt; line-height: 1.2; page-break-inside: avoid;">
-                            <p style="font-family:'Times New Roman',serif; font-size:12pt; font-weight: bold; margin: 0;">Greychel Ocasio Ortiz</p>
-                            <p style="font-family:'Times New Roman',serif; font-size:12pt; font-style: italic; margin: 0 0 4pt 0;">Oficial de Propiedad</p>
-                            <p style="font-family:'Times New Roman',serif; font-size:12pt; margin: 0;">Directo: (787) 437-7064</p>
-                            <p style="font-family:'Times New Roman',serif; font-size:12pt; margin: 0;">Tel. (787) 284-1912, ext. 2005</p>
-                            <p style="font-family:'Times New Roman',serif; font-size:12pt; margin: 0;">Contacto: <a href="mailto:grocasio@ponce.inter.edu">grocasio@ponce.inter.edu</a> / <a href="mailto:propiedad@ponce.inter.edu">propiedad@ponce.inter.edu</a></p>
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Informe_${endingMonthName}_${endingYear}.doc`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-            showToast('¡Informe descargado exitosamente!');
-        }
-
-        document.getElementById('search-tasks').addEventListener('input', renderKanban);
-        window.onload = function() { loadCycleData(); };
-    </script>
+<body>
+<div class="top">
+ <div class="wrap row between">
+  <div class="brand"><div class="logo">🏛</div><div><h1>Oficina de Bienes y Propiedad</h1><p class="mu">Oficial de Propiedad: Greychel Ocasio</p></div></div>
+  <div class="cyc" id="cyc">
+   <button class="ic" aria-label="Mes anterior" onclick="chg(-1)">‹</button>
+   <div class="mid"><b id="ct"></b><small id="cd"></small></div>
+   <button class="ic" aria-label="Mes siguiente" onclick="chg(1)">›</button>
+   <button class="ic" id="calb" aria-label="Elegir mes" aria-haspopup="true" aria-expanded="false" onclick="togglePop()"></button>
+   <button class="btn sm" onclick="cy=curCycle();render()">Ciclo actual</button>
+   <div class="pop" id="pop" hidden></div>
+  </div>
+  <div class="row">
+   <button class="ic" id="th" aria-label="Cambiar tema" onclick="theme()">◐</button>
+   <button class="btn pri" onclick="preview()">Vista previa del informe</button>
+  </div>
+ </div>
+ <nav class="tabs" role="tablist">
+  <button role="tab" data-t="dash">Dashboard</button>
+  <button role="tab" data-t="pre">Pre-Cierre</button>
+  <button role="tab" data-t="fin">Certificación Final</button>
+ </nav>
+</div>
+<main class="wrap" id="view"></main>
+<footer class="wrap mu" style="text-align:center">Universidad Interamericana de Puerto Rico · Recinto de Ponce · Oficina de Propiedad</footer>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const MES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const NAMES=["Ana L. Martínez Santiago","Karen García Cruzado","Jessica Castro Santiago","Wanda I. Andújar Rivas","Doel Lugo Irizarry","Marinelly González Guzmán","Lucila Jorge Cintrón","Luis G. Felix Morales","Natasha Borrero Muñíz","Oscar Díaz Millán","Amarilys Orozco Andujar","Joceline Rodríguez Aponte","María Rivera Ortíz","María M. Muñoz Dávila","Cuenta Gen. Propiedad - Greychel Ocasio","José Lugo Ocasio","Reinaldo Rosado Vega","Ernesto Rosado Torres","Jaime Torres González","Jennyfer Almodóvar Figueroa","Jennifer Burgos Ortíz","Brenda Rodríguez Rosado","Juan C. Fong Sam","Liset Rosado Rivera","Waldemar Colón","Carlos Herrera Breda","María De Los A. Silva","Adriana S. Torres Cruz","Oscar Mercado Ortiz","Miguel Lugo Torres","Cuenta invprop CIT - Miguel Lugo","Cuenta invprop CIT AV - Walberto Rodríguez","Nelson Rodríguez","Milton D. Morales Torres","Sofía Echevarría Maldonado","Hilda Stella Munera","Dilia Rodríguez Besosa"];
+const REQ=[["Etiquetas nuevas","Emisión y colocación de etiquetas por primera vez."],["Etiquetas por deterioro","Reemplazo de etiquetas deterioradas o ilegibles."],["Reparación fuera de la unidad","Solicitud para reparar equipos fuera de la unidad."],["Transferencias de equipos","Movimientos de equipos de un espacio a otro."],["Uso en gestiones oficiales","Equipos fuera de la unidad en actividades oficiales."],["Desaparición de equipos","Certificación para la desaparición de propiedad UIPR."],["Disposición de equipos","Equipos dañados, obsoletos o inservibles."],["Recogido de equipos","Recogido de equipos decomisados para disponer."]];
+const DEMO=[[14,12],[6,6],[9,5],[11,11],[4,3],[2,0],[7,4],[3,3]];
+const COLS=[["backlog","Pendiente"],["todo","Por hacer"],["prog","En progreso"],["done","Completado"]];
+const PR={H:["Alta","er"],M:["Media","wr"],L:["Baja","ok"]};
+const ST=["No Evaluado","En Revisión","Completado","Requiere Acción"];
+const CAT=["Equipos","Inventario","Reparación","Disposición","General"];
+let tab="dash",ph="pre",filt="all",q="",remOpen=false,S={cycles:{}};
+try{S=JSON.parse(localStorage.getItem("pv2")||"")||S}catch(e){}
+function save(){try{localStorage.setItem("pv2",JSON.stringify(S))}catch(e){}}
+const esc=t=>String(t??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const pad=n=>String(n).padStart(2,"0");
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+function curCycle(){const n=new Date();let y=Math.max(n.getFullYear(),2026),m=n.getMonth();if(n.getDate()>=16){m++;if(m>11){m=0;y++}}return{y,m}}
+let cy=curCycle();
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const sv=p=>`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const I={cal:sv('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),clock:sv('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),check:sv('<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>'),plus:sv('<path d="M12 5v14M5 12h14"/>'),lines:sv('<path d="M4 6h16M4 12h16M4 18h10"/>'),trash:sv('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>')};
+const sh=s=>{const p=s.split("-");return +p[2]+" "+MES[+p[1]-1].slice(0,3)};
+const fmt=s=>{if(!s)return"—";const[a,b,c]=s.split("-");return c+"/"+b+"/"+a};
+function roster(){return S.roster||NAMES}
+function mk(demo){return{c:roster().map((n,i)=>{const r=demo&&i<24;return{n,rec:r,dr:r?"2026-10-"+pad(8+i%17):"",dc:r&&i%3===0?"2026-10-26":"",st:r?(i%3===0?"Completado":i===5?"Requiere Acción":"En Revisión"):"No Evaluado",ob:i===5?"Faltan 3 equipos por verificar.":""}}),rem:demo?[{d:"2026-10-20",to:"Todos los custodios",n:"Recordatorio de entrega del informe de pre-cierre."}]:[]}}
+function D(){const k=cy.y+"_"+cy.m;if(!S.cycles[k]){const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;
+S.cycles[k]={req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",pre:mk(demo),fin:mk(false),
+tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""}]:[]};save()}return S.cycles[k]}
+function closeChip(){const e=new Date(cy.y,cy.m,15),s=new Date(cy.y,cy.m-1,16),n=new Date();n.setHours(0,0,0,0);
+if(n<s)return["Upcoming cycle","mu"];const d=Math.round((e-n)/864e5);return d<0?["Cycle closed","mu"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
+function head(){const sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1;$("#ct").textContent="Informe Mensual "+cap(MES[cy.m])+" "+cy.y;$("#cd").textContent="16 "+MES[sm].slice(0,3)+" "+sy+" – 15 "+MES[cy.m].slice(0,3)+" "+cy.y;
+document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===(tab==="dash"?"dash":ph)))}
+function chg(n){cy.m+=n;if(cy.m>11){cy.m=0;cy.y++}if(cy.m<0){cy.m=11;cy.y--}if(cy.y<2026){cy={y:2026,m:0}}render()}
+let py=2026;
+function renderPop(){const c=curCycle();$("#pop").innerHTML=`<div class="ph"><button class="ic" aria-label="Año anterior" onclick="popYear(-1)" ${py<=2026?"disabled":""}>‹</button><b>${py}</b><button class="ic" aria-label="Año siguiente" onclick="popYear(1)">›</button></div><div class="mg">${MES.map((m,i)=>`<button class="${py===cy.y&&i===cy.m?"cur":py===c.y&&i===c.m?"now":""}" onclick="setM(${i})">${cap(m.slice(0,3))}</button>`).join("")}</div><p class="mu" style="margin:10px 4px 0">Cada mes es el ciclo que cierra el día 15.</p>`}
+function togglePop(){const p=$("#pop");if(p.hidden){py=cy.y;renderPop();p.hidden=false}else p.hidden=true;$("#calb").setAttribute("aria-expanded",String(!p.hidden))}
+function closePop(){const p=$("#pop");if(p&&!p.hidden){p.hidden=true;$("#calb").setAttribute("aria-expanded","false")}}
+function popYear(n){py=Math.max(2026,py+n);renderPop()}
+function setM(i){cy={y:py,m:i};render()}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.t==="dash")tab="dash";else{tab="ph";ph=b.dataset.t;filt="all";q=""}render()});
+function theme(){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2200)}
+function render(){closePop();head();$("#view").innerHTML=tab==="dash"?dash():phase();if(tab!=="dash")rows()}
+
+/* ---------- Dashboard ---------- */
+function dash(){const d=D();let R=0,C=0;d.req.forEach(r=>{R+=r.r;C+=r.c});const rate=R?Math.round(C/R*100):0;
+const rq=d.req.map((r,i)=>{const v=rv(r);
+return`<div class="rq"><div><b>${esc(r.t)}</b><small>${esc(r.d)}</small></div>
+<div class="pbw"><div class="pb"><div class="bar"><i id="bar${i}" style="width:${v.p}%"></i></div><span class="chip ${v.cl}" id="pc${i}">${r.r?v.p+"%":"—"}</span></div><small class="mu" id="pe${i}">${v.tx}</small></div>
+<div><span class="lbl">Recibidas</span>${stp(i,"r",r.r,r.t)}</div><div><span class="lbl">Completadas</span>${stp(i,"c",r.c,r.t)}</div>
+</div>`}).join("");
+const cards=COLS.map(([k,l])=>{const ts=d.tasks.filter(t=>t.col===k);
+return`<div class="col" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="drop(event,'${k}')"><h3>${l}<span class="chip">${ts.length}</span></h3><div>${ts.length?ts.map(card).join(""):'<div class="empty">Arrastre tareas aquí</div>'}</div><button class="add" onclick="taskDlg(null,'${k}')">${I.plus} Añadir tarea</button></div>`}).join("");
+return`<section class="card pad"><div class="row between"><div><h2>Cumplimiento de solicitudes</h2><p class="mu">Solicitudes recibidas y trabajadas durante este periodo. Use + y − para actualizar.</p></div><span class="chip ${closeChip()[1]}">${closeChip()[0]}</span></div>
+<div class="kpis"><div class="kpi"><span>Recibidas</span><b id="kR">${R}</b></div><div class="kpi"><span>Completadas</span><b id="kC" style="color:var(--ok)">${C}</b></div><div class="kpi"><span>Pendientes</span><b id="kP" style="color:var(--wr)">${R-C}</b></div><div class="kpi"><span>Cumplimiento general</span><b id="kT">${R?rate+"%":"—"}</b></div></div>${rq}</section>
+<section class="card pad"><div class="row between"><div><h2>Objetivos del periodo</h2><p class="mu">Escriba una tarea por línea. Cada línea aparecerá como viñeta en el informe Word.</p></div><span class="chip ok" id="ns">Guardado ✓</span></div>
+<textarea rows="4" style="margin-top:12px" aria-label="Objetivos del periodo" placeholder="Ej.: Certificación de inventario pre-cierre." oninput="noteIn(this.value)">${esc(d.notes)}</textarea></section>
+<section><div class="row between" style="margin-bottom:12px"><div><h2>Tareas mensuales</h2><p class="mu">Arrastre las tarjetas o haga clic en una para editarla. Las completadas se incluyen en el informe.</p></div><button class="btn pri" onclick="taskDlg()">+ Nueva tarea</button></div><div class="board"><div class="kb">${cards}</div></div></section>`}
+function rv(r){const p=r.r?Math.round(r.c/r.r*100):0,pe=r.r-r.c;return{p,pe,cl:!r.r?"":p>=90?"ok":p>=75?"wr":"er",tx:pe>0?pe+" pendiente"+(pe>1?"s":""):r.r?"Al día":"Sin solicitudes"}}
+function stp(i,f,v,t){const id=(f==="r"?"ir":"ic")+i,n=f==="r"?"Recibidas":"Completadas";return`<span class="stp"><button aria-label="Restar ${n.toLowerCase()}: ${esc(t)}" onclick="bump(${i},'${f}',-1)">−</button><input type="number" min="0" inputmode="numeric" id="${id}" value="${v}" aria-label="${n}: ${esc(t)}" onfocus="this.select()" onchange="setReq(${i},'${f}',this.value)"><button aria-label="Sumar ${n.toLowerCase()}: ${esc(t)}" onclick="bump(${i},'${f}',1)">+</button></span>`}
+function setReq(i,f,v){const r=D().req[i];r[f]=Math.max(0,parseInt(v)||0);if(r.c>r.r)r.c=r.r;save();paint()}
+function bump(i,f,n){setReq(i,f,D().req[i][f]+n)}
+function paint(){const d=D();let R=0,C=0;d.req.forEach((r,i)=>{R+=r.r;C+=r.c;const v=rv(r),c=$("#pc"+i);$("#bar"+i).style.width=v.p+"%";c.className="chip "+v.cl;c.textContent=r.r?v.p+"%":"—";$("#pe"+i).textContent=v.tx;$("#ir"+i).value=r.r;$("#ic"+i).value=r.c});$("#kR").textContent=R;$("#kC").textContent=C;$("#kP").textContent=R-C;$("#kT").textContent=R?Math.round(C/R*100)+"%":"—"}
+let nt;function noteIn(v){D().notes=v;save();$("#ns").textContent="Guardando…";clearTimeout(nt);nt=setTimeout(()=>{const e=$("#ns");if(e)e.textContent="Guardado ✓"},500)}
+function card(t){const dn=t.col==="done",od=t.du&&t.du<today()&&!dn,dt=dn?(t.cd||t.du||t.s):t.s;
+return`<article class="tk" role="button" tabindex="0" draggable="true" aria-label="Editar tarea: ${esc(t.t)}" onclick="taskDlg('${t.id}')" onkeydown="if(event.key==='Enter')taskDlg('${t.id}')" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')"><div class="tt">${esc(t.t)}</div><div class="meta">${dt?`<span class="dt ${dn?"ok":od?"er":""}"${od?' title="Tarea vencida"':""}>${dn?I.check:I.clock} ${sh(dt)}</span>`:""}${t.d?`<span class="mi" title="Con detalles">${I.lines}</span>`:""}${t.pr==="H"?'<span class="chip er">Alta</span>':""}<span class="chip">${esc(t.cat)}</span></div></article>`}
+function mv(id,c){const t=D().tasks.find(x=>x.id===id);if(!t)return;t.col=c;t.cd=c==="done"?(t.cd||today()):"";save();render()}
+function drop(e,c){e.preventDefault();mv(e.dataTransfer.getData("text/plain"),c)}
+
+/* ---------- Pre-cierre / Final ---------- */
+function phase(){const p=D()[ph];
+return`<section class="card pad"><div class="row between"><div><h2>${ph==="pre"?"Certificación de inventario pre-cierre":"Certificación final de inventario"}</h2><p class="mu">Active “Recibido” cuando llegue el informe; la fecha se completa sola.</p></div><span class="chip ${closeChip()[1]}">${closeChip()[0]}</span></div><div id="stats" style="margin-top:14px"></div></section>
+<details class="card pad" ${remOpen?"open":""} ontoggle="remOpen=this.open"><summary>Bitácora de recordatorios (${p.rem.length})</summary>
+<div style="margin-top:10px">${p.rem.length?p.rem.map((r,i)=>`<div class="rem"><span><b>${fmt(r.d)}</b> · ${esc(r.to)} · <span class="mu">${esc(r.n)}</span></span><button class="ic" aria-label="Eliminar recordatorio" onclick="delRem(${i})">✕</button></div>`).join(""):'<p class="mu">No hay recordatorios registrados en esta fase.</p>'}
+<button class="btn sm" style="margin-top:10px" onclick="remDlg()">+ Registrar recordatorio</button></div></details>
+<section class="card"><div class="tb"><input class="in" type="search" aria-label="Buscar custodio" placeholder="Buscar custodio…" value="${esc(q)}" oninput="q=this.value;rows()">
+<div class="seg" role="group" aria-label="Filtro"><button data-f="all" onclick="filt='all';rows()">Todos</button><button data-f="pend" onclick="filt='pend';rows()">Solo pendientes</button><button data-f="act" onclick="filt='act';rows()">Requiere acción</button></div><span class="mu" id="cnt"></span><button class="btn pri sm" style="margin-left:auto;display:inline-flex;gap:6px;align-items:center" onclick="addCust()">${I.plus} Añadir custodio</button></div>
+<div class="scr"><table><thead><tr><th>Custodio enlace</th><th class="c">Recibido</th><th class="c">Fecha recibido</th><th class="c">Fecha completado</th><th>Evaluación</th><th>Observaciones</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></section>`}
+function rows(){const p=D()[ph],n=p.c.length,rc=p.c.filter(c=>c.rec).length,pct=n?Math.round(rc/n*100):0,ct=s=>p.c.filter(c=>c.rec&&c.st===s).length;
+$("#stats").innerHTML=`<div class="row between"><div><b style="font-size:26px">${rc}</b> <span class="mu">/ ${n} informes recibidos</span></div><b>${pct}%</b></div><div class="bar lg" style="margin:8px 0 12px"><i style="width:${pct}%"></i></div>
+<div class="row" style="gap:8px"><span class="chip wr">${n-rc} pendientes</span><span class="chip in">${ct("En Revisión")} en revisión</span><span class="chip ok">${ct("Completado")} completados</span><span class="chip er">${ct("Requiere Acción")} requieren acción</span></div>`;
+document.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b.dataset.f===filt));
+const l=p.c.map((c,i)=>({c,i})).filter(({c})=>c.n.toLowerCase().includes(q.toLowerCase())&&(filt==="all"||(filt==="pend"&&!c.rec)||(filt==="act"&&c.st==="Requiere Acción")));
+$("#cnt").textContent=l.length+" de "+n;
+$("#tbody").innerHTML=l.length?l.map(({c,i})=>`<tr><td><b>${esc(c.n)}</b></td>
+<td class="c"><label class="sw"><input type="checkbox" aria-label="Informe recibido de ${esc(c.n)}" ${c.rec?"checked":""} onchange="togRec(${i},this.checked)"><span></span></label></td>
+<td class="c">${fmt(c.dr)}</td><td class="c">${fmt(c.dc)}</td>
+<td><select class="sel s s-${c.st.split(" ").pop()==="Evaluado"?"":c.st.split(" ").pop()}" aria-label="Estatus" onchange="setSt(${i},this.value)">${ST.map(s=>`<option ${s===c.st?"selected":""}>${s}</option>`).join("")}</select></td>
+<td class="ob">${esc(c.ob)||"—"}</td><td style="white-space:nowrap"><button class="ic" aria-label="Editar ${esc(c.n)}" onclick="custDlg(${i})">✎</button><button class="ic" aria-label="Eliminar a ${esc(c.n)}" onclick="remCust(${i})">${I.trash}</button></td></tr>`).join(""):'<tr><td colspan="7" class="empty" style="border:0">Ningún custodio coincide con el filtro.</td></tr>'}
+function togRec(i,v){const c=D()[ph].c[i];c.rec=v;if(v){c.dr=c.dr||today();if(c.st==="No Evaluado")c.st="En Revisión"}else{c.dr="";c.dc="";c.st="No Evaluado"}save();rows()}
+function setSt(i,v){const c=D()[ph].c[i];c.st=v;if(v==="Completado"&&!c.dc)c.dc=today();if(v!=="Completado")c.dc="";save();rows()}
+
+/* ---------- Modals ---------- */
+const dlg=$("#dlg");
+function modal(title,body,ok,lbl,extra){if(dlg.open)dlg.close();dlg.innerHTML=`<form><div class="mh"><h3>${title}</h3><button type="button" class="ic" aria-label="Cerrar" onclick="dlg.close()">✕</button></div><div class="mb">${body}</div><div class="mf">${extra||""}<button type="button" class="btn" onclick="dlg.close()">Cancelar</button><button class="btn pri">${lbl||"Guardar"}</button></div></form>`;
+dlg.querySelector("form").onsubmit=e=>{e.preventDefault();if(ok(Object.fromEntries(new FormData(e.target)))!==false)dlg.close()};dlg.showModal()}
+const opt=(a,s)=>a.map(x=>{const v=Array.isArray(x)?x[0]:x,l=Array.isArray(x)?x[1]:x;return`<option value="${v}" ${v===s?"selected":""}>${l}</option>`}).join("");
+function ask(msg,fn){modal("Confirmar",`<p style="margin:0">${msg}</p>`,fn,"Eliminar")}
+function taskDlg(id,col){const d=D(),t=d.tasks.find(x=>x.id===id)||{t:"",cat:"General",pr:"M",col:col||"todo",s:today(),du:"",cd:"",d:""};
+modal(id?"Editar tarea":"Nueva tarea",`<label class="f">Título *<input class="in" name="t" required value="${esc(t.t)}"></label>
+<div class="g2"><label class="f">Categoría<select class="sel" name="cat">${opt(CAT,t.cat)}</select></label><label class="f">Prioridad<select class="sel" name="pr">${opt([["H","Alta"],["M","Media"],["L","Baja"]],t.pr)}</select></label></div>
+<div class="g2"><label class="f">Estatus<select class="sel" name="col">${opt(COLS,t.col)}</select></label><label class="f">Fecha de inicio<input class="in" type="date" name="s" value="${t.s}"></label></div>
+<div class="g2"><label class="f">Fecha de vencimiento<input class="in" type="date" name="du" value="${t.du}"></label><label class="f">Fecha de completado<input class="in" type="date" name="cd" value="${t.cd||""}"></label></div>
+<label class="f">Detalles<textarea name="d" rows="3">${esc(t.d)}</textarea></label>`,f=>{f.t=f.t.trim();f.cd=f.col==="done"?(f.cd||today()):"";if(id)Object.assign(t,f);else d.tasks.push({id:"t"+Date.now(),...f});save();render();toast("Tarea guardada")},"Guardar",id?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delTask('${id}')">Eliminar</button>`:"")}
+function delTask(id){ask("¿Desea eliminar esta tarea?",()=>{const d=D();d.tasks=d.tasks.filter(t=>t.id!==id);save();render()})}
+function custDlg(i){const c=D()[ph].c[i];modal("Editar custodio",`<p style="margin:0"><b>${esc(c.n)}</b></p><div class="g2"><label class="f">Fecha recibido<input class="in" type="date" name="dr" value="${c.dr}"></label><label class="f">Fecha completado<input class="in" type="date" name="dc" value="${c.dc}"></label></div><label class="f">Observaciones<textarea name="ob" rows="3">${esc(c.ob)}</textarea></label>`,f=>{Object.assign(c,f);save();rows();toast("Cambios guardados")},"Actualizar")}
+function remDlg(){modal("Registrar recordatorio",`<label class="f">Destinatario<input class="in" name="to" required></label><label class="f">Fecha de envío<input class="in" type="date" name="d" required value="${today()}"></label><label class="f">Asunto / notas<textarea name="n" rows="3" required></textarea></label>`,f=>{D()[ph].rem.push(f);remOpen=true;save();render()})}
+function delRem(i){ask("¿Eliminar este recordatorio?",()=>{D()[ph].rem.splice(i,1);save();render()})}
+
+function addCust(){modal("Añadir custodio",`<label class="f">Nombre del custodio *<input class="in" name="n" required autofocus></label><p id="err" class="mu" style="color:var(--er);margin:0"></p>`,f=>{const n=f.n.trim(),d=D();if(!n)return false;if(d[ph].c.some(c=>c.n.toLowerCase()===n.toLowerCase())){$("#err").textContent="Ese custodio ya existe.";return false}
+S.roster=[...roster(),n];[d.pre,d.fin].forEach(p=>p.c.push({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""}));q="";filt="all";save();render();const s=$(".scr");if(s)s.scrollTop=s.scrollHeight;toast("Custodio añadido")},"Añadir")}
+function remCust(i){const nm=D()[ph].c[i].n;ask(`¿Eliminar a <b>${esc(nm)}</b> de la lista de custodios? Se quitará de Pre-Cierre y de Certificación Final.`,()=>{const d=D();[d.pre,d.fin].forEach(p=>p.c=p.c.filter(c=>c.n!==nm));S.roster=roster().filter(x=>x!==nm);save();render();toast("Custodio eliminado")})}
+/* ---------- Informe ---------- */
+function reportHtml(){const d=D(),sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1,per="16 de "+MES[sm]+(sy!==cy.y?" de "+sy:"")+" al 15 de "+MES[cy.m]+" de "+cy.y;
+const ls=d.notes.split(/\r?\n/).filter(x=>x.trim()),done=d.tasks.filter(t=>t.col==="done");
+return`<p style="text-align:center"><b>Oficina de Propiedad</b><br><i>Periodo: ${per}</i></p><p>Durante el periodo comprendido del ${per}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p>
+<ul>${(ls.length?ls:["Gestiones generales de inventario y control de propiedad."]).map(l=>`<li>${esc(l)}</li>`).join("")}</ul>
+<h4>Tareas mensuales completadas</h4><ul>${done.length?done.map(t=>`<li>${esc(t.t)}${t.d?" - "+esc(t.d):""}</li>`).join(""):"<li>No se registraron tareas adicionales completadas en este ciclo.</li>"}</ul>
+<h4>Otros procesos relacionados</h4><table><tr><th align="left">Categoría de solicitud</th><th>Completadas / Recibidas</th><th>Cumplimiento</th></tr>${d.req.map(r=>`<tr><td>${esc(r.t)}</td><td align="center">${r.c} / ${r.r}</td><td align="center">${r.r?Math.round(r.c/r.r*100)+"%":"—"}</td></tr>`).join("")}</table>
+<p style="text-align:center;margin-top:16px"><b>¡Estamos para servirles!</b></p><p><b>Greychel Ocasio Ortiz</b><br><i>Oficial de Propiedad</i></p>`}
+function preview(){const h=reportHtml();modal("Vista previa del informe",`<div class="paper">${h}</div>`,()=>{const b=new Blob(["\ufeff<html><head><meta charset='utf-8'></head><body style=\"font-family:'Times New Roman';font-size:12pt\">"+h+"</body></html>"],{type:"application/msword"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Informe_"+MES[cy.m]+"_"+cy.y+".doc";document.body.appendChild(a);a.click();a.remove();toast("Informe descargado")},"Descargar .doc")}
+$("#calb").innerHTML=I.cal;
+document.addEventListener("click",e=>{if(!e.composedPath().includes($("#cyc")))closePop()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop()});
+render();
+</script>
 </body>
 </html>
