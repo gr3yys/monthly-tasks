@@ -1,29 +1,28 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tareas Mensuales | Oficina de Propiedad</title>
 <style>
-:root{--bg:#f4f7fa;--sf:#fff;--sf2:#eaf0f5;--bd:#d3dbe4;--tx:#0f172a;--tx2:#475569;--ac:#0d9488;--acx:#fff;--ok:#047857;--okb:#d1fae5;--wr:#92400e;--wrb:#fef3c7;--er:#be123c;--erb:#ffe4e6;--in:#1d4ed8;--inb:#dbeafe;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--sf:#111a2b;--sf2:#18233a;--bd:#2a3956;--tx:#f1f5f9;--tx2:#b8c4d4;--ac:#2dd4bf;--acx:#04201c;--ok:#6ee7b7;--okb:#0e3a2c;--wr:#fcd34d;--wrb:#3d2f0a;--er:#fda4af;--erb:#4a1522;--in:#93c5fd;--inb:#14305a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0b1220;--sf:#111a2b;--sf2:#18233a;--bd:#2a3956;--tx:#f1f5f9;--tx2:#b8c4d4;--ac:#2dd4bf;--acx:#04201c;--ok:#6ee7b7;--okb:#0e3a2c;--wr:#fcd34d;--wrb:#3d2f0a;--er:#fda4af;--erb:#4a1522;--in:#93c5fd;--inb:#14305a;color-scheme:dark}
+:root{--bg:#f4f7fa;--sf:#fff;--sf2:#eaf0f5;--bd:#d3dbe4;--tx:#0f172a;--tx2:#475569;--ac:#0d9488;--acx:#fff;--ok:#047857;--okb:#d1fae5;--wr:#92400e;--wrb:#fef3c7;--er:#be123c;--erb:#ffe4e6;--in:#1d4ed8;--inb:#dbeafe;color-scheme:light}
+:root[data-theme="dark"]{--bg:#111318;--sf:#242529;--sf2:#1a1d26;--bd:rgba(95,96,103,0.4);--tx:#dcd9db;--tx2:#858c95;--ac:#a3a7f6;--acx:#111318;--ok:#34d399;--okb:rgba(52,211,153,0.1);--wr:#fbbf24;--wrb:rgba(251,191,36,0.1);--er:#f87171;--erb:rgba(248,113,113,0.1);--in:#60a5fa;--inb:rgba(96,165,250,0.1);color-scheme:dark}
 *{box-sizing:border-box}html,body{margin:0}
 body{font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx)}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--sf);z-index:30}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--sf);border-bottom:1px solid var(--bd)}
+.top{position:sticky;top:0;z-index:20;background:var(--sf);border-bottom:1px solid var(--bd)}
 .wrap{max-width:1180px;margin:0 auto;padding:16px 20px}
 .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}
 h1{font-size:17px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0}
 .mu{color:var(--tx2);font-size:13px;margin:2px 0 0}
 .brand{display:flex;gap:12px;align-items:center}.logo{width:40px;height:40px;border-radius:10px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-size:20px}
-.cycw{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px}.ic.bd{border:1px solid var(--bd);background:var(--sf2);border-radius:10px;width:38px;height:38px}.cyc{display:flex;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:4px}
+.cycw{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px}.ic.bd{border:1px solid var(--bd);background:var(--sf2);border-radius:10px;width:38px;height:38px}
+.cyc{display:flex;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:4px}
 .cyc .mid{text-align:center;padding:0 10px;min-width:210px}.cyc b{display:block;font-size:14px}.cyc small{color:var(--tx2);font-size:12px}
 .pop{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(300px,92vw);background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:12px;box-shadow:0 12px 32px rgba(2,6,23,.28);z-index:40}.pop[hidden]{display:none}
 .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.mg button{border:1px solid transparent;background:var(--sf2);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:600}.mg button:hover{border-color:var(--ac)}.mg .cur{background:var(--ac);color:var(--acx)}.mg .now{border-color:var(--ac);color:var(--ac)}
+.mg button{border:1px solid transparent;background:var(--sf2);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:600;color:var(--tx)}.mg button:hover{border-color:var(--ac)}.mg .cur{background:var(--ac);color:var(--acx)}.mg .now{border-color:var(--ac);color:var(--ac)}
 .btn{border:1px solid var(--bd);background:var(--sf);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:13px}
 .btn:hover{background:var(--sf2)}.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}.btn.pri:hover{filter:brightness(1.08)}.btn.sm{padding:5px 10px;font-weight:500}
 .ic{display:inline-grid;place-items:center;vertical-align:middle;padding:0;border:0;background:transparent;cursor:pointer;border-radius:8px;width:34px;height:34px;font-size:16px;color:var(--tx2)}.ic:hover{background:var(--sf2);color:var(--tx)}.ic svg{display:block;margin:auto;width:20px;height:20px}.ic:disabled{opacity:.35;cursor:default}
@@ -67,7 +66,24 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}label.f{font-size:12.5px;font-weight:600;color:var(--tx2);display:grid;gap:4px}
 .paper{background:#fff;color:#000;font:13.5px/1.5 "Times New Roman",serif;padding:28px;border:1px solid var(--bd);border-radius:6px}.paper h4{margin:14px 0 4px}.paper table{min-width:0;font-size:13px}.paper td,.paper th{padding:3px 6px;background:none;position:static}
 .toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--ac);border-radius:12px;padding:10px 16px;font-weight:600;opacity:0;transform:translateY(20px);transition:.25s;z-index:60}.toast.on{opacity:1;transform:none}
-@media(max-width:760px){.rq{grid-template-columns:1fr 1fr}.rq>:first-child,.rq>.pbw{grid-column:1/-1}.cyc .mid{min-width:150px}}
+
+/* Estructura de Calendario tipo Jira con Tamaño Fijo Estricto */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-top:14px}
+.cal-head{background:var(--sf2);text-align:center;font-size:12px;font-weight:700;color:var(--tx2);padding:10px 0;text-transform:uppercase}
+.cal-cell{background:var(--sf);height:130px;max-height:130px;padding:8px;display:flex;flex-direction:column;gap:6px;position:relative;cursor:pointer;transition:.15s;overflow:hidden}
+.cal-cell:hover{background:var(--sf2)}
+.cal-cell.other{opacity:.35;background:var(--bg)}
+.cal-cell.today{background:color-mix(in srgb,var(--ac) 6%,var(--sf))}
+.cal-day-num{font-size:13px;font-weight:700;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;flex-shrink:0}
+.cal-cell.today .cal-day-num{background:var(--ac);color:var(--acx)}
+.cal-events{display:flex;flex-direction:column;gap:4px;overflow-y:auto;flex-grow:1;padding-right:2px}
+.cal-events::-webkit-scrollbar{width:3px}
+.cal-events::-webkit-scrollbar-thumb{background:var(--bd);border-radius:99px}
+.cal-ev{font-size:11px;padding:3px 6px;border-radius:6px;background:var(--sf2);border:1px solid var(--bd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;flex-shrink:0}
+.cal-ev.task-ev{border-left:3px solid var(--ac)}
+.cal-ev.event-ev{border-left:3px solid var(--wr);background:var(--wrb);color:var(--wr)}
+
+@media(max-width:760px){.rq{grid-template-columns:1fr 1fr}.rq>:first-child,.rq>.pbw{grid-column:1/-1}.cyc .mid{min-width:150px}.cal-cell{height:100px;max-height:100px;padding:4px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 </head>
@@ -85,12 +101,13 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
    <div class="pop" id="pop" hidden></div>
   </div>
   <div class="row">
-   <button class="ic" id="th" aria-label="Cambiar tema" onclick="theme()">◐</button>
+   <button class="ic" id="th" aria-label="Cambiar tema" onclick="theme()">☀️</button>
    <button class="btn pri" onclick="preview()">Vista previa del informe</button>
   </div>
  </div>
  <nav class="tabs" role="tablist">
   <button role="tab" data-t="dash">Dashboard</button>
+  <button role="tab" data-t="cal">Calendario</button>
   <button role="tab" data-t="pre">Pre-Cierre</button>
   <button role="tab" data-t="fin">Certificación Final</button>
  </nav>
@@ -127,13 +144,14 @@ function roster(){return S.roster||NAMES}
 function mk(demo){return{c:roster().map((n,i)=>{const r=demo&&i<24;return{n,rec:r,dr:r?"2026-10-"+pad(8+i%17):"",dc:r&&i%3===0?"2026-10-26":"",st:r?(i%3===0?"Completado":i===5?"Requiere Acción":"En Revisión"):"No Evaluado",ob:i===5?"Faltan 3 equipos por verificar.":""}}),rem:demo?[{d:"2026-10-20",to:"Todos los custodios",n:"Recordatorio de entrega del informe de pre-cierre."}]:[]}}
 function D(){const k=cy.y+"_"+cy.m;if(!S.cycles[k]){const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;
 S.cycles[k]={req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",pre:mk(demo),fin:mk(false),
+events:demo?[{id:"e1",t:"Reunión de Decanato",d:"2026-10-25"}]:[{id:"e1",t:"Reunión de Decanato",d:cy.y+"-"+pad(cy.m+1)+"-10"}],
 tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""}]:[]};save()}return S.cycles[k]}
 function closeChip(){const e=new Date(cy.y,cy.m,15),s=new Date(cy.y,cy.m-1,16),n=new Date();n.setHours(0,0,0,0);
 if(n<s)return["Upcoming cycle","mu"];const d=Math.round((e-n)/864e5);return d<0?["Cycle closed","mu"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
 function chipFor(du){if(!du)return closeChip();const n=new Date();n.setHours(0,0,0,0);const d=Math.round((new Date(du+"T00:00:00")-n)/864e5);return d<0?["Overdue by "+(-d)+(d===-1?" day":" days"),"er"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
 function setPhD(k,v){D()[ph][k]=v;save();render()}
 function head(){const sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1;$("#ct").textContent="Informe Mensual "+cap(MES[cy.m])+" "+cy.y;$("#cd").textContent="16 "+MES[sm].slice(0,3)+" "+sy+" – 15 "+MES[cy.m].slice(0,3)+" "+cy.y;
-document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===(tab==="dash"?"dash":ph)))}
+document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.t===tab)))}
 function chg(n){cy.m+=n;if(cy.m>11){cy.m=0;cy.y++}if(cy.m<0){cy.m=11;cy.y--}if(cy.y<2026){cy={y:2026,m:0}}render()}
 let py=2026;
 function renderPop(){const c=curCycle();$("#pop").innerHTML=`<div class="ph"><button class="ic" aria-label="Año anterior" onclick="popYear(-1)" ${py<=2026?"disabled":""}>‹</button><b>${py}</b><button class="ic" aria-label="Año siguiente" onclick="popYear(1)">›</button></div><div class="mg">${MES.map((m,i)=>`<button class="${py===cy.y&&i===cy.m?"cur":py===c.y&&i===c.m?"now":""}" onclick="setM(${i})">${cap(m.slice(0,3))}</button>`).join("")}</div><p class="mu" style="margin:10px 4px 0">Cada mes es el ciclo que cierra el día 15.</p>`}
@@ -141,10 +159,14 @@ function togglePop(){const p=$("#pop");if(p.hidden){py=cy.y;renderPop();p.hidden
 function closePop(){const p=$("#pop");if(p&&!p.hidden){p.hidden=true;$("#calb").setAttribute("aria-expanded","false")}}
 function popYear(n){py=Math.max(2026,py+n);renderPop()}
 function setM(i){cy={y:py,m:i};render()}
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{if(b.dataset.t==="dash")tab="dash";else{tab="ph";ph=b.dataset.t;filt="all";q=""}render()});
-function theme(){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+function theme(){const r=document.documentElement,dark=r.dataset.theme==="dark";r.dataset.theme=dark?"light":"dark";$("#th").textContent=dark?"☀️":"🌙"}
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2200)}
-function render(){closePop();head();$("#view").innerHTML=tab==="dash"?dash():phase();if(tab!=="dash")rows()}
+function render(){closePop();head();
+if(tab==="dash")$("#view").innerHTML=dash();
+else if(tab==="cal")$("#view").innerHTML=calendarView();
+else $("#view").innerHTML=phase();
+if(tab==="pre"||tab==="fin")rows()}
 
 /* ---------- Dashboard ---------- */
 function dash(){const d=D();let R=0,C=0;d.req.forEach(r=>{R+=r.r;C+=r.c});const rate=R?Math.round(C/R*100):0;
@@ -170,6 +192,60 @@ function card(t){const dn=t.col==="done",od=t.du&&t.du<today()&&!dn,dt=dn?(t.cd|
 return`<article class="tk" role="button" tabindex="0" draggable="true" aria-label="Editar tarea: ${esc(t.t)}" onclick="taskDlg('${t.id}')" onkeydown="if(event.key==='Enter')taskDlg('${t.id}')" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')"><div class="meta"><span class="chip cat">${esc(t.cat)}</span>${t.pr==="H"?'<span class="chip er">Alta</span>':""}</div><div class="tt">${esc(t.t)}</div><div class="meta">${dt?`<span class="dt ${dn?"ok":od?"er":""}"${od?' title="Tarea vencida"':""}>${dn?I.check:I.clock} ${sh(dt)}</span>`:"<span></span>"}${t.d?`<span class="mi" title="Con detalles">${I.lines}</span>`:""}</div></article>`}
 function mv(id,c){const t=D().tasks.find(x=>x.id===id);if(!t)return;t.col=c;t.cd=c==="done"?(t.cd||today()):"";save();render()}
 function drop(e,c){e.preventDefault();mv(e.dataTransfer.getData("text/plain"),c)}
+
+/* ---------- Calendario Mensual (Estilo Jira con altura fija y sin deformarse) ---------- */
+function calendarView(){
+    const d=D();
+    const y=cy.y, m=cy.m;
+    const firstDayIndexRaw = new Date(y, m, 1).getDay();
+    const firstDayIndex = (firstDayIndexRaw === 0) ? 6 : firstDayIndexRaw - 1;
+    
+    const totalDays = new Date(y, m + 1, 0).getDate();
+    const prevDays = new Date(y, m, 0).getDate();
+    const tod = today();
+
+    let cellsHtml="";
+    for(let i=firstDayIndex; i>0; i--){
+        const dayNum = prevDays - i + 1;
+        cellsHtml += `<div class="cal-cell other"><span class="cal-day-num">${dayNum}</span></div>`;
+    }
+
+    for(let day=1; day<=totalDays; day++){
+        const dateStr = y + "-" + pad(m+1) + "-" + pad(day);
+        const isToday = (dateStr === tod);
+        
+        const dayTasks = d.tasks.filter(t => t.s === dateStr || t.du === dateStr);
+        const dayEvents = (d.events || []).filter(e => e.d === dateStr);
+
+        let evsHtml = "";
+        dayEvents.forEach(ev => {
+            evsHtml += `<div class="cal-ev event-ev" onclick="event.stopPropagation(); eventDlg('${ev.id}')" title="Evento: ${esc(ev.t)}">📌 ${esc(ev.t)}</div>`;
+        });
+        dayTasks.forEach(tk => {
+            const isDue = tk.du === dateStr;
+            evsHtml += `<div class="cal-ev task-ev" onclick="event.stopPropagation(); taskDlg('${tk.id}')" title="Tarea: ${esc(tk.t)}">${isDue?"🏁 ":"🚀 "}${esc(tk.t)}</div>`;
+        });
+
+        cellsHtml += `<div class="cal-cell ${isToday?"today":""}" onclick="taskDlg(null, 'todo', '${dateStr}')"><span class="cal-day-num">${day}</span><div class="cal-events">${evsHtml}</div></div>`;
+    }
+
+    const totalCellsPainted = firstDayIndex + totalDays;
+    const nextDaysCount = totalCellsPainted <= 35 ? 35 - totalCellsPainted : 42 - totalCellsPainted;
+    for(let day=1; day<=nextDaysCount; day++){
+        cellsHtml += `<div class="cal-cell other"><span class="cal-day-num">${day}</span></div>`;
+    }
+
+    return `<section class="card pad">
+        <div class="row between">
+            <div><h2>Calendario Mensual</h2><p class="mu">Haga clic en cualquier celda de fecha para añadir una tarea de forma instantánea en ese día.</p></div>
+            <div class="row"><button class="btn pri sm" onclick="eventDlg()">+ Nuevo evento</button><button class="btn sm" onclick="taskDlg(null, 'todo', '${today()}')">+ Nueva tarea</button></div>
+        </div>
+        <div class="cal-grid">
+            <div class="cal-head">Lun</div><div class="cal-head">Mar</div><div class="cal-head">Mié</div><div class="cal-head">Jue</div><div class="cal-head">Vie</div><div class="cal-head">Sáb</div><div class="cal-head">Dom</div>
+            ${cellsHtml}
+        </div>
+    </section>`;
+}
 
 /* ---------- Pre-cierre / Final ---------- */
 function phase(){const p=D()[ph],cp=chipFor(p.du);
@@ -200,13 +276,18 @@ function modal(title,body,ok,lbl,extra){if(dlg.open)dlg.close();dlg.innerHTML=`<
 dlg.querySelector("form").onsubmit=e=>{e.preventDefault();if(ok(Object.fromEntries(new FormData(e.target)))!==false)dlg.close()};dlg.showModal()}
 const opt=(a,s)=>a.map(x=>{const v=Array.isArray(x)?x[0]:x,l=Array.isArray(x)?x[1]:x;return`<option value="${v}" ${v===s?"selected":""}>${l}</option>`}).join("");
 function ask(msg,fn){modal("Confirmar",`<p style="margin:0">${msg}</p>`,fn,"Eliminar")}
-function taskDlg(id,col){const d=D(),t=d.tasks.find(x=>x.id===id)||{t:"",cat:"General",pr:"M",col:col||"todo",s:today(),du:"",cd:"",d:""};
+function taskDlg(id,col,presetDate){const d=D(),t=d.tasks.find(x=>x.id===id)||{t:"",cat:"General",pr:"M",col:col||"todo",s:presetDate||today(),du:presetDate||"",cd:"",d:""};
 modal(id?"Editar tarea":"Nueva tarea",`<label class="f">Título *<input class="in" name="t" required value="${esc(t.t)}"></label>
 <div class="g2"><label class="f">Categoría<select class="sel" name="cat">${opt(CAT,t.cat)}</select></label><label class="f">Prioridad<select class="sel" name="pr">${opt([["H","Alta"],["M","Media"],["L","Baja"]],t.pr)}</select></label></div>
 <div class="g2"><label class="f">Estatus<select class="sel" name="col">${opt(COLS,t.col)}</select></label><label class="f">Fecha de inicio<input class="in" type="date" name="s" value="${t.s}"></label></div>
 <div class="g2"><label class="f">Fecha de vencimiento<input class="in" type="date" name="du" value="${t.du}"></label><label class="f">Fecha de completado<input class="in" type="date" name="cd" value="${t.cd||""}"></label></div>
 <label class="f">Detalles<textarea name="d" rows="3">${esc(t.d)}</textarea></label>`,f=>{f.t=f.t.trim();f.cd=f.col==="done"?(f.cd||today()):"";if(id)Object.assign(t,f);else d.tasks.push({id:"t"+Date.now(),...f});save();render();toast("Tarea guardada")},"Guardar",id?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delTask('${id}')">Eliminar</button>`:"")}
 function delTask(id){ask("¿Desea eliminar esta tarea?",()=>{const d=D();d.tasks=d.tasks.filter(t=>t.id!==id);save();render()})}
+
+function eventDlg(id){const d=D();if(!d.events)d.events=[];const ev=d.events.find(x=>x.id===id)||{t:"",d:today()};
+modal(id?"Editar evento":"Nuevo evento en calendario",`<label class="f">Título del evento *<input class="in" name="t" required value="${esc(ev.t)}"></label><label class="f">Fecha<input class="in" type="date" name="d" required value="${ev.d}"></label>`,f=>{f.t=f.t.trim();if(id)Object.assign(ev,f);else d.events.push({id:"e"+Date.now(),...f});save();render();toast("Evento guardado")},"Guardar",id?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delEvent('${id}')">Eliminar</button>`:"")}
+function delEvent(id){ask("¿Desea eliminar este evento?",()=>{const d=D();d.events=(d.events||[]).filter(e=>e.id!==id);save();render()})}
+
 function custDlg(i){const c=D()[ph].c[i];modal("Editar custodio",`<p style="margin:0"><b>${esc(c.n)}</b></p><div class="g2"><label class="f">Fecha recibido<input class="in" type="date" name="dr" value="${c.dr}"></label><label class="f">Fecha completado<input class="in" type="date" name="dc" value="${c.dc}"></label></div><label class="f">Observaciones<textarea name="ob" rows="3">${esc(c.ob)}</textarea></label>`,f=>{Object.assign(c,f);save();rows();toast("Cambios guardados")},"Actualizar")}
 function remDlg(){modal("Registrar recordatorio",`<label class="f">Destinatario<input class="in" name="to" required></label><label class="f">Fecha de envío<input class="in" type="date" name="d" required value="${today()}"></label><label class="f">Asunto / notas<textarea name="n" rows="3" required></textarea></label>`,f=>{D()[ph].rem.push(f);remOpen=true;save();render()})}
 function delRem(i){ask("¿Eliminar este recordatorio?",()=>{D()[ph].rem.splice(i,1);save();render()})}
@@ -214,6 +295,7 @@ function delRem(i){ask("¿Eliminar este recordatorio?",()=>{D()[ph].rem.splice(i
 function addCust(){modal("Añadir custodio",`<label class="f">Nombre del custodio *<input class="in" name="n" required autofocus></label><p id="err" class="mu" style="color:var(--er);margin:0"></p>`,f=>{const n=f.n.trim(),d=D();if(!n)return false;if(d[ph].c.some(c=>c.n.toLowerCase()===n.toLowerCase())){$("#err").textContent="Ese custodio ya existe.";return false}
 S.roster=[...roster(),n];[d.pre,d.fin].forEach(p=>p.c.push({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""}));q="";filt="all";save();render();const s=$(".scr");if(s)s.scrollTop=s.scrollHeight;toast("Custodio añadido")},"Añadir")}
 function remCust(i){const nm=D()[ph].c[i].n;ask(`¿Eliminar a <b>${esc(nm)}</b> de la lista de custodios? Se quitará de Pre-Cierre y de Certificación Final.`,()=>{const d=D();[d.pre,d.fin].forEach(p=>p.c=p.c.filter(c=>c.n!==nm));S.roster=roster().filter(x=>x!==nm);save();render();toast("Custodio eliminado")})}
+
 /* ---------- Informe ---------- */
 const SAB=["De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.","Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.","Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.","De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.","Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales."];
 const QUOTE="“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.";
