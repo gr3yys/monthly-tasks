@@ -19,14 +19,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 h1{font-size:17px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0}
 .mu{color:var(--tx2);font-size:13px;margin:2px 0 0}
 .brand{display:flex;gap:12px;align-items:center}.logo{width:40px;height:40px;border-radius:10px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-size:20px}
-.cyc{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:4px}
+.cycw{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px}.ic.bd{border:1px solid var(--bd);background:var(--sf2);border-radius:10px;width:38px;height:38px}.cyc{display:flex;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:4px}
 .cyc .mid{text-align:center;padding:0 10px;min-width:210px}.cyc b{display:block;font-size:14px}.cyc small{color:var(--tx2);font-size:12px}
 .pop{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(300px,92vw);background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:12px;box-shadow:0 12px 32px rgba(2,6,23,.28);z-index:40}.pop[hidden]{display:none}
 .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .mg button{border:1px solid transparent;background:var(--sf2);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:600}.mg button:hover{border-color:var(--ac)}.mg .cur{background:var(--ac);color:var(--acx)}.mg .now{border-color:var(--ac);color:var(--ac)}
 .btn{border:1px solid var(--bd);background:var(--sf);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:13px}
 .btn:hover{background:var(--sf2)}.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}.btn.pri:hover{filter:brightness(1.08)}.btn.sm{padding:5px 10px;font-weight:500}
-.ic{border:0;background:transparent;cursor:pointer;border-radius:8px;width:34px;height:34px;font-size:16px;color:var(--tx2)}.ic:hover{background:var(--sf2);color:var(--tx)}.ic svg{display:block;margin:auto;width:20px;height:20px}.ic:disabled{opacity:.35;cursor:default}
+.ic{display:inline-grid;place-items:center;vertical-align:middle;padding:0;border:0;background:transparent;cursor:pointer;border-radius:8px;width:34px;height:34px;font-size:16px;color:var(--tx2)}.ic:hover{background:var(--sf2);color:var(--tx)}.ic svg{display:block;margin:auto;width:20px;height:20px}.ic:disabled{opacity:.35;cursor:default}
 .tabs{display:flex;gap:4px;max-width:1180px;margin:0 auto;padding:0 20px;overflow-x:auto}
 .tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 16px;cursor:pointer;font-weight:600;color:var(--tx2);white-space:nowrap}
 .tabs button[aria-selected=true]{color:var(--tx);border-color:var(--ac)}
@@ -46,8 +46,8 @@ h1{font-size:17px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0
 .col{background:var(--sf2);border-radius:14px;padding:10px;border:2px solid transparent}.col.over{border-color:var(--ac)}
 .col h3{display:flex;justify-content:space-between;padding:4px 6px 10px}
 .empty{border:2px dashed var(--bd);border-radius:10px;padding:18px;text-align:center;color:var(--tx2);font-size:13px}
-.tk{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 2px rgba(9,30,66,.25);font-weight:500;height:96px;display:flex;flex-direction:column;justify-content:space-between}.tt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}.tk:hover{border-color:var(--ac)}
-.meta{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;overflow:hidden;margin-top:8px}.mi{color:var(--tx2);display:inline-flex}
+.tk{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 2px rgba(9,30,66,.25);font-weight:500;height:124px;display:flex;flex-direction:column;justify-content:space-between;gap:6px}.tt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}.tk:hover{border-color:var(--ac)}
+.meta{display:flex;gap:8px;align-items:center;justify-content:space-between;min-width:0}.cat{display:inline-block;max-width:150px;overflow:hidden;text-overflow:ellipsis}.mi{color:var(--tx2);display:inline-flex}
 .dt{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--tx2);padding:2px 6px;border-radius:6px}.dt.ok{background:var(--okb);color:var(--ok)}.dt.er{background:var(--erb);color:var(--er)}
 .add{display:flex;gap:8px;align-items:center;width:100%;background:none;border:0;border-radius:8px;padding:8px;cursor:pointer;color:var(--tx2);font-weight:600;margin-top:4px}.add:hover{background:var(--bd);color:var(--tx)}
 .sel,.in,textarea{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:7px 10px;width:100%}.sel.mv{width:auto;font-size:12.5px;padding:4px 6px;margin-top:8px}
@@ -75,11 +75,12 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 <div class="top">
  <div class="wrap row between">
   <div class="brand"><div class="logo">🏛</div><div><h1>Oficina de Bienes y Propiedad</h1><p class="mu">Oficial de Propiedad: Greychel Ocasio</p></div></div>
-  <div class="cyc" id="cyc">
+  <div class="cycw" id="cyc"><div class="cyc">
    <button class="ic" aria-label="Mes anterior" onclick="chg(-1)">‹</button>
    <div class="mid"><b id="ct"></b><small id="cd"></small></div>
    <button class="ic" aria-label="Mes siguiente" onclick="chg(1)">›</button>
-   <button class="ic" id="calb" aria-label="Elegir mes" aria-haspopup="true" aria-expanded="false" onclick="togglePop()"></button>
+   </div>
+   <button class="ic bd" id="calb" aria-label="Elegir mes" aria-haspopup="true" aria-expanded="false" onclick="togglePop()"></button>
    <button class="btn sm" onclick="cy=curCycle();render()">Ciclo actual</button>
    <div class="pop" id="pop" hidden></div>
   </div>
@@ -119,7 +120,7 @@ function curCycle(){const n=new Date();let y=Math.max(n.getFullYear(),2026),m=n.
 let cy=curCycle();
 const cap=s=>s[0].toUpperCase()+s.slice(1);
 const sv=p=>`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
-const I={cal:sv('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),clock:sv('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),check:sv('<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>'),plus:sv('<path d="M12 5v14M5 12h14"/>'),lines:sv('<path d="M4 6h16M4 12h16M4 18h10"/>'),trash:sv('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>')};
+const I={cal:sv('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),clock:sv('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),check:sv('<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>'),plus:sv('<path d="M12 5v14M5 12h14"/>'),lines:sv('<path d="M4 6h16M4 12h16M4 18h10"/>'),trash:sv('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),edit:sv('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>')};
 const sh=s=>{const p=s.split("-");return +p[2]+" "+MES[+p[1]-1].slice(0,3)};
 const fmt=s=>{if(!s)return"—";const[a,b,c]=s.split("-");return c+"/"+b+"/"+a};
 function roster(){return S.roster||NAMES}
@@ -129,6 +130,8 @@ S.cycles[k]={req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[
 tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""}]:[]};save()}return S.cycles[k]}
 function closeChip(){const e=new Date(cy.y,cy.m,15),s=new Date(cy.y,cy.m-1,16),n=new Date();n.setHours(0,0,0,0);
 if(n<s)return["Upcoming cycle","mu"];const d=Math.round((e-n)/864e5);return d<0?["Cycle closed","mu"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
+function chipFor(du){if(!du)return closeChip();const n=new Date();n.setHours(0,0,0,0);const d=Math.round((new Date(du+"T00:00:00")-n)/864e5);return d<0?["Overdue by "+(-d)+(d===-1?" day":" days"),"er"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
+function setPhD(k,v){D()[ph][k]=v;save();render()}
 function head(){const sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1;$("#ct").textContent="Informe Mensual "+cap(MES[cy.m])+" "+cy.y;$("#cd").textContent="16 "+MES[sm].slice(0,3)+" "+sy+" – 15 "+MES[cy.m].slice(0,3)+" "+cy.y;
 document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===(tab==="dash"?"dash":ph)))}
 function chg(n){cy.m+=n;if(cy.m>11){cy.m=0;cy.y++}if(cy.m<0){cy.m=11;cy.y--}if(cy.y<2026){cy={y:2026,m:0}}render()}
@@ -164,13 +167,13 @@ function bump(i,f,n){setReq(i,f,D().req[i][f]+n)}
 function paint(){const d=D();let R=0,C=0;d.req.forEach((r,i)=>{R+=r.r;C+=r.c;const v=rv(r),c=$("#pc"+i);$("#bar"+i).style.width=v.p+"%";c.className="chip "+v.cl;c.textContent=r.r?v.p+"%":"—";$("#pe"+i).textContent=v.tx;$("#ir"+i).value=r.r;$("#ic"+i).value=r.c});$("#kR").textContent=R;$("#kC").textContent=C;$("#kP").textContent=R-C;$("#kT").textContent=R?Math.round(C/R*100)+"%":"—"}
 let nt;function noteIn(v){D().notes=v;save();$("#ns").textContent="Guardando…";clearTimeout(nt);nt=setTimeout(()=>{const e=$("#ns");if(e)e.textContent="Guardado ✓"},500)}
 function card(t){const dn=t.col==="done",od=t.du&&t.du<today()&&!dn,dt=dn?(t.cd||t.du||t.s):t.s;
-return`<article class="tk" role="button" tabindex="0" draggable="true" aria-label="Editar tarea: ${esc(t.t)}" onclick="taskDlg('${t.id}')" onkeydown="if(event.key==='Enter')taskDlg('${t.id}')" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')"><div class="tt">${esc(t.t)}</div><div class="meta">${dt?`<span class="dt ${dn?"ok":od?"er":""}"${od?' title="Tarea vencida"':""}>${dn?I.check:I.clock} ${sh(dt)}</span>`:""}${t.d?`<span class="mi" title="Con detalles">${I.lines}</span>`:""}${t.pr==="H"?'<span class="chip er">Alta</span>':""}<span class="chip">${esc(t.cat)}</span></div></article>`}
+return`<article class="tk" role="button" tabindex="0" draggable="true" aria-label="Editar tarea: ${esc(t.t)}" onclick="taskDlg('${t.id}')" onkeydown="if(event.key==='Enter')taskDlg('${t.id}')" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')"><div class="meta"><span class="chip cat">${esc(t.cat)}</span>${t.pr==="H"?'<span class="chip er">Alta</span>':""}</div><div class="tt">${esc(t.t)}</div><div class="meta">${dt?`<span class="dt ${dn?"ok":od?"er":""}"${od?' title="Tarea vencida"':""}>${dn?I.check:I.clock} ${sh(dt)}</span>`:"<span></span>"}${t.d?`<span class="mi" title="Con detalles">${I.lines}</span>`:""}</div></article>`}
 function mv(id,c){const t=D().tasks.find(x=>x.id===id);if(!t)return;t.col=c;t.cd=c==="done"?(t.cd||today()):"";save();render()}
 function drop(e,c){e.preventDefault();mv(e.dataTransfer.getData("text/plain"),c)}
 
 /* ---------- Pre-cierre / Final ---------- */
-function phase(){const p=D()[ph];
-return`<section class="card pad"><div class="row between"><div><h2>${ph==="pre"?"Certificación de inventario pre-cierre":"Certificación final de inventario"}</h2><p class="mu">Active “Recibido” cuando llegue el informe; la fecha se completa sola.</p></div><span class="chip ${closeChip()[1]}">${closeChip()[0]}</span></div><div id="stats" style="margin-top:14px"></div></section>
+function phase(){const p=D()[ph],cp=chipFor(p.du);
+return`<section class="card pad"><div class="row between"><div><h2>${ph==="pre"?"Certificación de inventario pre-cierre":"Certificación final de inventario"}</h2><p class="mu">Active “Recibido” cuando llegue el informe; la fecha se completa sola.</p></div><span class="chip ${cp[1]}">${cp[0]}</span></div><div class="g2" style="max-width:440px;margin-top:14px"><label class="f">Fecha de inicio<input class="in" type="date" value="${p.s||""}" max="${p.du||""}" onchange="setPhD('s',this.value)"></label><label class="f">Fecha de vencimiento<input class="in" type="date" value="${p.du||""}" min="${p.s||""}" onchange="setPhD('du',this.value)"></label></div><div id="stats" style="margin-top:14px"></div></section>
 <details class="card pad" ${remOpen?"open":""} ontoggle="remOpen=this.open"><summary>Bitácora de recordatorios (${p.rem.length})</summary>
 <div style="margin-top:10px">${p.rem.length?p.rem.map((r,i)=>`<div class="rem"><span><b>${fmt(r.d)}</b> · ${esc(r.to)} · <span class="mu">${esc(r.n)}</span></span><button class="ic" aria-label="Eliminar recordatorio" onclick="delRem(${i})">✕</button></div>`).join(""):'<p class="mu">No hay recordatorios registrados en esta fase.</p>'}
 <button class="btn sm" style="margin-top:10px" onclick="remDlg()">+ Registrar recordatorio</button></div></details>
@@ -187,7 +190,7 @@ $("#tbody").innerHTML=l.length?l.map(({c,i})=>`<tr><td><b>${esc(c.n)}</b></td>
 <td class="c"><label class="sw"><input type="checkbox" aria-label="Informe recibido de ${esc(c.n)}" ${c.rec?"checked":""} onchange="togRec(${i},this.checked)"><span></span></label></td>
 <td class="c">${fmt(c.dr)}</td><td class="c">${fmt(c.dc)}</td>
 <td><select class="sel s s-${c.st.split(" ").pop()==="Evaluado"?"":c.st.split(" ").pop()}" aria-label="Estatus" onchange="setSt(${i},this.value)">${ST.map(s=>`<option ${s===c.st?"selected":""}>${s}</option>`).join("")}</select></td>
-<td class="ob">${esc(c.ob)||"—"}</td><td style="white-space:nowrap"><button class="ic" aria-label="Editar ${esc(c.n)}" onclick="custDlg(${i})">✎</button><button class="ic" aria-label="Eliminar a ${esc(c.n)}" onclick="remCust(${i})">${I.trash}</button></td></tr>`).join(""):'<tr><td colspan="7" class="empty" style="border:0">Ningún custodio coincide con el filtro.</td></tr>'}
+<td class="ob">${esc(c.ob)||"—"}</td><td class="c" style="white-space:nowrap"><button class="ic" aria-label="Editar ${esc(c.n)}" onclick="custDlg(${i})">${I.edit}</button><button class="ic" aria-label="Eliminar a ${esc(c.n)}" onclick="remCust(${i})">${I.trash}</button></td></tr>`).join(""):'<tr><td colspan="7" class="empty" style="border:0">Ningún custodio coincide con el filtro.</td></tr>'}
 function togRec(i,v){const c=D()[ph].c[i];c.rec=v;if(v){c.dr=c.dr||today();if(c.st==="No Evaluado")c.st="En Revisión"}else{c.dr="";c.dc="";c.st="No Evaluado"}save();rows()}
 function setSt(i,v){const c=D()[ph].c[i];c.st=v;if(v==="Completado"&&!c.dc)c.dc=today();if(v!=="Completado")c.dc="";save();rows()}
 
