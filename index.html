@@ -13,77 +13,191 @@ button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 .top{position:sticky;top:0;z-index:20;background:var(--sf);border-bottom:1px solid var(--bd)}
 .wrap{max-width:1180px;margin:0 auto;padding:16px 20px}
-.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
 h1{font-size:17px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0}
 .mu{color:var(--tx2);font-size:13px;margin:2px 0 0}
-.brand{display:flex;gap:12px;align-items:center}.logo{width:40px;height:40px;border-radius:10px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-size:20px}
-.cycw{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px}.ic.bd{border:1px solid var(--bd);background:var(--sf2);border-radius:10px;width:38px;height:38px}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--ac);color:var(--acx);display:grid;place-items:center;font-size:20px}
+.cycw{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px}
+.ic.bd{border:1px solid var(--bd);background:var(--sf2);border-radius:10px;width:38px;height:38px}
 .cyc{display:flex;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;padding:4px}
-.cyc .mid{text-align:center;padding:0 10px;min-width:210px}.cyc b{display:block;font-size:14px}.cyc small{color:var(--tx2);font-size:12px}
-.pop{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(300px,92vw);background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:12px;box-shadow:0 12px 32px rgba(2,6,23,.28);z-index:40}.pop[hidden]{display:none}
-.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.mg button{border:1px solid transparent;background:var(--sf2);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:600;color:var(--tx)}.mg button:hover{border-color:var(--ac)}.mg .cur{background:var(--ac);color:var(--acx)}.mg .now{border-color:var(--ac);color:var(--ac)}
+.cyc .mid{text-align:center;padding:0 10px;min-width:210px}
+.cyc b{display:block;font-size:14px}.cyc small{color:var(--tx2);font-size:12px}
+.pop{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(300px,92vw);background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:12px;box-shadow:0 12px 32px rgba(2,6,23,.28);z-index:40}
+.pop[hidden]{display:none}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mg button{border:1px solid transparent;background:var(--sf2);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:600;color:var(--tx)}
+.mg button:hover{border-color:var(--ac)}
+.mg .cur{background:var(--ac);color:var(--acx)}
+.mg .now{border-color:var(--ac);color:var(--ac)}
 .btn{border:1px solid var(--bd);background:var(--sf);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:13px}
-.btn:hover{background:var(--sf2)}.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}.btn.pri:hover{filter:brightness(1.08)}.btn.sm{padding:5px 10px;font-weight:500}
-.ic{display:inline-grid;place-items:center;vertical-align:middle;padding:0;border:0;background:transparent;cursor:pointer;border-radius:8px;width:34px;height:34px;font-size:16px;color:var(--tx2)}.ic:hover{background:var(--sf2);color:var(--tx)}.ic svg{display:block;margin:auto;width:20px;height:20px}.ic:disabled{opacity:.35;cursor:default}
+.btn:hover{background:var(--sf2)}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}
+.btn.pri:hover{filter:brightness(1.08)}
+.btn.sm{padding:5px 10px;font-weight:500}
+.ic{display:inline-grid;place-items:center;vertical-align:middle;padding:0;border:0;background:transparent;cursor:pointer;border-radius:8px;width:34px;height:34px;font-size:16px;color:var(--tx2)}
+.ic:hover{background:var(--sf2);color:var(--tx)}
+.ic svg{display:block;margin:auto;width:20px;height:20px}
+.ic:disabled{opacity:.35;cursor:default}
 .tabs{display:flex;gap:4px;max-width:1180px;margin:0 auto;padding:0 20px;overflow-x:auto}
 .tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 16px;cursor:pointer;font-weight:600;color:var(--tx2);white-space:nowrap}
 .tabs button[aria-selected=true]{color:var(--tx);border-color:var(--ac)}
-.card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;margin-bottom:18px}.pad{padding:18px}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;margin-bottom:18px}
+.pad{padding:18px}
 .chip{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--sf2);color:var(--tx2)}
-.chip.ok{background:var(--okb);color:var(--ok)}.chip.wr{background:var(--wrb);color:var(--wr)}.chip.er{background:var(--erb);color:var(--er)}.chip.in{background:var(--inb);color:var(--in)}
+.chip.ok{background:var(--okb);color:var(--ok)}
+.chip.wr{background:var(--wrb);color:var(--wr)}
+.chip.er{background:var(--erb);color:var(--er)}
+.chip.in{background:var(--inb);color:var(--in)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
-.kpi{background:var(--sf2);border-radius:12px;padding:12px 14px}.kpi span{font-size:12px;color:var(--tx2);display:block}.kpi b{font-size:24px}
-.bar{height:8px;background:var(--sf2);border-radius:99px;overflow:hidden;border:1px solid var(--bd)}.bar i{display:block;height:100%;background:var(--ac);border-radius:99px}.bar.lg{height:12px}
+.kpi{background:var(--sf2);border-radius:12px;padding:12px 14px}
+.kpi span{font-size:12px;color:var(--tx2);display:block}
+.kpi b{font-size:24px}
+.bar{height:8px;background:var(--sf2);border-radius:99px;overflow:hidden;border:1px solid var(--bd)}
+.bar i{display:block;height:100%;background:var(--ac);border-radius:99px}
+.bar.lg{height:12px}
 .rq{display:grid;grid-template-columns:minmax(200px,1.4fr) minmax(190px,1fr) auto auto;gap:14px;align-items:center;padding:12px 4px;border-top:1px solid var(--bd)}
 .rq small{display:block;color:var(--tx2);font-size:12.5px}
 .stp{display:inline-flex;align-items:center;gap:2px;background:var(--sf2);border-radius:10px;padding:2px}
-.stp button{width:30px;height:30px;border:0;border-radius:8px;background:var(--sf);cursor:pointer;font-size:17px;font-weight:700;border:1px solid var(--bd)}.stp button:hover{background:var(--bd)}
-.stp input{width:54px;text-align:center;border:0;background:transparent;font-weight:700;padding:4px 0;-moz-appearance:textfield}.stp input::-webkit-outer-spin-button,.stp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.stp input:focus{background:var(--sf);border-radius:6px}
-.lbl{font-size:12px;color:var(--tx2);display:block;margin-bottom:2px}.pb{display:flex;align-items:center;gap:10px}.pb .bar{flex:1}
-.board{background:var(--ac);background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 38%,var(--sf)),color-mix(in srgb,var(--ac) 22%,var(--sf)));border-radius:18px;padding:16px;overflow-x:auto}.kb{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:14px;align-items:start}
-.col{background:var(--sf2);border-radius:14px;padding:10px;border:2px solid transparent}.col.over{border-color:var(--ac)}
+.stp button{width:30px;height:30px;border:0;border-radius:8px;background:var(--sf);cursor:pointer;font-size:17px;font-weight:700;border:1px solid var(--bd)}
+.stp button:hover{background:var(--bd)}
+.stp input{width:54px;text-align:center;border:0;background:transparent;font-weight:700;padding:4px 0;-moz-appearance:textfield}
+.stp input::-webkit-outer-spin-button,.stp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.stp input:focus{background:var(--sf);border-radius:6px}
+.lbl{font-size:12px;color:var(--tx2);display:block;margin-bottom:2px}
+.pb{display:flex;align-items:center;gap:10px}.pb .bar{flex:1}
+.board{background:var(--ac);background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 38%,var(--sf)),color-mix(in srgb,var(--ac) 22%,var(--sf)));border-radius:18px;padding:16px;overflow-x:auto}
+.kb{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:14px;align-items:start}
+.col{background:var(--sf2);border-radius:14px;padding:10px;border:2px solid transparent}
+.col.over{border-color:var(--ac)}
 .col h3{display:flex;justify-content:space-between;padding:4px 6px 10px}
 .empty{border:2px dashed var(--bd);border-radius:10px;padding:18px;text-align:center;color:var(--tx2);font-size:13px}
-.tk{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 2px rgba(9,30,66,.25);font-weight:500;height:124px;display:flex;flex-direction:column;justify-content:space-between;gap:6px}.tt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}.tk:hover{border-color:var(--ac)}
-.meta{display:flex;gap:8px;align-items:center;justify-content:space-between;min-width:0}.cat{display:inline-block;max-width:150px;overflow:hidden;text-overflow:ellipsis}.mi{color:var(--tx2);display:inline-flex}
-.dt{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--tx2);padding:2px 6px;border-radius:6px}.dt.ok{background:var(--okb);color:var(--ok)}.dt.er{background:var(--erb);color:var(--er)}
-.add{display:flex;gap:8px;align-items:center;width:100%;background:none;border:0;border-radius:8px;padding:8px;cursor:pointer;color:var(--tx2);font-weight:600;margin-top:4px}.add:hover{background:var(--bd);color:var(--tx)}
-.sel,.in,textarea{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:7px 10px;width:100%}.sel.mv{width:auto;font-size:12.5px;padding:4px 6px;margin-top:8px}
+.tk{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 2px rgba(9,30,66,.25);font-weight:500;height:124px;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.tt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
+.tk:hover{border-color:var(--ac)}
+.meta{display:flex;gap:8px;align-items:center;justify-content:space-between;min-width:0}
+.cat{display:inline-block;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.mi{color:var(--tx2);display:inline-flex}
+.dt{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;color:var(--tx2);padding:2px 6px;border-radius:6px}
+.dt.ok{background:var(--okb);color:var(--ok)}.dt.er{background:var(--erb);color:var(--er)}
+.add{display:flex;gap:8px;align-items:center;width:100%;background:none;border:0;border-radius:8px;padding:8px;cursor:pointer;color:var(--tx2);font-weight:600;margin-top:4px}
+.add:hover{background:var(--bd);color:var(--tx)}
+.sel,.in,textarea{background:var(--sf);border:1px solid var(--bd);border-radius:9px;padding:7px 10px;width:100%}
+.sel.mv{width:auto;font-size:12.5px;padding:4px 6px;margin-top:8px}
 textarea{resize:vertical;line-height:1.5}
-.tb{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:14px 16px;border-bottom:1px solid var(--bd)}.tb .in{max-width:280px}
-.seg{display:inline-flex;border:1px solid var(--bd);border-radius:10px;overflow:hidden}.seg button{border:0;background:var(--sf);padding:7px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--tx2)}.seg button.on{background:var(--ac);color:var(--acx)}
-.scr{max-height:560px;overflow:auto}table{width:100%;border-collapse:collapse;font-size:14px;min-width:860px}
+.tb{display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:14px 16px;border-bottom:1px solid var(--bd)}
+.tb .in{max-width:280px}
+.seg{display:inline-flex;border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--sf);padding:7px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--tx2)}
+.seg button.on{background:var(--ac);color:var(--acx)}
+.scr{max-height:560px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:860px}
 th{position:sticky;top:0;background:var(--sf2);text-align:left;font-size:12.5px;padding:10px 12px;border-bottom:1px solid var(--bd);z-index:1}
-td{padding:9px 12px;border-bottom:1px solid var(--bd)}tr:hover td{background:var(--sf2)}.c{text-align:center}.ob{color:var(--tx2);max-width:240px;font-size:13px}
-.sw{position:relative;display:inline-block;width:42px;height:24px;vertical-align:middle}.sw input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer;z-index:1}
-.sw span{position:absolute;inset:0;background:var(--bd);border-radius:99px;transition:.15s}.sw span:after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s}
-.sw input:checked+span{background:var(--ac)}.sw input:checked+span:after{transform:translateX(18px);background:var(--acx)}.sw input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
-.sel.s{width:auto;padding:4px 8px;font-size:13px;font-weight:600}.s-Completado{background:var(--okb);color:var(--ok)}.s-Requiere{background:var(--erb);color:var(--er)}.s-Revisión{background:var(--inb);color:var(--in)}
-details summary{cursor:pointer;font-weight:600}.rem{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--bd);font-size:14px}
-dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:var(--tx);padding:0;width:min(520px,94vw)}dialog::backdrop{background:rgba(2,6,23,.6)}
-.mh{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--bd)}.mb{padding:18px 20px;display:grid;gap:12px;max-height:68vh;overflow:auto}.mf{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--bd)}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}label.f{font-size:12.5px;font-weight:600;color:var(--tx2);display:grid;gap:4px}
-.paper{background:#fff;color:#000;font:13.5px/1.5 "Times New Roman",serif;padding:28px;border:1px solid var(--bd);border-radius:6px}.paper h4{margin:14px 0 4px}.paper table{min-width:0;font-size:13px}.paper td,.paper th{padding:3px 6px;background:none;position:static}
-.toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--ac);border-radius:12px;padding:10px 16px;font-weight:600;opacity:0;transform:translateY(20px);transition:.25s;z-index:60}.toast.on{opacity:1;transform:none}
+td{padding:9px 12px;border-bottom:1px solid var(--bd)}
+tr:hover td{background:var(--sf2)}
+.c{text-align:center}.ob{color:var(--tx2);max-width:240px;font-size:13px}
+.sw{position:relative;display:inline-block;width:42px;height:24px;vertical-align:middle}
+.sw input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer;z-index:1}
+.sw span{position:absolute;inset:0;background:var(--bd);border-radius:99px;transition:.15s}
+.sw span:after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s}
+.sw input:checked+span{background:var(--ac)}
+.sw input:checked+span:after{transform:translateX(18px);background:var(--acx)}
+.sw input:focus-visible+span{outline:2px solid var(--ac);outline-offset:2px}
+.sel.s{width:auto;padding:4px 8px;font-size:13px;font-weight:600}
+.s-Completado{background:var(--okb);color:var(--ok)}
+.s-Requiere{background:var(--erb);color:var(--er)}
+.s-Revisión{background:var(--inb);color:var(--in)}
+details summary{cursor:pointer;font-weight:600}
+.rem{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--bd);font-size:14px}
+dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:var(--tx);padding:0;width:min(520px,94vw)}
+dialog::backdrop{background:rgba(2,6,23,.6)}
+.mh{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--bd)}
+.mb{padding:18px 20px;display:grid;gap:12px;max-height:68vh;overflow:auto}
+.mf{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--bd)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label.f{font-size:12.5px;font-weight:600;color:var(--tx2);display:grid;gap:4px}
+.paper{background:#fff;color:#000;font:13.5px/1.5 "Times New Roman",serif;padding:28px;border:1px solid var(--bd);border-radius:6px}
+.paper h4{margin:14px 0 4px}.paper table{min-width:0;font-size:13px}.paper td,.paper th{padding:3px 6px;background:none;position:static}
+.toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--ac);border-radius:12px;padding:10px 16px;font-weight:600;opacity:0;transform:translateY(20px);transition:.25s;z-index:60}
+.toast.on{opacity:1;transform:none}
 
-/* Estructura de Calendario tipo Jira con Tamaño Fijo Estricto */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--bd);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-top:14px}
-.cal-head{background:var(--sf2);text-align:center;font-size:12px;font-weight:700;color:var(--tx2);padding:10px 0;text-transform:uppercase}
-.cal-cell{background:var(--sf);height:130px;max-height:130px;padding:8px;display:flex;flex-direction:column;gap:6px;position:relative;cursor:pointer;transition:.15s;overflow:hidden}
-.cal-cell:hover{background:var(--sf2)}
-.cal-cell.other{opacity:.35;background:var(--bg)}
-.cal-cell.today{background:color-mix(in srgb,var(--ac) 6%,var(--sf))}
-.cal-day-num{font-size:13px;font-weight:700;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;flex-shrink:0}
-.cal-cell.today .cal-day-num{background:var(--ac);color:var(--acx)}
-.cal-events{display:flex;flex-direction:column;gap:4px;overflow-y:auto;flex-grow:1;padding-right:2px}
-.cal-events::-webkit-scrollbar{width:3px}
-.cal-events::-webkit-scrollbar-thumb{background:var(--bd);border-radius:99px}
-.cal-ev{font-size:11px;padding:3px 6px;border-radius:6px;background:var(--sf2);border:1px solid var(--bd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;flex-shrink:0}
-.cal-ev.task-ev{border-left:3px solid var(--ac)}
-.cal-ev.event-ev{border-left:3px solid var(--wr);background:var(--wrb);color:var(--wr)}
-
-@media(max-width:760px){.rq{grid-template-columns:1fr 1fr}.rq>:first-child,.rq>.pbw{grid-column:1/-1}.cyc .mid{min-width:150px}.cal-cell{height:100px;max-height:100px;padding:4px}}
+/* ---------- Calendar Grid Styling (Fixed 7-Column Layout) ---------- */
+.cal-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 1px;
+  background: var(--bd);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+.cal-head {
+  background: var(--sf2);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tx2);
+  padding: 10px 0;
+  text-transform: uppercase;
+}
+.cal-cell {
+  background: var(--sf);
+  height: 130px;
+  max-height: 130px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  cursor: pointer;
+  transition: .15s;
+  overflow: hidden;
+}
+.cal-cell:hover { background: var(--sf2); }
+.cal-cell.other { opacity: .35; background: var(--bg); }
+.cal-cell.today { background: color-mix(in srgb, var(--ac) 6%, var(--sf)); }
+.cal-day-num {
+  font-size: 13px;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cal-cell.today .cal-day-num { background: var(--ac); color: var(--acx); }
+.cal-events {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 2px;
+}
+.cal-events::-webkit-scrollbar { width: 3px; }
+.cal-events::-webkit-scrollbar-thumb { background: var(--bd); border-radius: 99px; }
+.cal-ev {
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: var(--sf2);
+  border: 1px solid var(--bd);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.cal-ev.task-ev { border-left: 3px solid var(--ac); }
+.cal-ev.event-ev { border-left: 3px solid var(--wr); background: var(--wrb); color: var(--wr); }
+@media(max-width:760px){
+  .cal-grid { grid-template-columns: repeat(7, 1fr) !important; }
+  .cal-cell { height: 100px; max-height: 100px; padding: 4px; }
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 </head>
@@ -116,7 +230,6 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 <footer class="wrap mu" style="text-align:center">Universidad Interamericana de Puerto Rico · Recinto de Ponce · Oficina de Propiedad</footer>
 <dialog id="dlg"></dialog>
 <div class="toast" id="toast" role="status"></div>
-
 <script>
 const $=s=>document.querySelector(s);
 const MES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
@@ -127,7 +240,7 @@ const COLS=[["backlog","Pendiente"],["todo","Por hacer"],["prog","En progreso"],
 const PR={H:["Alta","er"],M:["Media","wr"],L:["Baja","ok"]};
 const ST=["No Evaluado","En Revisión","Completado","Requiere Acción"];
 const CAT=["Equipos","Inventario","Reparación","Disposición","General"];
-let tab="dash",ph="pre",filt="all",q="",remOpen=false,S={cycles:{}};
+let tab="dash",filt="all",q="",remOpen=false,S={cycles:{}};
 try{S=JSON.parse(localStorage.getItem("pv2")||"")||S}catch(e){}
 function save(){try{localStorage.setItem("pv2",JSON.stringify(S))}catch(e){}}
 const esc=t=>String(t??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
@@ -141,17 +254,12 @@ const I={cal:sv('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10
 const sh=s=>{const p=s.split("-");return +p[2]+" "+MES[+p[1]-1].slice(0,3)};
 const fmt=s=>{if(!s)return"—";const[a,b,c]=s.split("-");return c+"/"+b+"/"+a};
 function roster(){return S.roster||NAMES}
-function mk(demo){return{c:roster().map((n,i)=>{const r=demo&&i<24;return{n,rec:r,dr:r?"2026-10-"+pad(8+i%17):"",dc:r&&i%3===0?"2026-10-26":"",st:r?(i%3===0?"Completado":i===5?"Requiere Acción":"En Revisión"):"No Evaluado",ob:i===5?"Faltan 3 equipos por verificar.":""}}),rem:demo?[{d:"2026-10-20",to:"Todos los custodios",n:"Recordatorio de entrega del informe de pre-cierre."}]:[]}}
-function D(){const k=cy.y+"_"+cy.m;if(!S.cycles[k]){const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;
-S.cycles[k]={req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",pre:mk(demo),fin:mk(false),
-events:demo?[{id:"e1",t:"Reunión de Decanato",d:"2026-10-25"}]:[{id:"e1",t:"Reunión de Decanato",d:cy.y+"-"+pad(cy.m+1)+"-10"}],
-tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""}]:[]};save()}return S.cycles[k]}
-function closeChip(){const e=new Date(cy.y,cy.m,15),s=new Date(cy.y,cy.m-1,16),n=new Date();n.setHours(0,0,0,0);
-if(n<s)return["Upcoming cycle","mu"];const d=Math.round((e-n)/864e5);return d<0?["Cycle closed","mu"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
+function mk(demo){return{s:"",du:"",c:roster().map((n,i)=>{const r=demo&&i<24;return{n,rec:r,dr:r?"2026-10-"+pad(8+i%17):"",dc:r&&i%3===0?"2026-10-26":"",st:r?(i%3===0?"Completado":i===5?"Requiere Acción":"En Revisión"):"No Evaluado",ob:i===5?"Faltan 3 equipos por verificar.":""}}),rem:demo?[{d:"2026-10-20",to:"Todos los custodios",n:"Recordatorio de entrega del informe de pre-cierre."}]:[]}}
+function D(){const k=cy.y+"_"+cy.m;if(!S.cycles[k]){const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;S.cycles[k]={req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",pre:mk(demo),fin:mk(false),events:demo?[{id:"e1",t:"Reunión de Decanato",d:"2026-10-25"}]:[{id:"e1",t:"Reunión de Decanato",d:cy.y+"-"+pad(cy.m+1)+"-10"}],tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""}]:[]};save()}return S.cycles[k]}
+function closeChip(){const e=new Date(cy.y,cy.m,15),s=new Date(cy.y,cy.m-1,16),n=new Date();n.setHours(0,0,0,0);if(n<s)return["Upcoming cycle","mu"];const d=Math.round((e-n)/864e5);return d<0?["Cycle closed","mu"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
 function chipFor(du){if(!du)return closeChip();const n=new Date();n.setHours(0,0,0,0);const d=Math.round((new Date(du+"T00:00:00")-n)/864e5);return d<0?["Overdue by "+(-d)+(d===-1?" day":" days"),"er"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
-function setPhD(k,v){D()[ph][k]=v;save();render()}
-function head(){const sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1;$("#ct").textContent="Informe Mensual "+cap(MES[cy.m])+" "+cy.y;$("#cd").textContent="16 "+MES[sm].slice(0,3)+" "+sy+" – 15 "+MES[cy.m].slice(0,3)+" "+cy.y;
-document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.t===tab)))}
+function setPhD(k,v){D()[tab][k]=v;save();render()}
+function head(){const sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1;$("#ct").textContent="Informe Mensual "+cap(MES[cy.m])+" "+cy.y;$("#cd").textContent="16 "+MES[sm].slice(0,3)+" "+sy+" – 15 "+MES[cy.m].slice(0,3)+" "+cy.y;document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.t===tab)))}
 function chg(n){cy.m+=n;if(cy.m>11){cy.m=0;cy.y++}if(cy.m<0){cy.m=11;cy.y--}if(cy.y<2026){cy={y:2026,m:0}}render()}
 let py=2026;
 function renderPop(){const c=curCycle();$("#pop").innerHTML=`<div class="ph"><button class="ic" aria-label="Año anterior" onclick="popYear(-1)" ${py<=2026?"disabled":""}>‹</button><b>${py}</b><button class="ic" aria-label="Año siguiente" onclick="popYear(1)">›</button></div><div class="mg">${MES.map((m,i)=>`<button class="${py===cy.y&&i===cy.m?"cur":py===c.y&&i===c.m?"now":""}" onclick="setM(${i})">${cap(m.slice(0,3))}</button>`).join("")}</div><p class="mu" style="margin:10px 4px 0">Cada mes es el ciclo que cierra el día 15.</p>`}
@@ -162,44 +270,25 @@ function setM(i){cy={y:py,m:i};render()}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
 function theme(){const r=document.documentElement,dark=r.dataset.theme==="dark";r.dataset.theme=dark?"light":"dark";$("#th").textContent=dark?"☀️":"🌙"}
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2200)}
-function render(){closePop();head();
-if(tab==="dash")$("#view").innerHTML=dash();
-else if(tab==="cal")$("#view").innerHTML=calendarView();
-else $("#view").innerHTML=phase();
-if(tab==="pre"||tab==="fin")rows()}
-
+function render(){closePop();head();if(tab==="dash")$("#view").innerHTML=dash();else if(tab==="cal")$("#view").innerHTML=calendarView();else $("#view").innerHTML=phase();if(tab==="pre"||tab==="fin")rows()}
 /* ---------- Dashboard ---------- */
-function dash(){const d=D();let R=0,C=0;d.req.forEach(r=>{R+=r.r;C+=r.c});const rate=R?Math.round(C/R*100):0;
-const rq=d.req.map((r,i)=>{const v=rv(r);
-return`<div class="rq"><div><b>${esc(r.t)}</b><small>${esc(r.d)}</small></div>
-<div class="pbw"><div class="pb"><div class="bar"><i id="bar${i}" style="width:${v.p}%"></i></div><span class="chip ${v.cl}" id="pc${i}">${r.r?v.p+"%":"—"}</span></div><small class="mu" id="pe${i}">${v.tx}</small></div>
-<div><span class="lbl">Recibidas</span>${stp(i,"r",r.r,r.t)}</div><div><span class="lbl">Completadas</span>${stp(i,"c",r.c,r.t)}</div>
-</div>`}).join("");
-const cards=COLS.map(([k,l])=>{const ts=d.tasks.filter(t=>t.col===k);
-return`<div class="col" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="drop(event,'${k}')"><h3>${l}<span class="chip">${ts.length}</span></h3><div>${ts.length?ts.map(card).join(""):'<div class="empty">Arrastre tareas aquí</div>'}</div><button class="add" onclick="taskDlg(null,'${k}')">${I.plus} Añadir tarea</button></div>`}).join("");
-return`<section class="card pad"><div class="row between"><div><h2>Cumplimiento de solicitudes</h2><p class="mu">Solicitudes recibidas y trabajadas durante este periodo. Use + y − para actualizar.</p></div><span class="chip ${closeChip()[1]}">${closeChip()[0]}</span></div>
-<div class="kpis"><div class="kpi"><span>Recibidas</span><b id="kR">${R}</b></div><div class="kpi"><span>Completadas</span><b id="kC" style="color:var(--ok)">${C}</b></div><div class="kpi"><span>Pendientes</span><b id="kP" style="color:var(--wr)">${R-C}</b></div><div class="kpi"><span>Cumplimiento general</span><b id="kT">${R?rate+"%":"—"}</b></div></div>${rq}</section>
-<section class="card pad"><div class="row between"><div><h2>Objetivos del periodo</h2><p class="mu">Escriba una tarea por línea. Cada línea aparecerá como viñeta en el informe Word.</p></div><span class="chip ok" id="ns">Guardado ✓</span></div>
-<textarea rows="4" style="margin-top:12px" aria-label="Objetivos del periodo" placeholder="Ej.: Certificación de inventario pre-cierre." oninput="noteIn(this.value)">${esc(d.notes)}</textarea></section>
-<section><div class="row between" style="margin-bottom:12px"><div><h2>Tareas mensuales</h2><p class="mu">Arrastre las tarjetas o haga clic en una para editarla. Las completadas se incluyen en el informe.</p></div><button class="btn pri" onclick="taskDlg()">+ Nueva tarea</button></div><div class="board"><div class="kb">${cards}</div></div></section>`}
+function dash(){const d=D();let R=0,C=0;d.req.forEach(r=>{R+=r.r;C+=r.c});const rate=R?Math.round(C/R*100):0;const rq=d.req.map((r,i)=>{const v=rv(r);return`<div class="rq"><div><b>${esc(r.t)}</b><small>${esc(r.d)}</small></div><div class="pbw"><div class="pb"><div class="bar"><i id="bar${i}" style="width:${v.p}%"></i></div><span class="chip ${v.cl}" id="pc${i}">${r.r?v.p+"%":"—"}</span></div><small class="mu" id="pe${i}">${v.tx}</small></div><div><span class="lbl">Recibidas</span>${stp(i,"r",r.r,r.t)}</div><div><span class="lbl">Completadas</span>${stp(i,"c",r.c,r.t)}</div></div>`}).join("");const cards=COLS.map(([k,l])=>{const ts=d.tasks.filter(t=>t.col===k);return`<div class="col" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="drop(event,'${k}')"><h3>${l}<span class="chip">${ts.length}</span></h3><div>${ts.length?ts.map(card).join(""):'<div class="empty">Arrastre tareas aquí</div>'}</div><button class="add" onclick="taskDlg(null,'${k}')">${I.plus} Añadir tarea</button></div>`}).join("");return`<section class="card pad"><div class="row between"><div><h2>Cumplimiento de solicitudes</h2><p class="mu">Solicitudes recibidas y trabajadas durante este periodo. Use + y − para actualizar.</p></div><span class="chip ${closeChip()[1]}">${closeChip()[0]}</span></div><div class="kpis"><div class="kpi"><span>Recibidas</span><b id="kR">${R}</b></div><div class="kpi"><span>Completadas</span><b id="kC" style="color:var(--ok)">${C}</b></div><div class="kpi"><span>Pendientes</span><b id="kP" style="color:var(--wr)">${R-C}</b></div><div class="kpi"><span>Cumplimiento general</span><b id="kT">${R?rate+"%":"—"}</b></div></div>${rq}</section><section class="card pad"><div class="row between"><div><h2>Objetivos del periodo</h2><p class="mu">Escriba una tarea por línea. Cada línea aparecerá como viñeta en el informe Word.</p></div><span class="chip ok" id="ns">Guardado ✓</span></div><textarea rows="4" style="margin-top:12px" aria-label="Objetivos del periodo" placeholder="Ej.: Certificación de inventario pre-cierre." oninput="noteIn(this.value)">${esc(d.notes)}</textarea></section><section><div class="row between" style="margin-bottom:12px"><div><h2>Tareas mensuales</h2><p class="mu">Arrastre las tarjetas o haga clic en una para editarla. Las completadas se incluyen en el informe.</p></div><button class="btn pri" onclick="taskDlg()">+ Nueva tarea</button></div><div class="board"><div class="kb">${cards}</div></div></section>`}
 function rv(r){const p=r.r?Math.round(r.c/r.r*100):0,pe=r.r-r.c;return{p,pe,cl:!r.r?"":p>=90?"ok":p>=75?"wr":"er",tx:pe>0?pe+" pendiente"+(pe>1?"s":""):r.r?"Al día":"Sin solicitudes"}}
 function stp(i,f,v,t){const id=(f==="r"?"ir":"ic")+i,n=f==="r"?"Recibidas":"Completadas";return`<span class="stp"><button aria-label="Restar ${n.toLowerCase()}: ${esc(t)}" onclick="bump(${i},'${f}',-1)">−</button><input type="number" min="0" inputmode="numeric" id="${id}" value="${v}" aria-label="${n}: ${esc(t)}" onfocus="this.select()" onchange="setReq(${i},'${f}',this.value)"><button aria-label="Sumar ${n.toLowerCase()}: ${esc(t)}" onclick="bump(${i},'${f}',1)">+</button></span>`}
 function setReq(i,f,v){const r=D().req[i];r[f]=Math.max(0,parseInt(v)||0);if(r.c>r.r)r.c=r.r;save();paint()}
 function bump(i,f,n){setReq(i,f,D().req[i][f]+n)}
 function paint(){const d=D();let R=0,C=0;d.req.forEach((r,i)=>{R+=r.r;C+=r.c;const v=rv(r),c=$("#pc"+i);$("#bar"+i).style.width=v.p+"%";c.className="chip "+v.cl;c.textContent=r.r?v.p+"%":"—";$("#pe"+i).textContent=v.tx;$("#ir"+i).value=r.r;$("#ic"+i).value=r.c});$("#kR").textContent=R;$("#kC").textContent=C;$("#kP").textContent=R-C;$("#kT").textContent=R?Math.round(C/R*100)+"%":"—"}
 let nt;function noteIn(v){D().notes=v;save();$("#ns").textContent="Guardando…";clearTimeout(nt);nt=setTimeout(()=>{const e=$("#ns");if(e)e.textContent="Guardado ✓"},500)}
-function card(t){const dn=t.col==="done",od=t.du&&t.du<today()&&!dn,dt=dn?(t.cd||t.du||t.s):t.s;
-return`<article class="tk" role="button" tabindex="0" draggable="true" aria-label="Editar tarea: ${esc(t.t)}" onclick="taskDlg('${t.id}')" onkeydown="if(event.key==='Enter')taskDlg('${t.id}')" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')"><div class="meta"><span class="chip cat">${esc(t.cat)}</span>${t.pr==="H"?'<span class="chip er">Alta</span>':""}</div><div class="tt">${esc(t.t)}</div><div class="meta">${dt?`<span class="dt ${dn?"ok":od?"er":""}"${od?' title="Tarea vencida"':""}>${dn?I.check:I.clock} ${sh(dt)}</span>`:"<span></span>"}${t.d?`<span class="mi" title="Con detalles">${I.lines}</span>`:""}</div></article>`}
+function card(t){const dn=t.col==="done",od=t.du&&t.du<today()&&!dn,dt=dn?(t.cd||t.du||t.s):t.s;return`<article class="tk" role="button" tabindex="0" draggable="true" aria-label="Editar tarea: ${esc(t.t)}" onclick="taskDlg('${t.id}')" onkeydown="if(event.key==='Enter')taskDlg('${t.id}')" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')"><div class="meta"><span class="chip cat">${esc(t.cat)}</span>${t.pr==="H"?'<span class="chip er">Alta</span>':""}</div><div class="tt">${esc(t.t)}</div><div class="meta">${dt?`<span class="dt ${dn?"ok":od?"er":""}"${od?' title="Tarea vencida"':""}>${dn?I.check:I.clock} ${sh(dt)}</span>`:"<span></span>"}${t.d?`<span class="mi" title="Con detalles">${I.lines}</span>`:""}</div></article>`}
 function mv(id,c){const t=D().tasks.find(x=>x.id===id);if(!t)return;t.col=c;t.cd=c==="done"?(t.cd||today()):"";save();render()}
 function drop(e,c){e.preventDefault();mv(e.dataTransfer.getData("text/plain"),c)}
 
-/* ---------- Calendario Mensual (Estilo Jira con altura fija y sin deformarse) ---------- */
+/* ---------- Calendario Mensual (Estilo Jira con altura fija y selector de mes centrado) ---------- */
 function calendarView(){
     const d=D();
     const y=cy.y, m=cy.m;
     const firstDayIndexRaw = new Date(y, m, 1).getDay();
     const firstDayIndex = (firstDayIndexRaw === 0) ? 6 : firstDayIndexRaw - 1;
-    
     const totalDays = new Date(y, m + 1, 0).getDate();
     const prevDays = new Date(y, m, 0).getDate();
     const tod = today();
@@ -213,7 +302,6 @@ function calendarView(){
     for(let day=1; day<=totalDays; day++){
         const dateStr = y + "-" + pad(m+1) + "-" + pad(day);
         const isToday = (dateStr === tod);
-        
         const dayTasks = d.tasks.filter(t => t.s === dateStr || t.du === dateStr);
         const dayEvents = (d.events || []).filter(e => e.d === dateStr);
 
@@ -236,9 +324,17 @@ function calendarView(){
     }
 
     return `<section class="card pad">
-        <div class="row between">
+        <div class="row between" style="margin-bottom: 12px;">
             <div><h2>Calendario Mensual</h2><p class="mu">Haga clic en cualquier celda de fecha para añadir una tarea de forma instantánea en ese día.</p></div>
             <div class="row"><button class="btn pri sm" onclick="eventDlg()">+ Nuevo evento</button><button class="btn sm" onclick="taskDlg(null, 'todo', '${today()}')">+ Nueva tarea</button></div>
+        </div>
+        <!-- Month Switcher Centered Above Calendar Grid -->
+        <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 14px; background: var(--sf2); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--bd);">
+            <button class="ic bd" onclick="chg(-1)" aria-label="Mes anterior">‹</button>
+            <div style="text-align: center; min-width: 180px;">
+                <b style="font-size: 15px; text-transform: capitalize;">${MES[cy.m]} ${cy.y}</b>
+            </div>
+            <button class="ic bd" onclick="chg(1)" aria-label="Mes siguiente">›</button>
         </div>
         <div class="cal-grid">
             <div class="cal-head">Lun</div><div class="cal-head">Mar</div><div class="cal-head">Mié</div><div class="cal-head">Jue</div><div class="cal-head">Vie</div><div class="cal-head">Sáb</div><div class="cal-head">Dom</div>
@@ -248,91 +344,32 @@ function calendarView(){
 }
 
 /* ---------- Pre-cierre / Final ---------- */
-function phase(){const p=D()[ph],cp=chipFor(p.du);
-return`<section class="card pad"><div class="row between"><div><h2>${ph==="pre"?"Certificación de inventario pre-cierre":"Certificación final de inventario"}</h2><p class="mu">Active “Recibido” cuando llegue el informe; la fecha se completa sola.</p></div><span class="chip ${cp[1]}">${cp[0]}</span></div><div class="g2" style="max-width:440px;margin-top:14px"><label class="f">Fecha de inicio<input class="in" type="date" value="${p.s||""}" max="${p.du||""}" onchange="setPhD('s',this.value)"></label><label class="f">Fecha de vencimiento<input class="in" type="date" value="${p.du||""}" min="${p.s||""}" onchange="setPhD('du',this.value)"></label></div><div id="stats" style="margin-top:14px"></div></section>
-<details class="card pad" ${remOpen?"open":""} ontoggle="remOpen=this.open"><summary>Bitácora de recordatorios (${p.rem.length})</summary>
-<div style="margin-top:10px">${p.rem.length?p.rem.map((r,i)=>`<div class="rem"><span><b>${fmt(r.d)}</b> · ${esc(r.to)} · <span class="mu">${esc(r.n)}</span></span><button class="ic" aria-label="Eliminar recordatorio" onclick="delRem(${i})">✕</button></div>`).join(""):'<p class="mu">No hay recordatorios registrados en esta fase.</p>'}
-<button class="btn sm" style="margin-top:10px" onclick="remDlg()">+ Registrar recordatorio</button></div></details>
-<section class="card"><div class="tb"><input class="in" type="search" aria-label="Buscar custodio" placeholder="Buscar custodio…" value="${esc(q)}" oninput="q=this.value;rows()">
-<div class="seg" role="group" aria-label="Filtro"><button data-f="all" onclick="filt='all';rows()">Todos</button><button data-f="pend" onclick="filt='pend';rows()">Solo pendientes</button><button data-f="act" onclick="filt='act';rows()">Requiere acción</button></div><span class="mu" id="cnt"></span><button class="btn pri sm" style="margin-left:auto;display:inline-flex;gap:6px;align-items:center" onclick="addCust()">${I.plus} Añadir custodio</button></div>
-<div class="scr"><table><thead><tr><th>Custodio enlace</th><th class="c">Recibido</th><th class="c">Fecha recibido</th><th class="c">Fecha completado</th><th>Evaluación</th><th>Observaciones</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></section>`}
-function rows(){const p=D()[ph],n=p.c.length,rc=p.c.filter(c=>c.rec).length,pct=n?Math.round(rc/n*100):0,ct=s=>p.c.filter(c=>c.rec&&c.st===s).length;
-$("#stats").innerHTML=`<div class="row between"><div><b style="font-size:26px">${rc}</b> <span class="mu">/ ${n} informes recibidos</span></div><b>${pct}%</b></div><div class="bar lg" style="margin:8px 0 12px"><i style="width:${pct}%"></i></div>
-<div class="row" style="gap:8px"><span class="chip wr">${n-rc} pendientes</span><span class="chip in">${ct("En Revisión")} en revisión</span><span class="chip ok">${ct("Completado")} completados</span><span class="chip er">${ct("Requiere Acción")} requieren acción</span></div>`;
-document.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b.dataset.f===filt));
-const l=p.c.map((c,i)=>({c,i})).filter(({c})=>c.n.toLowerCase().includes(q.toLowerCase())&&(filt==="all"||(filt==="pend"&&!c.rec)||(filt==="act"&&c.st==="Requiere Acción")));
-$("#cnt").textContent=l.length+" de "+n;
-$("#tbody").innerHTML=l.length?l.map(({c,i})=>`<tr><td><b>${esc(c.n)}</b></td>
-<td class="c"><label class="sw"><input type="checkbox" aria-label="Informe recibido de ${esc(c.n)}" ${c.rec?"checked":""} onchange="togRec(${i},this.checked)"><span></span></label></td>
-<td class="c">${fmt(c.dr)}</td><td class="c">${fmt(c.dc)}</td>
-<td><select class="sel s s-${c.st.split(" ").pop()==="Evaluado"?"":c.st.split(" ").pop()}" aria-label="Estatus" onchange="setSt(${i},this.value)">${ST.map(s=>`<option ${s===c.st?"selected":""}>${s}</option>`).join("")}</select></td>
-<td class="ob">${esc(c.ob)||"—"}</td><td class="c" style="white-space:nowrap"><button class="ic" aria-label="Editar ${esc(c.n)}" onclick="custDlg(${i})">${I.edit}</button><button class="ic" aria-label="Eliminar a ${esc(c.n)}" onclick="remCust(${i})">${I.trash}</button></td></tr>`).join(""):'<tr><td colspan="7" class="empty" style="border:0">Ningún custodio coincide con el filtro.</td></tr>'}
-function togRec(i,v){const c=D()[ph].c[i];c.rec=v;if(v){c.dr=c.dr||today();if(c.st==="No Evaluado")c.st="En Revisión"}else{c.dr="";c.dc="";c.st="No Evaluado"}save();rows()}
-function setSt(i,v){const c=D()[ph].c[i];c.st=v;if(v==="Completado"&&!c.dc)c.dc=today();if(v!=="Completado")c.dc="";save();rows()}
+function phase(){const p=D()[tab],cp=chipFor(p.du);return`<section class="card pad"><div class="row between"><div><h2>${tab==="pre"?"Certificación de inventario pre-cierre":"Certificación final de inventario"}</h2><p class="mu">Active “Recibido” cuando llegue el informe; la fecha se completa sola.</p></div><span class="chip ${cp[1]}">${cp[0]}</span></div><div class="g2" style="max-width:440px;margin-top:14px"><label class="f">Fecha de inicio<input class="in" type="date" value="${p.s||""}" max="${p.du||""}" onchange="setPhD('s',this.value)"></label><label class="f">Fecha de vencimiento<input class="in" type="date" value="${p.du||""}" min="${p.s||""}" onchange="setPhD('du',this.value)"></label></div><div id="stats" style="margin-top:14px"></div></section><details class="card pad" ${remOpen?"open":""} ontoggle="remOpen=this.open"><summary>Bitácora de recordatorios (${p.rem.length})</summary><div style="margin-top:10px">${p.rem.length?p.rem.map((r,i)=>`<div class="rem"><span><b>${fmt(r.d)}</b> · ${esc(r.to)} · <span class="mu">${esc(r.n)}</span></span><button class="ic" aria-label="Eliminar recordatorio" onclick="delRem(${i})">✕</button></div>`).join(""):'<p class="mu">No hay recordatorios registrados en esta fase.</p>'}<button class="btn sm" style="margin-top:10px" onclick="remDlg()">+ Registrar recordatorio</button></div></details><section class="card"><div class="tb"><input class="in" type="search" aria-label="Buscar custodio" placeholder="Buscar custodio…" value="${esc(q)}" oninput="q=this.value;rows()"><div class="seg" role="group" aria-label="Filtro"><button data-f="all" onclick="filt='all';rows()">Todos</button><button data-f="pend" onclick="filt='pend';rows()">Solo pendientes</button><button data-f="act" onclick="filt='act';rows()">Requiere acción</button></div><span class="mu" id="cnt"></span><button class="btn pri sm" style="margin-left:auto;display:inline-flex;gap:6px;align-items:center" onclick="addCust()">${I.plus} Añadir custodio</button></div><div class="scr"><table><thead><tr><th>Custodio enlace</th><th class="c">Recibido</th><th class="c">Fecha recibido</th><th class="c">Fecha completado</th><th>Evaluación</th><th>Observaciones</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></section>`}
+function rows(){const p=D()[tab],n=p.c.length,rc=p.c.filter(c=>c.rec).length,pct=n?Math.round(rc/n*100):0,ct=s=>p.c.filter(c=>c.rec&&c.st===s).length;$("#stats").innerHTML=`<div class="row between"><div><b style="font-size:26px">${rc}</b> <span class="mu">/ ${n} informes recibidos</span></div><b>${pct}%</b></div><div class="bar lg" style="margin:8px 0 12px"><i style="width:${pct}%"></i></div><div class="row" style="gap:8px"><span class="chip wr">${n-rc} pendientes</span><span class="chip in">${ct("En Revisión")} en revisión</span><span class="chip ok">${ct("Completado")} completados</span><span class="chip er">${ct("Requiere Acción")} requieren acción</span></div>`;document.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b.dataset.f===filt));const l=p.c.map((c,i)=>({c,i})).filter(({c})=>c.n.toLowerCase().includes(q.toLowerCase())&&(filt==="all"||(filt==="pend"&&!c.rec)||(filt==="act"&&c.st==="Requiere Acción")));$("#cnt").textContent=l.length+" de "+n;$("#tbody").innerHTML=l.length?l.map(({c,i})=>`<tr><td><b>${esc(c.n)}</b></td><td class="c"><label class="sw"><input type="checkbox" aria-label="Informe recibido de ${esc(c.n)}" ${c.rec?"checked":""} onchange="togRec(${i},this.checked)"><span></span></label></td><td class="c">${fmt(c.dr)}</td><td class="c">${fmt(c.dc)}</td><td><select class="sel s s-${c.st.split(" ").pop()==="Evaluado"?"":c.st.split(" ").pop()}" aria-label="Estatus" onchange="setSt(${i},this.value)">${ST.map(s=>`<option ${s===c.st?"selected":""}>${s}</option>`).join("")}</select></td><td class="ob">${esc(c.ob)||"—"}</td><td class="c" style="white-space:nowrap"><button class="ic" aria-label="Editar ${esc(c.n)}" onclick="custDlg(${i})">${I.edit}</button><button class="ic" aria-label="Eliminar a ${esc(c.n)}" onclick="remCust(${i})">${I.trash}</button></td></tr>`).join(""):'<tr><td colspan="7" class="empty" style="border:0">Ningún custodio coincide con el filtro.</td></tr>'}
+function togRec(i,v){const c=D()[tab].c[i];c.rec=v;if(v){c.dr=c.dr||today();if(c.st==="No Evaluado")c.st="En Revisión"}else{c.dr="";c.dc="";c.st="No Evaluado"}save();rows()}
+function setSt(i,v){const c=D()[tab].c[i];c.st=v;if(v==="Completado"&&!c.dc)c.dc=today();if(v!=="Completado")c.dc="";save();rows()}
 
 /* ---------- Modals ---------- */
 const dlg=$("#dlg");
-function modal(title,body,ok,lbl,extra){if(dlg.open)dlg.close();dlg.innerHTML=`<form><div class="mh"><h3>${title}</h3><button type="button" class="ic" aria-label="Cerrar" onclick="dlg.close()">✕</button></div><div class="mb">${body}</div><div class="mf">${extra||""}<button type="button" class="btn" onclick="dlg.close()">Cancelar</button><button class="btn pri">${lbl||"Guardar"}</button></div></form>`;
-dlg.querySelector("form").onsubmit=e=>{e.preventDefault();if(ok(Object.fromEntries(new FormData(e.target)))!==false)dlg.close()};dlg.showModal()}
+function modal(title,body,ok,lbl,extra){if(dlg.open)dlg.close();dlg.innerHTML=`<form><div class="mh"><h3>${title}</h3><button type="button" class="ic" aria-label="Cerrar" onclick="dlg.close()">✕</button></div><div class="mb">${body}</div><div class="mf">${extra||""}<button type="button" class="btn" onclick="dlg.close()">Cancelar</button><button class="btn pri">${lbl||"Guardar"}</button></div></form>`;dlg.querySelector("form").onsubmit=e=>{e.preventDefault();if(ok(Object.fromEntries(new FormData(e.target)))!==false)dlg.close()};dlg.showModal()}
 const opt=(a,s)=>a.map(x=>{const v=Array.isArray(x)?x[0]:x,l=Array.isArray(x)?x[1]:x;return`<option value="${v}" ${v===s?"selected":""}>${l}</option>`}).join("");
 function ask(msg,fn){modal("Confirmar",`<p style="margin:0">${msg}</p>`,fn,"Eliminar")}
-function taskDlg(id,col,presetDate){const d=D(),t=d.tasks.find(x=>x.id===id)||{t:"",cat:"General",pr:"M",col:col||"todo",s:presetDate||today(),du:presetDate||"",cd:"",d:""};
-modal(id?"Editar tarea":"Nueva tarea",`<label class="f">Título *<input class="in" name="t" required value="${esc(t.t)}"></label>
-<div class="g2"><label class="f">Categoría<select class="sel" name="cat">${opt(CAT,t.cat)}</select></label><label class="f">Prioridad<select class="sel" name="pr">${opt([["H","Alta"],["M","Media"],["L","Baja"]],t.pr)}</select></label></div>
-<div class="g2"><label class="f">Estatus<select class="sel" name="col">${opt(COLS,t.col)}</select></label><label class="f">Fecha de inicio<input class="in" type="date" name="s" value="${t.s}"></label></div>
-<div class="g2"><label class="f">Fecha de vencimiento<input class="in" type="date" name="du" value="${t.du}"></label><label class="f">Fecha de completado<input class="in" type="date" name="cd" value="${t.cd||""}"></label></div>
-<label class="f">Detalles<textarea name="d" rows="3">${esc(t.d)}</textarea></label>`,f=>{f.t=f.t.trim();f.cd=f.col==="done"?(f.cd||today()):"";if(id)Object.assign(t,f);else d.tasks.push({id:"t"+Date.now(),...f});save();render();toast("Tarea guardada")},"Guardar",id?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delTask('${id}')">Eliminar</button>`:"")}
+function taskDlg(id,col,presetDate){const d=D(),t=d.tasks.find(x=>x.id===id)||{t:"",cat:"General",pr:"M",col:col||"todo",s:presetDate||today(),du:presetDate||"",cd:"",d:""};modal(id?"Editar tarea":"Nueva tarea",`<label class="f">Título *<input class="in" name="t" required value="${esc(t.t)}"></label><div class="g2"><label class="f">Categoría<select class="sel" name="cat">${opt(CAT,t.cat)}</select></label><label class="f">Prioridad<select class="sel" name="pr">${opt([["H","Alta"],["M","Media"],["L","Baja"]],t.pr)}</select></label></div><div class="g2"><label class="f">Estatus<select class="sel" name="col">${opt(COLS,t.col)}</select></label><label class="f">Fecha de inicio<input class="in" type="date" name="s" value="${t.s}"></label></div><div class="g2"><label class="f">Fecha de vencimiento<input class="in" type="date" name="du" value="${t.du}"></label><label class="f">Fecha de completado<input class="in" type="date" name="cd" value="${t.cd||""}"></label></div><label class="f">Detalles<textarea name="d" rows="3">${esc(t.d)}</textarea></label>`,f=>{f.t=f.t.trim();f.cd=f.col==="done"?(f.cd||today()):"";if(id)Object.assign(t,f);else d.tasks.push({id:"t"+Date.now(),...f});save();render();toast("Tarea guardada")},"Guardar",id?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delTask('${id}')">Eliminar</button>`:"")}
 function delTask(id){ask("¿Desea eliminar esta tarea?",()=>{const d=D();d.tasks=d.tasks.filter(t=>t.id!==id);save();render()})}
-
-function eventDlg(id){const d=D();if(!d.events)d.events=[];const ev=d.events.find(x=>x.id===id)||{t:"",d:today()};
-modal(id?"Editar evento":"Nuevo evento en calendario",`<label class="f">Título del evento *<input class="in" name="t" required value="${esc(ev.t)}"></label><label class="f">Fecha<input class="in" type="date" name="d" required value="${ev.d}"></label>`,f=>{f.t=f.t.trim();if(id)Object.assign(ev,f);else d.events.push({id:"e"+Date.now(),...f});save();render();toast("Evento guardado")},"Guardar",id?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delEvent('${id}')">Eliminar</button>`:"")}
+function eventDlg(id){const d=D();if(!d.events)d.events=[];const ev=d.events.find(x=>x.id===id)||{t:"",d:today()};modal(id?"Editar evento":"Nuevo evento en calendario",`<label class="f">Título del evento *<input class="in" name="t" required value="${esc(ev.t)}"></label><label class="f">Fecha<input class="in" type="date" name="d" required value="${ev.d}"></label>`,f=>{f.t=f.t.trim();if(id)Object.assign(ev,f);else d.events.push({id:"e"+Date.now(),...f});save();render();toast("Evento guardado")},"Guardar",id?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delEvent('${id}')">Eliminar</button>`:"")}
 function delEvent(id){ask("¿Desea eliminar este evento?",()=>{const d=D();d.events=(d.events||[]).filter(e=>e.id!==id);save();render()})}
-
-function custDlg(i){const c=D()[ph].c[i];modal("Editar custodio",`<p style="margin:0"><b>${esc(c.n)}</b></p><div class="g2"><label class="f">Fecha recibido<input class="in" type="date" name="dr" value="${c.dr}"></label><label class="f">Fecha completado<input class="in" type="date" name="dc" value="${c.dc}"></label></div><label class="f">Observaciones<textarea name="ob" rows="3">${esc(c.ob)}</textarea></label>`,f=>{Object.assign(c,f);save();rows();toast("Cambios guardados")},"Actualizar")}
-function remDlg(){modal("Registrar recordatorio",`<label class="f">Destinatario<input class="in" name="to" required></label><label class="f">Fecha de envío<input class="in" type="date" name="d" required value="${today()}"></label><label class="f">Asunto / notas<textarea name="n" rows="3" required></textarea></label>`,f=>{D()[ph].rem.push(f);remOpen=true;save();render()})}
-function delRem(i){ask("¿Eliminar este recordatorio?",()=>{D()[ph].rem.splice(i,1);save();render()})}
-
-function addCust(){modal("Añadir custodio",`<label class="f">Nombre del custodio *<input class="in" name="n" required autofocus></label><p id="err" class="mu" style="color:var(--er);margin:0"></p>`,f=>{const n=f.n.trim(),d=D();if(!n)return false;if(d[ph].c.some(c=>c.n.toLowerCase()===n.toLowerCase())){$("#err").textContent="Ese custodio ya existe.";return false}
-S.roster=[...roster(),n];[d.pre,d.fin].forEach(p=>p.c.push({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""}));q="";filt="all";save();render();const s=$(".scr");if(s)s.scrollTop=s.scrollHeight;toast("Custodio añadido")},"Añadir")}
-function remCust(i){const nm=D()[ph].c[i].n;ask(`¿Eliminar a <b>${esc(nm)}</b> de la lista de custodios? Se quitará de Pre-Cierre y de Certificación Final.`,()=>{const d=D();[d.pre,d.fin].forEach(p=>p.c=p.c.filter(c=>c.n!==nm));S.roster=roster().filter(x=>x!==nm);save();render();toast("Custodio eliminado")})}
+function custDlg(i){const c=D()[tab].c[i];modal("Editar custodio",`<p style="margin:0"><b>${esc(c.n)}</b></p><div class="g2"><label class="f">Fecha recibido<input class="in" type="date" name="dr" value="${c.dr}"></label><label class="f">Fecha completado<input class="in" type="date" name="dc" value="${c.dc}"></label></div><label class="f">Observaciones<textarea name="ob" rows="3">${esc(c.ob)}</textarea></label>`,f=>{Object.assign(c,f);save();rows();toast("Cambios guardados")},"Actualizar")}
+function remDlg(){modal("Registrar recordatorio",`<label class="f">Destinatario<input class="in" name="to" required></label><label class="f">Fecha de envío<input class="in" type="date" name="d" required value="${today()}"></label><label class="f">Asunto / notas<textarea name="n" rows="3" required></textarea></label>`,f=>{D()[tab].rem.push(f);remOpen=true;save();render()})}
+function delRem(i){ask("¿Eliminar este recordatorio?",()=>{D()[tab].rem.splice(i,1);save();render()})}
+function addCust(){modal("Añadir custodio",`<label class="f">Nombre del custodio *<input class="in" name="n" required autofocus></label><p id="err" class="mu" style="color:var(--er);margin:0"></p>`,f=>{const n=f.n.trim(),d=D();if(!n)return false;if(d[tab].c.some(c=>c.n.toLowerCase()===n.toLowerCase())){$("#err").textContent="Ese custodio ya existe.";return false}S.roster=[...roster(),n];[d.pre,d.fin].forEach(p=>p.c.push({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""}));q="";filt="all";save();render();const s=$(".scr");if(s)s.scrollTop=s.scrollHeight;toast("Custodio añadido")},"Añadir")}
+function remCust(i){const nm=D()[tab].c[i].n;ask(`¿Eliminar a <b>${esc(nm)}</b> de la lista de custodios? Se quitará de Pre-Cierre y de Certificación Final.`,()=>{const d=D();[d.pre,d.fin].forEach(p=>p.c=p.c.filter(c=>c.n!==nm));S.roster=roster().filter(x=>x!==nm);save();render();toast("Custodio eliminado")})}
 
 /* ---------- Informe ---------- */
 const SAB=["De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.","Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.","Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.","De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.","Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales."];
 const QUOTE="“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.";
-function repData(){const d=D(),sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1,per="16 de "+MES[sm]+(sy!==cy.y?" de "+sy:"")+" al 15 de "+MES[cy.m]+" de "+cy.y;
-const ls=d.notes.split(/\r?\n/).filter(x=>x.trim());
-return{d,per,ls:ls.length?ls:["Gestiones generales de inventario y control de propiedad."],done:d.tasks.filter(t=>t.col==="done").map(t=>t.t+(t.s||t.cd||t.du?" ("+[t.s?"Inicio: "+fmt(t.s):"",(t.cd||t.du)?"Fin: "+fmt(t.cd||t.du):""].filter(Boolean).join(" - ")+")":"")+(t.d?" - "+t.d:""))}}
-function reportHtml(){const{d,per,ls,done}=repData();
-return`<p style="text-align:center;font-family:Arial,sans-serif;opacity:.6">Universidad Interamericana de Puerto Rico<br>Recinto de Ponce<br><br>Decanato de Administración</p><p style="text-align:center"><b>Oficina de Propiedad</b></p><p><i>Periodo: ${per}</i></p><p>Durante el periodo comprendido del ${per}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p>
-<ul>${ls.map(l=>`<li>${esc(l)}</li>`).join("")}</ul>
-<h4>Tareas mensuales completadas</h4><ul>${done.length?done.map(t=>`<li>${esc(t)}</li>`).join(""):"<li>No se registraron tareas adicionales completadas en este ciclo.</li>"}</ul>
-<h4>Otros procesos relacionados</h4><table><tr><th align="left">Categoría de solicitud</th><th>Completadas / Recibidas</th><th>Cumplimiento</th></tr>${d.req.map(r=>`<tr><td>${esc(r.t)}</td><td align="center">${r.c} / ${r.r}</td><td align="center">${r.r?Math.round(r.c/r.r*100)+"%":"—"}</td></tr>`).join("")}</table>
-<h4>Pequeños Grandes Saberes</h4><p>Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p><ul>${SAB.map(s=>`<li>${s}</li>`).join("")}</ul><p style="text-align:center;font-style:italic;color:#444;margin-top:16px">${QUOTE}</p><p style="color:#0d9488"><b>¡Estamos para servirles!</b></p><p><b>Greychel Ocasio Ortiz</b><br><i>Oficial de Propiedad</i><br>Directo: (787) 437-7064<br>Tel. (787) 284-1912, ext. 2005<br>Contacto: <a href="mailto:grocasio@ponce.inter.edu">grocasio@ponce.inter.edu</a> / <a href="mailto:propiedad@ponce.inter.edu">propiedad@ponce.inter.edu</a></p>`}
-async function docxReport(){const{Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,AlignmentType,BorderStyle,Header,LevelFormat,ExternalHyperlink}=docx,{d,per,ls,done}=repData(),F="Times New Roman",T="0D9488",C=AlignmentType.CENTER;
-const tr=(t,o={})=>new TextRun({text:t,font:F,size:24,...o}),
-p=(t,o={},r={})=>new Paragraph({spacing:{after:120},...o,children:[tr(t,r)]}),
-bl=t=>new Paragraph({numbering:{reference:"b",level:0},spacing:{after:80},children:[tr(t)]}),
-h=t=>new Paragraph({keepNext:true,spacing:{before:280,after:80},children:[tr(t,{bold:true,color:T})]}),
-hp=t=>new Paragraph({alignment:C,children:[tr(t,{bold:true})]}),
-hn=t=>new Paragraph({alignment:C,children:[tr(t,{font:"Arial",color:"666666"})]}),
-mail=e=>new ExternalHyperlink({link:"mailto:"+e,children:[tr(e,{color:"0563C1",underline:{}})]}),
-no={style:BorderStyle.NONE,size:0,color:"FFFFFF"},ln={style:BorderStyle.SINGLE,size:4,color:"CBD5E1"},hd={style:BorderStyle.SINGLE,size:12,color:"000000"},W=[4680,2340,2340],
-cell=(t,i,b,o)=>new TableCell({width:{size:W[i],type:WidthType.DXA},margins:{top:60,bottom:60,left:120,right:120},borders:{top:no,left:no,right:no,bottom:b},children:[new Paragraph({alignment:i?C:undefined,children:[tr(t,o)]})]}),
-row=(a,b,o)=>new TableRow({children:a.map((t,i)=>cell(t,i,b,o))}),
-rows=[row(["Categoría de Solicitud","Completadas / Recibidas","Cumplimiento"],hd,{bold:true}),...d.req.map(r=>row([r.t,r.c+" / "+r.r,r.r?Math.round(r.c/r.r*100)+"%":"—"],ln))];
-const doc=new Document({styles:{default:{document:{run:{font:F,size:24}}}},numbering:{config:[{reference:"b",levels:[{level:0,format:LevelFormat.BULLET,text:"•",alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:720,hanging:360}}}}]}]},
-sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:1440,right:1440,bottom:1440,left:1440}}},
-headers:{default:new Header({children:[hn("Universidad Interamericana de Puerto Rico"),hn("Recinto de Ponce"),hn(""),hn("Decanato de Administración")]})},
-children:[hp("Oficina de Propiedad"),new Paragraph({spacing:{after:280},children:[tr("Periodo: "+per,{italics:true,color:"555555"})]}),
-p("Durante el periodo comprendido del "+per+", la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:"),...ls.map(bl),
-h("Tareas mensuales completadas"),...(done.length?done:["No se registraron tareas adicionales completadas en este ciclo."]).map(bl),
-h("Otros procesos relacionados"),new Table({width:{size:9360,type:WidthType.DXA},columnWidths:W,borders:{top:no,bottom:no,left:no,right:no,insideHorizontal:no,insideVertical:no},rows}),
-h("Pequeños Grandes Saberes"),p("Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:"),...SAB.map(bl),
-new Paragraph({alignment:C,spacing:{before:360,after:160},children:[tr(QUOTE,{italics:true,color:"444444"})]}),
-new Paragraph({spacing:{after:360},children:[tr("¡Estamos para servirles!",{bold:true,color:T})]}),
-p("Greychel Ocasio Ortiz",{spacing:{after:0}},{bold:true}),p("Oficial de Propiedad",{spacing:{after:80}},{italics:true}),
-p("Directo: (787) 437-7064",{spacing:{after:0}}),p("Tel. (787) 284-1912, ext. 2005",{spacing:{after:0}}),new Paragraph({children:[tr("Contacto: "),mail("grocasio@ponce.inter.edu"),tr(" / "),mail("propiedad@ponce.inter.edu")]})]}]});
-const b=await Packer.toBlob(doc),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Informe_"+MES[cy.m]+"_"+cy.y+".docx";document.body.appendChild(a);a.click();a.remove();toast("Informe descargado")}
+function repData(){const d=D(),sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1,per="16 de "+MES[sm]+(sy!==cy.y?" de "+sy:"")+" al 15 de "+MES[cy.m]+" de "+cy.y;const ls=d.notes.split(/\r?\n/).filter(x=>x.trim());return{d,per,ls:ls.length?ls:["Gestiones generales de inventario y control de propiedad."],done:d.tasks.filter(t=>t.col==="done").map(t=>t.t+(t.s||t.cd||t.du?" ("+[t.s?"Inicio: "+fmt(t.s):"",(t.cd||t.du)?"Fin: "+fmt(t.cd||t.du):""].filter(Boolean).join(" - ")+")":"")+(t.d?" - "+t.d:""))}}
+function reportHtml(){const{d,per,ls,done}=repData();return`<p style="text-align:center;font-family:Arial,sans-serif;opacity:.6">Universidad Interamericana de Puerto Rico<br>Recinto de Ponce<br><br>Decanato de Administración</p><p style="text-align:center"><b>Oficina de Propiedad</b></p><p><i>Periodo: ${per}</i></p><p>Durante el periodo comprendido del ${per}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p><ul>${ls.map(l=>`<li>${esc(l)}</li>`).join("")}</ul><h4>Tareas mensuales completadas</h4><ul>${done.length?done.map(t=>`<li>${esc(t)}</li>`).join(""):"<li>No se registraron tareas adicionales completadas en este ciclo.</li>"}</ul><h4>Otros procesos relacionados</h4><table><tr><th align="left">Categoría de solicitud</th><th>Completadas / Recibidas</th><th>Cumplimiento</th></tr>${d.req.map(r=>`<tr><td>${esc(r.t)}</td><td align="center">${r.c} / ${r.r}</td><td align="center">${r.r?Math.round(r.c/r.r*100)+"%":"—"}</td></tr>`).join("")}</table><h4>Pequeños Grandes Saberes</h4><p>Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p><ul>${SAB.map(s=>`<li>${s}</li>`).join("")}</ul><p style="text-align:center;font-style:italic;color:#444;margin-top:16px">${QUOTE}</p><p style="color:#0d9488"><b>¡Estamos para servirles!</b></p><p><b>Greychel Ocasio Ortiz</b><br><i>Oficial de Propiedad</i><br>Directo: (787) 437-7064<br>Tel. (787) 284-1912, ext. 2005<br>Contacto: <a href="mailto:grocasio@ponce.inter.edu">grocasio@ponce.inter.edu</a> / <a href="mailto:propiedad@ponce.inter.edu">propiedad@ponce.inter.edu</a></p>`}
+async function docxReport(){const{Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,AlignmentType,BorderStyle,Header,LevelFormat,ExternalHyperlink}=docx,{d,per,ls,done}=repData(),F="Times New Roman",T="0D9488",C=AlignmentType.CENTER;const tr=(t,o={})=>new TextRun({text:t,font:F,size:24,...o}),p=(t,o={},r={})=>new Paragraph({spacing:{after:120},...o,children:[tr(t,r)]}),bl=t=>new Paragraph({numbering:{reference:"b",level:0},spacing:{after:80},children:[tr(t)]}),h=t=>new Paragraph({keepNext:true,spacing:{before:280,after:80},children:[tr(t,{bold:true,color:T})]}),hp=t=>new Paragraph({alignment:C,children:[tr(t,{bold:true})]}),hn=t=>new Paragraph({alignment:C,children:[tr(t,{font:"Arial",color:"666666"})]}),mail=e=>new ExternalHyperlink({link:"mailto:"+e,children:[tr(e,{color:"0563C1",underline:{}})]}),no={style:BorderStyle.NONE,size:0,color:"FFFFFF"},ln={style:BorderStyle.SINGLE,size:4,color:"CBD5E1"},hd={style:BorderStyle.SINGLE,size:12,color:"000000"},W=[4680,2340,2340],cell=(t,i,b,o)=>new TableCell({width:{size:W[i],type:WidthType.DXA},margins:{top:60,bottom:60,left:120,right:120},borders:{top:no,left:no,right:no,bottom:b},children:[new Paragraph({alignment:i?C:undefined,children:[tr(t,o)]})]}),row=(a,b,o)=>new TableRow({children:a.map((t,i)=>cell(t,i,b,o))}),rows=[row(["Categoría de Solicitud","Completadas / Recibidas","Cumplimiento"],hd,{bold:true}),...d.req.map(r=>row([r.t,r.c+" / "+r.r,r.r?Math.round(r.c/r.r*100)+"%":"—"],ln))];const doc=new Document({styles:{default:{document:{run:{font:F,size:24}}}},numbering:{config:[{reference:"b",levels:[{level:0,format:LevelFormat.BULLET,text:"•",alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:720,hanging:360}}}}]}]},sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:1440,right:1440,bottom:1440,left:1440}}},headers:{default:new Header({children:[hn("Universidad Interamericana de Puerto Rico"),hn("Recinto de Ponce"),hn(""),hn("Decanato de Administración")]})},children:[hp("Oficina de Propiedad"),new Paragraph({spacing:{after:280},children:[tr("Periodo: "+per,{italics:true,color:"555555"})]}),p("Durante el periodo comprendido del "+per+", la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:"),...ls.map(bl),h("Tareas mensuales completadas"),...(done.length?done:["No se registraron tareas adicionales completadas en este ciclo."]).map(bl),h("Otros procesos relacionados"),new Table({width:{size:9360,type:WidthType.DXA},columnWidths:W,borders:{top:no,bottom:no,left:no,right:no,insideHorizontal:no,insideVertical:no},rows}),h("Pequeños Grandes Saberes"),p("Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:"),...SAB.map(bl),new Paragraph({alignment:C,spacing:{before:360,after:160},children:[tr(QUOTE,{italics:true,color:"444444"})]}),new Paragraph({spacing:{after:360},children:[tr("¡Estamos para servirles!",{bold:true,color:T})]}),p("Greychel Ocasio Ortiz",{spacing:{after:0}},{bold:true}),p("Oficial de Propiedad",{spacing:{after:80}},{italics:true}),p("Directo: (787) 437-7064",{spacing:{after:0}}),p("Tel. (787) 284-1912, ext. 2005",{spacing:{after:0}}),new Paragraph({children:[tr("Contacto: "),mail("grocasio@ponce.inter.edu"),tr(" / "),mail("propiedad@ponce.inter.edu")]})]}]});const b=await Packer.toBlob(doc),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Informe_"+MES[cy.m]+"_"+cy.y+".docx";document.body.appendChild(a);a.click();a.remove();toast("Informe descargado")}
 function preview(){const h=reportHtml();modal("Vista previa del informe",`<div class="paper">${h}</div>`,()=>{if(window.docx){docxReport();return}const b=new Blob(["\ufeff<html><head><meta charset='utf-8'></head><body style=\"font-family:'Times New Roman';font-size:12pt\">"+h+"</body></html>"],{type:"application/msword"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Informe_"+MES[cy.m]+"_"+cy.y+".doc";document.body.appendChild(a);a.click();a.remove();toast("Informe descargado")},"Descargar .docx")}
 $("#calb").innerHTML=I.cal;
 document.addEventListener("click",e=>{if(!e.composedPath().includes($("#cyc")))closePop()});
