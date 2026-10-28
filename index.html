@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tareas Mensuales | Oficina de Propiedad</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root{--bg:#f4f7fa;--sf:#fff;--sf2:#eaf0f5;--bd:#d3dbe4;--tx:#0f172a;--tx2:#475569;--ac:#0d9488;--acx:#fff;--ok:#047857;--okb:#d1fae5;--wr:#92400e;--wrb:#fef3c7;--er:#be123c;--erb:#ffe4e6;--in:#1d4ed8;--inb:#dbeafe;color-scheme:light}
 :root[data-theme="dark"]{--bg:#111318;--sf:#242529;--sf2:#1a1d26;--bd:rgba(95,96,103,0.4);--tx:#dcd9db;--tx2:#858c95;--ac:#a3a7f6;--acx:#111318;--ok:#34d399;--okb:rgba(52,211,153,0.1);--wr:#fbbf24;--wrb:rgba(251,191,36,0.1);--er:#f87171;--erb:rgba(248,113,113,0.1);--in:#60a5fa;--inb:rgba(96,165,250,0.1);color-scheme:dark}
@@ -204,7 +205,7 @@ label.f{font-size:12.5px;font-weight:600;color:var(--tx2);display:grid;gap:4px}
 <body>
 <div class="top">
  <div class="wrap row between">
-  <div class="brand"><div class="logo"></div><div><h1>Oficina de Bienes y Propiedad</h1><p class="mu">Oficial de Propiedad: Greychel Ocasio</p></div></div>
+  <div class="brand"><div class="logo">🏛</div><div><h1>Oficina de Bienes y Propiedad</h1><p class="mu">Oficial de Propiedad: Greychel Ocasio</p></div></div>
   <div class="cycw" id="cyc"><div class="cyc">
    <button class="ic" aria-label="Mes anterior" onclick="chg(-1)">‹</button>
    <div class="mid"><b id="ct"></b><small id="cd"></small></div>
@@ -235,7 +236,6 @@ const $=s=>document.querySelector(s);
 const MES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 const NAMES=["Ana L. Martínez Santiago","Karen García Cruzado","Jessica Castro Santiago","Wanda I. Andújar Rivas","Doel Lugo Irizarry","Marinelly González Guzmán","Lucila Jorge Cintrón","Luis G. Felix Morales","Natasha Borrero Muñíz","Oscar Díaz Millán","Amarilys Orozco Andujar","Joceline Rodríguez Aponte","María Rivera Ortíz","María M. Muñoz Dávila","Cuenta Gen. Propiedad - Greychel Ocasio","José Lugo Ocasio","Reinaldo Rosado Vega","Ernesto Rosado Torres","Jaime Torres González","Jennyfer Almodóvar Figueroa","Jennifer Burgos Ortíz","Brenda Rodríguez Rosado","Juan C. Fong Sam","Liset Rosado Rivera","Waldemar Colón","Carlos Herrera Breda","María De Los A. Silva","Adriana S. Torres Cruz","Oscar Mercado Ortiz","Miguel Lugo Torres","Cuenta invprop CIT - Miguel Lugo","Cuenta invprop CIT AV - Walberto Rodríguez","Nelson Rodríguez","Milton D. Morales Torres","Sofía Echevarría Maldonado","Hilda Stella Munera","Dilia Rodríguez Besosa"];
 const REQ=[["Etiquetas nuevas","Emisión y colocación de etiquetas por primera vez."],["Etiquetas por deterioro","Reemplazo de etiquetas deterioradas o ilegibles."],["Reparación fuera de la unidad","Solicitud para reparar equipos fuera de la unidad."],["Transferencias de equipos","Movimientos de equipos de un espacio a otro."],["Uso en gestiones oficiales","Equipos fuera de la unidad en actividades oficiales."],["Desaparición de equipos","Certificación para la desaparición de propiedad UIPR."],["Disposición de equipos","Equipos dañados, obsoletos o inservibles."],["Recogido de equipos","Recogido de equipos decomisados para disponer."]];
-const DEMO=[[14,12],[6,6],[9,5],[11,11],[4,3],[2,0],[7,4],[3,3]];
 const COLS=[["backlog","Pendiente"],["todo","Por hacer"],["prog","En progreso"],["done","Completado"]];
 const PR={H:["Alta","er"],M:["Media","wr"],L:["Baja","ok"]};
 const ST=["No Evaluado","En Revisión","Completado","Requiere Acción"];
@@ -254,8 +254,8 @@ const I={cal:sv('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10
 const sh=s=>{const p=s.split("-");return +p[2]+" "+MES[+p[1]-1].slice(0,3)};
 const fmt=s=>{if(!s)return"—";const[a,b,c]=s.split("-");return c+"/"+b+"/"+a};
 function roster(){return S.roster||NAMES}
-function mk(demo){return{s:"",du:"",c:roster().map((n,i)=>{const r=demo&&i<24;return{n,rec:r,dr:r?"2026-10-"+pad(8+i%17):"",dc:r&&i%3===0?"2026-10-26":"",st:r?(i%3===0?"Completado":i===5?"Requiere Acción":"En Revisión"):"No Evaluado",ob:i===5?"Faltan 3 equipos por verificar.":""}}),rem:demo?[{d:"2026-10-20",to:"Todos los custodios",n:"Recordatorio de entrega del informe de pre-cierre."}]:[]}}
-function D(){const k=cy.y+"_"+cy.m;if(!S.cycles[k]){const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;S.cycles[k]={req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",pre:mk(demo),fin:mk(false),events:demo?[{id:"e1",t:"Reunión de Decanato",d:"2026-10-25"}]:[{id:"e1",t:"Reunión de Decanato",d:cy.y+"-"+pad(cy.m+1)+"-10"}],tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""}]:[]};save()}return S.cycles[k]}
+function mk(){return{s:"",du:"",c:roster().map(n=>({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""})),rem:[]}}
+function D(){const k=cy.y+"_"+cy.m;if(!S.cycles[k]){S.cycles[k]={req:REQ.map(r=>({t:r[0],d:r[1],r:0,c:0})),notes:"",pre:mk(),fin:mk(),events:[],tasks:[]};save()}return S.cycles[k]}
 function closeChip(){const e=new Date(cy.y,cy.m,15),s=new Date(cy.y,cy.m-1,16),n=new Date();n.setHours(0,0,0,0);if(n<s)return["Upcoming cycle","mu"];const d=Math.round((e-n)/864e5);return d<0?["Cycle closed","mu"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
 function chipFor(du){if(!du)return closeChip();const n=new Date();n.setHours(0,0,0,0);const d=Math.round((new Date(du+"T00:00:00")-n)/864e5);return d<0?["Overdue by "+(-d)+(d===-1?" day":" days"),"er"]:d===0?["Due today","er"]:["Due in "+d+(d===1?" day":" days"),d<=5?"wr":"in"]}
 function setPhD(k,v){D()[tab][k]=v;save();render()}
@@ -268,7 +268,11 @@ function closePop(){const p=$("#pop");if(p&&!p.hidden){p.hidden=true;$("#calb").
 function popYear(n){py=Math.max(2026,py+n);renderPop()}
 function setM(i){cy={y:py,m:i};render()}
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
-function theme(){const r=document.documentElement,dark=r.dataset.theme==="dark";r.dataset.theme=dark?"light":"dark";$("#th").textContent=dark?"☀️":"🌙"}
+function theme(){
+  const r=document.documentElement,dark=r.dataset.theme==="dark";
+  r.dataset.theme=dark?"light":"dark";
+  $("#th").innerHTML=dark?'<i class="fa-regular fa-moon"></i>':'<i class="fa-solid fa-moon"></i>';
+}
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2200)}
 function render(){closePop();head();if(tab==="dash")$("#view").innerHTML=dash();else if(tab==="cal")$("#view").innerHTML=calendarView();else $("#view").innerHTML=phase();if(tab==="pre"||tab==="fin")rows()}
 /* ---------- Dashboard ---------- */
@@ -307,11 +311,10 @@ function calendarView(){
 
         let evsHtml = "";
         dayEvents.forEach(ev => {
-            evsHtml += `<div class="cal-ev event-ev" onclick="event.stopPropagation(); eventDlg('${ev.id}')" title="Evento: ${esc(ev.t)}">📌 ${esc(ev.t)}</div>`;
+            evsHtml += `<div class="cal-ev event-ev" onclick="event.stopPropagation(); eventDlg('${ev.id}')" title="Evento: ${esc(ev.t)}">${esc(ev.t)}</div>`;
         });
         dayTasks.forEach(tk => {
-            const isDue = tk.du === dateStr;
-            evsHtml += `<div class="cal-ev task-ev" onclick="event.stopPropagation(); taskDlg('${tk.id}')" title="Tarea: ${esc(tk.t)}">${isDue?"🏁 ":"🚀 "}${esc(tk.t)}</div>`;
+            evsHtml += `<div class="cal-ev task-ev" onclick="event.stopPropagation(); taskDlg('${tk.id}')" title="Tarea: ${esc(tk.t)}">${esc(tk.t)}</div>`;
         });
 
         cellsHtml += `<div class="cal-cell ${isToday?"today":""}" onclick="taskDlg(null, 'todo', '${dateStr}')"><span class="cal-day-num">${day}</span><div class="cal-events">${evsHtml}</div></div>`;
