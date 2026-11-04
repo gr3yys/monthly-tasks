@@ -328,7 +328,7 @@ function calendarTableHtml(){
  for(let d=1;cells.length%7;d++)cells.push(`<td class="other"><span class="cal-day-num">${d}</span></td>`);
  let rows="";for(let i=0;i<cells.length;i+=7)rows+=`<tr>${cells.slice(i,i+7).join("")}</tr>`;
  return`<table class="cal-table"><thead><tr><th>L</th><th>M</th><th>X</th><th>J</th><th>V</th><th>S</th><th>D</th></tr></thead><tbody>${rows}</tbody></table>`}
-function calendarView(){return`<section class="card pad"><div class="row between"><div><h2>Calendario mensual — <span style="color:var(--ac)">${cap(MES[calM])} ${calY}</span></h2><p class="mu">Haga clic en una fecha para añadir una tarea.</p></div>
+function calendarView(){return`<section class="card pad"><div class="row between"><div><h2><span style="color:var(--ac)">${cap(MES[calM])} ${calY}</span></h2><p class="mu">Haga clic en una fecha para añadir una tarea.</p></div>
 <div class="row"><div class="cyc" style="padding:2px 6px"><button class="ic" aria-label="Mes anterior" onclick="calChg(-1)">‹</button><b style="font-size:13px;padding:0 8px">${cap(MES[calM].slice(0,3))} ${calY}</b><button class="ic" aria-label="Mes siguiente" onclick="calChg(1)">›</button></div><button class="btn pri sm" onclick="eventDlg()">+ Nuevo evento</button></div></div>${calendarTableHtml()}</section>`}
 function calChg(n){calM+=n;if(calM>11){calM=0;calY++}if(calM<0){calM=11;calY--}render()}
 
