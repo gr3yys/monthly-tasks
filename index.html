@@ -199,6 +199,7 @@ async function loadFromSupabase(){
   }catch(error){
     console.error("Error al cargar datos de Supabase:",error);
     dbReady=false;
+    lastSaveError=error?.message||String(error);
     toast("No se pudieron cargar los datos de Supabase. Verifique la conexión y los permisos.");
     return false;
   }
@@ -258,7 +259,7 @@ const sh=s=>{const p=s.split("-");return +p[2]+" "+MES[+p[1]-1].slice(0,3)};
 const fmt=s=>{if(!s)return"—";const[a,b,c]=s.split("-");return c+"/"+b+"/"+a};
 const colName=k=>(COLS.find(c=>c[0]===k)||[0,k])[1];
 const diff=ds=>Math.round((new Date(ds+"T00:00:00")-new Date(today()+"T00:00:00"))/864e5);
-const rel=ds=>{const d=diff(ds);return d===0?"Hoy":d===1?"Mañana":d===-1?"Ayer":d>0?"En "+d+" días":"Hace "+(-d)+" días"};
+const rel=ds=>{const d=diff(ds);return d===0?"Hoy":d===1?"Mañana":d===-1?"Ayer":d>0?"En "+d+" days":"Hace "+(-d)+" days"};
 const dayName=ds=>cap(new Date(ds+"T00:00:00").toLocaleDateString("es-PR",{weekday:"long",day:"numeric",month:"long"}));
 function cycTxt(){const sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1;return"16 "+MES[sm].slice(0,3)+" "+sy+" – 15 "+MES[cy.m].slice(0,3)+" "+cy.y}
 
@@ -317,7 +318,7 @@ function miniCal(){
  let cells="";for(let i=0;i<first;i++)cells+="<span></span>";
  for(let d=1;d<=tot;d++){const ds=y+"-"+pad(m+1)+"-"+pad(d),tk=tasks.some(t=>t.du?t.du===ds:t.s===ds),ev=events.some(e=>e.d===ds);
   cells+=`<button class="mc-d${ds===tod?" today":""}${ds===selDay?" sel":""}" aria-label="${d} de ${MES[m]}" onclick="selectDay('${ds}')"><span>${d}</span><i class="dots">${tk?"<b></b>":""}${ev?'<b class="de"></b>':""}</i></button>`}
- const dayRows=tasks.filter(t=>t.du?t.du===selDay:t.s===selDay).map(t=>agRow(t,colName(t.col),t.col==="done"?"ok":"")).concat(events.filter(e=>e.d===selDay).map(evRow));
+ const dayRows=tasks.filter(t=>t.du?t.du===selDay:t.s===selDay).map(t=>agRow(t,colName(t.col),t.col==="done"?"ok":"" )).concat(events.filter(e=>e.d===selDay).map(evRow));
  return`<section class="card pad"><div class="row between"><h3>${cap(MES[m])} ${y}</h3><div class="row" style="gap:6px"><button class="ic bd" aria-label="Mes anterior" onclick="calChg(-1)">‹</button><button class="ic bd" aria-label="Mes siguiente" onclick="calChg(1)">›</button></div></div>
 <div class="mc">${["L","M","X","J","V","S","D"].map(x=>`<span class="mc-h">${x}</span>`).join("")}${cells}</div>
 <div class="dayhd"><b>${dayName(selDay)}</b><button class="btn sm" onclick="taskDlg(null,'todo','${selDay}')">+ Tarea</button></div>${dayRows.join("")||'<p class="mu">Sin tareas ni eventos este día.</p>'}</section>`}
@@ -482,24 +483,29 @@ $("#calb").innerHTML=I.cal;
 document.addEventListener("click",e=>{if(!e.composedPath().includes($("#cyc")))closePop()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop()});
 
-// No se dibuja la aplicación hasta completar la lectura inicial de Supabase.
+// Inicialización segura garantizando que la interfaz renderice siempre
 (async function initApp(){
-  const connected=await loadFromSupabase();
-  if(!connected){
-    // Se permite abrir la interfaz, pero no se simula que los cambios se guardaron.
-    // La persistencia permanece desactivada hasta recuperar una conexión válida.
+  try {
+    const connected = await loadFromSupabase();
+    if (!connected) {
+      console.warn("Supabase load failed. Operating in fallback mode.");
+    }
+  } catch (err) {
+    console.error("Initialization error:", err);
+  } finally {
+    try {
+      D();
+    } catch (e) {
+      console.error("Error initializing local state data:", e);
+    }
     render();
-    return;
   }
-  D();
-  render();
 })();
 
 // Intenta completar cualquier escritura pendiente antes de cerrar o abandonar la página.
 window.addEventListener("beforeunload",()=>{
   if(dbReady && Object.keys(S.cycles||{}).length){
     const rows=Object.entries(S.cycles).map(([key,cycleData])=>({cycle_key:"cycle_"+key,payload:{cycle_data:cycleData,phases:S.phases||null},updated_at:new Date().toISOString()}));
-    // La operación se inicia como respaldo; el guardado normal ocurre automáticamente.
     supabaseClient.from("property_cycles").upsert(rows,{onConflict:"cycle_key"});
   }
 });
