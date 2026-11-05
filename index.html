@@ -116,6 +116,7 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="top">
@@ -449,37 +450,19 @@ function setSt(i,v){const c=S.phases[tab].c[i];c.st=v;if(v==="Completado"&&!c.dc
 function exportCustodiansExcel(){
  const p=S.phases[tab]||{c:[]};
  if(!Array.isArray(p.c) || !p.c.length){toast("No hay custodios para exportar.");return;}
- let xml=`<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
-  <Styles>
-   <Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#0D9488" ss:Pattern="Solid"/></Style>
-   <Style ss:ID="Cell"><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D3DBE4"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D3DBE4"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D3DBE4"/><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D3DBE4"/></Borders></Style>
-  </Styles>
-  <Worksheet ss:Name="${tab==="pre"?"Pre-Cierre":"Certificacion Final"}">
-   <Table>
-    <Row>
-     <Cell ss:StyleID="Header"><Data ss:Type="String">Custodio Enlace</Data></Cell>
-     <Cell ss:StyleID="Header"><Data ss:Type="String">Recibido</Data></Cell>
-     <Cell ss:StyleID="Header"><Data ss:Type="String">Fecha Recibido</Data></Cell>
-     <Cell ss:StyleID="Header"><Data ss:Type="String">Fecha Completado</Data></Cell>
-     <Cell ss:StyleID="Header"><Data ss:Type="String">Estatus / Evaluación</Data></Cell>
-     <Cell ss:StyleID="Header"><Data ss:Type="String">Observaciones</Data></Cell>
-    </Row>`;
- p.c.forEach(c=>{
-  xml+=`<Row>
-   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.n||""}</Data></Cell>
-   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.rec?"Sí":"No"}</Data></Cell>
-   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.dr||""}</Data></Cell>
-   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.dc||""}</Data></Cell>
-   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.st||""}</Data></Cell>
-   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.ob||""}</Data></Cell>
-  </Row>`;
- });
- xml+=`</Table></Worksheet></Workbook>`;
- const blob=new Blob([xml],{type:"application/vnd.ms-excel;charset=utf-8"});
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);
- a.download=`Custodios_${tab==="pre"?"PreCierre":"CertificacionFinal"}_${cy.y}_${pad(cy.m+1)}.xls`;
- document.body.appendChild(a);a.click();a.remove();
- toast("Excel descargado exitosamente");
+ const data = p.c.map(c=>({
+  "Custodio Enlace": c.n || "",
+  "Recibido": c.rec ? "Sí" : "No",
+  "Fecha Recibido": c.dr || "",
+  "Fecha Completado": c.dc || "",
+  "Estatus / Evaluación": c.st || "",
+  "Observaciones": c.ob || ""
+ }));
+ const worksheet = XLSX.utils.json_to_sheet(data);
+ const workbook = XLSX.utils.book_new();
+ XLSX.utils.book_append_sheet(workbook, worksheet, tab==="pre"?"Pre-Cierre":"Certificacion Final");
+ XLSX.writeFile(workbook, `Custodios_${tab==="pre"?"PreCierre":"CertificacionFinal"}_${cy.y}_${pad(cy.m+1)}.xlsx`);
+ toast("Archivo .xlsx descargado exitosamente");
 }
 
 /* ---------- Modales ---------- */
@@ -530,7 +513,7 @@ async function docxReport(){const{Document,Packer,Paragraph,TextRun,Table,TableR
  headers:{default:new Header({children:[hn("Universidad Interamericana de Puerto Rico"),hn("Recinto de Ponce"),hn(""),hn("Decanato de Administración")]})},
  children:[hp("Oficina de Propiedad"+phTitle()),new Paragraph({spacing:{after:280},children:[tr("Periodo: "+per,{italics:true,color:"555555"})]}),
  p("Durante el periodo comprendido del "+per+", la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:"),...ls.map(bl),
- h("Tareas mensuales completadas"),...(done.length?done:["No se registraron tareas adicionales completadas in este ciclo."]).map(bl),
+ h("Tareas mensuales completadas"),...(done.length?done:["No se registraron tareas adicionales completadas en este ciclo."]).map(bl),
  h("Otros procesos relacionados"),new Table({width:{size:9360,type:WidthType.DXA},columnWidths:W,borders:{top:no,bottom:no,left:no,right:no,insideHorizontal:no,insideVertical:no},rows}),
  h("Pequeños Grandes Saberes"),p("Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:"),...SAB.map(bl),
  new Paragraph({alignment:C,spacing:{before:360,after:160},children:[tr(QUOTE,{italics:true,color:"444444"})]}),
