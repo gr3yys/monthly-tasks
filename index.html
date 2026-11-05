@@ -275,7 +275,6 @@ function D(){
   };
   save();
  } else {
-  // Auto-repara si falta alguna propiedad esencial en los datos cargados de Supabase
   const cyc = S.cycles[k];
   if(!Array.isArray(cyc.req)) cyc.req=REQ.map((r,i)=>({t:r[0],d:r[1],r:0,c:0}));
   if(!Array.isArray(cyc.tasks)) cyc.tasks=[];
@@ -432,7 +431,7 @@ function calChg(n){calM+=n;if(calM>11){calM=0;calY++}if(calM<0){calM=11;calY--}r
 
 /* ---------- Pre-Cierre / Final ---------- */
 function phaseView(){const p=S.phases[tab]||{c:[],rem:[],s:"",du:""},cp=chipFor(p.du);
- return`<section class="card pad"><div class="row between"><div><h2>${tab==="pre"?"Certificación de inventario pre-cierre":"Certificación final de inventario"}</h2><p class="mu">Gestione el periodo y supervise a los custodios enlace.</p></div><div class="row"><span class="chip ${cp[1]}">${cp[0]}</span><button class="btn pri sm" onclick="preview()">Descargar informe</button></div></div>
+ return`<section class="card pad"><div class="row between"><div><h2>${tab==="pre"?"Certificación de inventario pre-cierre":"Certificación final de inventario"}</h2><p class="mu">Gestione el periodo y supervise a los custodios enlace.</p></div><div class="row"><span class="chip ${cp[1]}">${cp[0]}</span><button class="btn pri sm" onclick="exportCustodiansExcel()">Descargar Excel</button></div></div>
 <div class="g2" style="max-width:440px;margin-top:14px"><label class="f">Fecha de inicio<input class="in" type="date" value="${p.s||""}" max="${p.du||""}" onchange="setPhaseDate('s',this.value)"></label><label class="f">Fecha de vencimiento<input class="in" type="date" value="${p.du||""}" min="${p.s||""}" onchange="setPhaseDate('du',this.value)"></label></div><div id="stats" style="margin-top:14px"></div></section>
 <details class="card pad" ${remOpen?"open":""} ontoggle="remOpen=this.open"><summary>Bitácora de recordatorios (${p.rem?p.rem.length:0})</summary><div style="margin-top:10px">${p.rem&&p.rem.length?p.rem.map((r,i)=>`<div class="rem"><span><b>${fmt(r.d)}</b> · ${esc(r.to)} · <span class="mu">${esc(r.n)}</span></span><button class="ic" aria-label="Eliminar recordatorio" onclick="delRem(${i})">✕</button></div>`).join(""):'<p class="mu">No hay recordatorios registrados en esta fase.</p>'}<button class="btn sm" style="margin-top:10px" onclick="remDlg()">+ Registrar recordatorio</button></div></details>
 <section class="card"><div class="tb"><input class="in" type="search" aria-label="Buscar custodio" placeholder="Buscar custodio…" value="${esc(q)}" oninput="q=this.value;rows()"><div class="seg" role="group" aria-label="Filtro"><button data-f="all" onclick="filt='all';rows()">Todos</button><button data-f="pend" onclick="filt='pend';rows()">Solo pendientes</button><button data-f="act" onclick="filt='act';rows()">Requiere acción</button></div><span class="mu" id="cnt"></span><button class="btn pri sm" style="margin-left:auto;display:inline-flex;gap:6px;align-items:center" onclick="addCust()">${I.plus} Añadir custodio</button></div>
@@ -446,6 +445,42 @@ function rows(){const p=S.phases[tab]||{c:[]};if(!Array.isArray(p.c)) p.c=[];con
  $("#tbody").innerHTML=l.length?l.map(({c,i})=>`<tr><td><b>${esc(c.n)}</b></td><td class="c"><label class="sw"><input type="checkbox" aria-label="Informe recibido de ${esc(c.n)}" ${c.rec?"checked":""} onchange="togRec(${i},this.checked)"><span></span></label></td><td class="c">${fmt(c.dr)}</td><td class="c">${fmt(c.dc)}</td><td><select class="sel s" aria-label="Estatus" onchange="setSt(${i},this.value)">${ST.map(s=>`<option ${s===c.st?"selected":""}>${s}</option>`).join("")}</select></td><td class="ob">${esc(c.ob)||"—"}</td><td class="c" style="white-space:nowrap"><button class="ic" aria-label="Editar ${esc(c.n)}" onclick="custDlg(${i})">${I.edit}</button><button class="ic" aria-label="Eliminar a ${esc(c.n)}" onclick="remCust(${i})">${I.trash}</button></td></tr>`).join(""):'<tr><td colspan="7" class="empty" style="border:0">Ningún custodio coincide con el filtro.</td></tr>'}
 function togRec(i,v){const c=S.phases[tab].c[i];c.rec=v;if(v){c.dr=c.dr||today();if(c.st==="No Evaluado")c.st="En Revisión"}else{c.dr="";c.dc="";c.st="No Evaluado"}save();rows()}
 function setSt(i,v){const c=S.phases[tab].c[i];c.st=v;if(v==="Completado"&&!c.dc)c.dc=today();if(v!=="Completado")c.dc="";save();rows()}
+
+function exportCustodiansExcel(){
+ const p=S.phases[tab]||{c:[]};
+ if(!Array.isArray(p.c) || !p.c.length){toast("No hay custodios para exportar.");return;}
+ let xml=`<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Styles>
+   <Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#0D9488" ss:Pattern="Solid"/></Style>
+   <Style ss:ID="Cell"><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D3DBE4"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D3DBE4"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D3DBE4"/><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D3DBE4"/></Borders></Style>
+  </Styles>
+  <Worksheet ss:Name="${tab==="pre"?"Pre-Cierre":"Certificacion Final"}">
+   <Table>
+    <Row>
+     <Cell ss:StyleID="Header"><Data ss:Type="String">Custodio Enlace</Data></Cell>
+     <Cell ss:StyleID="Header"><Data ss:Type="String">Recibido</Data></Cell>
+     <Cell ss:StyleID="Header"><Data ss:Type="String">Fecha Recibido</Data></Cell>
+     <Cell ss:StyleID="Header"><Data ss:Type="String">Fecha Completado</Data></Cell>
+     <Cell ss:StyleID="Header"><Data ss:Type="String">Estatus / Evaluación</Data></Cell>
+     <Cell ss:StyleID="Header"><Data ss:Type="String">Observaciones</Data></Cell>
+    </Row>`;
+ p.c.forEach(c=>{
+  xml+=`<Row>
+   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.n||""}</Data></Cell>
+   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.rec?"Sí":"No"}</Data></Cell>
+   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.dr||""}</Data></Cell>
+   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.dc||""}</Data></Cell>
+   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.st||""}</Data></Cell>
+   <Cell ss:StyleID="Cell"><Data ss:Type="String">${c.ob||""}</Data></Cell>
+  </Row>`;
+ });
+ xml+=`</Table></Worksheet></Workbook>`;
+ const blob=new Blob([xml],{type:"application/vnd.ms-excel;charset=utf-8"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+ a.download=`Custodios_${tab==="pre"?"PreCierre":"CertificacionFinal"}_${cy.y}_${pad(cy.m+1)}.xls`;
+ document.body.appendChild(a);a.click();a.remove();
+ toast("Excel descargado exitosamente");
+}
 
 /* ---------- Modales ---------- */
 const dlg=$("#dlg");
@@ -495,7 +530,7 @@ async function docxReport(){const{Document,Packer,Paragraph,TextRun,Table,TableR
  headers:{default:new Header({children:[hn("Universidad Interamericana de Puerto Rico"),hn("Recinto de Ponce"),hn(""),hn("Decanato de Administración")]})},
  children:[hp("Oficina de Propiedad"+phTitle()),new Paragraph({spacing:{after:280},children:[tr("Periodo: "+per,{italics:true,color:"555555"})]}),
  p("Durante el periodo comprendido del "+per+", la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:"),...ls.map(bl),
- h("Tareas mensuales completadas"),...(done.length?done:["No se registraron tareas adicionales completadas en este ciclo."]).map(bl),
+ h("Tareas mensuales completadas"),...(done.length?done:["No se registraron tareas adicionales completadas in este ciclo."]).map(bl),
  h("Otros procesos relacionados"),new Table({width:{size:9360,type:WidthType.DXA},columnWidths:W,borders:{top:no,bottom:no,left:no,right:no,insideHorizontal:no,insideVertical:no},rows}),
  h("Pequeños Grandes Saberes"),p("Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:"),...SAB.map(bl),
  new Paragraph({alignment:C,spacing:{before:360,after:160},children:[tr(QUOTE,{italics:true,color:"444444"})]}),
