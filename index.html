@@ -24,7 +24,7 @@ h1{font-size:17px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0
 .cyc .mid{text-align:center;padding:0 10px;min-width:210px}.cyc b{display:block;font-size:14px}.cyc small{color:var(--tx2);font-size:12px}
 .pop{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:min(300px,92vw);background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:12px;box-shadow:0 12px 32px rgba(2,6,23,.28);z-index:40}.pop[hidden]{display:none}
 .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.mg button{border:1px solid transparent;background:var(--sf2);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:600;color:var(--tx)}.mg button:hover{border-color:var(--ac)}.mg .cur{background:var(--ac);color:var(--acx)}.mg .now{border-color:var(--ac);color:var(--ac)}
+.mg button{border:1px solid transparent;background:var(--sf2);border-radius:10px;padding:10px 0;cursor:pointer;font-weight:600;color:var(--tx)}.mg button:hover{border-color:var(--ac)}.mg .cur{background:var(--ac);color:var(--acx)}.mg .now{border-color:var(--ac);color:var(--ac}
 .btn{border:1px solid var(--bd);background:var(--sf);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:13px}
 .btn:hover{background:var(--sf2)}.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}.btn.pri:hover{filter:brightness(1.08)}.btn.sm{padding:5px 10px;font-weight:500}
 .ic{display:inline-grid;place-items:center;vertical-align:middle;padding:0;border:0;background:transparent;cursor:pointer;border-radius:8px;width:34px;height:34px;font-size:16px;color:var(--tx2)}.ic:hover{background:var(--sf2);color:var(--tx)}.ic svg{display:block;margin:auto;width:20px;height:20px}.ic:disabled{opacity:.35;cursor:default}
@@ -99,7 +99,7 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 .mc-d:hover{background:var(--sf2)}.mc-d.today{border-color:var(--ac);color:var(--ac)}.mc-d.sel{background:var(--ac);color:var(--acx);border-color:var(--ac)}
 .dots{display:flex;gap:3px;height:5px}.dots b{width:5px;height:5px;border-radius:50%;background:var(--ac);display:block}.dots b.de{background:var(--wr)}.mc-d.sel .dots b{background:var(--acx)}
 .dayhd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:14px 0 4px;padding-top:14px;border-top:1px solid var(--bd)}
-/* Próximas actividades (estilo limpio de tu imagen) */
+/* Próximas actividades */
 .up-hd{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;margin-bottom:12px;color:var(--tx)}
 .up-hd svg{color:var(--ac);width:18px;height:18px;flex:none}
 .up-item{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:12px;padding:10px 8px;cursor:pointer;transition:.15s}
@@ -169,8 +169,6 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 let tab="dash",filt="all",q="",remOpen=false,S={cycles:{},phases:null};
 let dbReady=false,saveTimer=null,saveQueue=Promise.resolve(),lastSaveError="";
 
-// Cada ciclo se guarda como una fila en property_cycles. El campo payload
-// conserva los datos del ciclo y las fases de certificación.
 async function loadFromSupabase(){
   try{
     const {data,error}=await supabaseClient.from("property_cycles").select("cycle_key,payload");
@@ -183,7 +181,7 @@ async function loadFromSupabase(){
       const payload=row.payload;
       if(payload && typeof payload==="object"){
         const cycleData=payload.cycle_data || payload;
-        if(cycleData.req || cycleData.tasks || cycleData.events || cycleData.notes!==undefined){
+        if(cycleData){
           const clean={...cycleData};
           delete clean.phases; delete clean.cycle_data;
           loadedCycles[key]=clean;
@@ -199,7 +197,8 @@ async function loadFromSupabase(){
   }catch(error){
     console.error("Error al cargar datos de Supabase:",error);
     dbReady=false;
-    toast("No se pudieron cargar los datos de Supabase. Verifique la conexión y los permisos.");
+    lastSaveError=error?.message||String(error);
+    toast("No se pudieron cargar los datos de Supabase.");
     return false;
   }
 }
@@ -211,7 +210,7 @@ function save(){
     saveQueue=saveQueue.then(persistAllCycles).catch(error=>{
       console.error("Error al guardar en Supabase:",error);
       lastSaveError=error?.message||String(error);
-      toast("Error al guardar en Supabase. Sus cambios podrían no haberse guardado.");
+      toast("Error al guardar en Supabase.");
     });
   },350);
 }
@@ -254,7 +253,7 @@ const I={
  trash:sv('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
  edit:sv('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>')
 };
-const sh=s=>{const p=s.split("-");return +p[2]+" "+MES[+p[1]-1].slice(0,3)};
+const sh=s=>{if(!s||typeof s!=="string"||!s.includes("-"))return"";const p=s.split("-");if(p.length<3)return s;return +p[2]+" "+(MES[+p[1]-1]?.slice(0,3)||"")};
 const fmt=s=>{if(!s)return"—";const[a,b,c]=s.split("-");return c+"/"+b+"/"+a};
 const colName=k=>(COLS.find(c=>c[0]===k)||[0,k])[1];
 const diff=ds=>Math.round((new Date(ds+"T00:00:00")-new Date(today()+"T00:00:00"))/864e5);
@@ -263,25 +262,45 @@ const dayName=ds=>cap(new Date(ds+"T00:00:00").toLocaleDateString("es-PR",{weekd
 function cycTxt(){const sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1;return"16 "+MES[sm].slice(0,3)+" "+sy+" – 15 "+MES[cy.m].slice(0,3)+" "+cy.y}
 
 function mkPhase(demo,s,du){return{c:NAMES.map((n,i)=>{const r=demo&&i<24;return{n,rec:r,dr:r?"2026-10-"+pad(8+i%17):"",dc:r&&i%3===0?"2026-10-26":"",st:r?(i%3===0?"Completado":i===5?"Requiere Acción":"En Revisión"):"No Evaluado",ob:i===5?"Faltan 3 equipos por verificar.":""}}),rem:demo?[{d:"2026-10-20",to:"Todos los custodios",n:"Recordatorio de entrega del informe de pre-cierre."}]:[],s:s||"",du:du||""}}
+
 function D(){
  const k=cy.y+"_"+cy.m;
- if(!S.cycles[k]){const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;
-  S.cycles[k]={req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",
-  tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""},{id:"t5",t:"Verificar inventario del Laboratorio",cat:"Inventario",pr:"H",col:"todo",s:"2026-10-29",du:"2026-10-29",d:""}]:[],events:demo?[{id:"e1",t:"Reunión con custodios",d:"2026-11-03"}]:[]};
-  save()}
- if(!S.phases||!S.phases.pre||!S.phases.pre.c){const demo=!!Object.keys(S.cycles).length;S.phases={pre:mkPhase(demo,"2026-10-19","2026-11-06"),fin:mkPhase(false)};save()}
+ if(!S.cycles[k]){
+  const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;
+  S.cycles[k]={
+   req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),
+   notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",
+   tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""},{id:"t5",t:"Verificar inventario del Laboratorio",cat:"Inventario",pr:"H",col:"todo",s:"2026-10-29",du:"2026-10-29",d:""}]:[],
+   events:demo?[{id:"e1",t:"Reunión con custodios",d:"2026-11-03"}]:[]
+  };
+  save();
+ } else {
+  // Auto-repara si falta alguna propiedad esencial en los datos cargados de Supabase
+  const cyc = S.cycles[k];
+  if(!Array.isArray(cyc.req)) cyc.req=REQ.map((r,i)=>({t:r[0],d:r[1],r:0,c:0}));
+  if(!Array.isArray(cyc.tasks)) cyc.tasks=[];
+  if(!Array.isArray(cyc.events)) cyc.events=[];
+  if(typeof cyc.notes!=="string") cyc.notes="";
+ }
+ if(!S.phases||!S.phases.pre||!S.phases.pre.c){
+  const demo=!!Object.keys(S.cycles).length;
+  S.phases={pre:mkPhase(demo,"2026-10-19","2026-11-06"),fin:mkPhase(false)};
+  save();
+ }
  return S.cycles[k];
 }
+
 function allItems(){
  const tasks=[],events=[],seenT=new Set(),seenE=new Set();
  Object.values(S.cycles).forEach(c=>{
-  (c.tasks||[]).forEach(t=>{if(!seenT.has(t.id)){seenT.add(t.id);tasks.push(t)}});
-  (c.events||[]).forEach(e=>{if(!seenE.has(e.id)){seenE.add(e.id);events.push(e)}});
+  if(c && Array.isArray(c.tasks)) c.tasks.forEach(t=>{if(t && !seenT.has(t.id)){seenT.add(t.id);tasks.push(t)}});
+  if(c && Array.isArray(c.events)) c.events.forEach(e=>{if(e && !seenE.has(e.id)){seenE.add(e.id);events.push(e)}});
  });
  return{tasks,events};
 }
-function findTask(id){for(const c of Object.values(S.cycles)){const t=(c.tasks||[]).find(x=>x.id===id);if(t)return{t,c}}return null}
-function findEvent(id){for(const c of Object.values(S.cycles)){const t=(c.events||[]).find(x=>x.id===id);if(t)return{t,c}}return null}
+
+function findTask(id){for(const c of Object.values(S.cycles)){if(c && Array.isArray(c.tasks)){const t=c.tasks.find(x=>x.id===id);if(t)return{t,c}}}return null}
+function findEvent(id){for(const c of Object.values(S.cycles)){if(c && Array.isArray(c.events)){const t=c.events.find(x=>x.id===id);if(t)return{t,c}}}return null}
 
 function closeChip(){const e=new Date(cy.y,cy.m,15),s=new Date(cy.y,cy.m-1,16),n=new Date();n.setHours(0,0,0,0);
  if(n<s)return["Upcoming cycle","mu"];const d=Math.round((e-n)/864e5);
@@ -327,7 +346,7 @@ function upcomingCard(){
  const {events}=allItems(),tod=today(),items=[];
  [["pre","Certificación de Pre-Cierre"],["fin","Certificación Final"]].forEach(([k,lbl])=>{
   const p=S.phases[k];
-  if(p&&(p.s||p.du)){
+  if(p&&p.c&&(p.s||p.du)){
    const rc=p.c.filter(c=>c.rec).length,n=p.c.length,pct=n?Math.round(rc/n*100):0,cp=p.du?chipFor(p.du):["En curso","in"];
    const fTxt=[p.s?"Inicio: "+sh(p.s):"",p.du?"Vence: "+sh(p.du):""].filter(Boolean).join(" · ");
    items.push(`<button class="up-item" onclick="go('${k}')"><div class="up-ic">${I.calDots}</div><div class="up-tx"><b>${lbl}</b><small>${fTxt} · ${rc}/${n} recibidos (${pct}%)</small></div><span class="chip ${cp[1]}">${cp[0]}</span><span class="up-arr">›</span></button>`);
@@ -343,8 +362,8 @@ function upcomingCard(){
 
 function dashboardView(){
  const d=D(),tod=today(),{tasks,events}=allItems();
- let R=0,C=0;d.req.forEach(r=>{R+=r.r;C+=r.c});const rate=R?Math.round(C/R*100):0;
- const mt=d.tasks.length,md=d.tasks.filter(t=>t.col==="done").length,mp=mt?Math.round(md/mt*100):0;
+ let R=0,C=0;if(Array.isArray(d.req)) d.req.forEach(r=>{R+=r.r;C+=r.c});const rate=R?Math.round(C/R*100):0;
+ const mt=Array.isArray(d.tasks)?d.tasks.length:0,md=Array.isArray(d.tasks)?d.tasks.filter(t=>t.col==="done").length:0,mp=mt?Math.round(md/mt*100):0;
  const open=tasks.filter(t=>t.col!=="done"),byDu=(a,b)=>a.du<b.du?-1:a.du>b.du?1:0;
  const over=open.filter(t=>t.du&&t.du<tod).sort(byDu);
  const hoy=open.filter(t=>(t.du===tod||(!t.du&&t.s===tod))&&!over.includes(t));
@@ -352,9 +371,9 @@ function dashboardView(){
  const sec=(t,cl,rs)=>rs.length?`<h4 class="agh">${t}<span class="chip ${cl}">${rs.length}</span></h4>${rs.join("")}`:"";
  const hoyRows=hoy.map(t=>agRow(t,"Hoy","in")).concat(events.filter(e=>e.d===tod).map(evRow));
  const ag=sec("Vencidas","er",over.map(t=>agRow(t,rel(t.du),"er")))+sec("Hoy","in",hoyRows)+sec("Próximos 7 días","",sem.map(t=>agRow(t,rel(t.du))));
- const pend=d.req.map(r=>({...r,pe:r.r-r.c})).filter(r=>r.pe>0).sort((a,b)=>b.pe-a.pe).slice(0,5);
- const pendHtml=pend.length?pend.map(r=>{const v=rv(r);return`<div class="pr"><div class="prt"><b>${esc(r.t)}</b><span class="chip ${v.cl}">${r.pe} pend.</span></div><div class="bar"><i style="width:${v.p}%"></i></div></div>`}).join(""):'<div class="empty" style="margin-top:12px">No hay solicitudes pendientes.</div>';
- const cert=["pre","fin"].map(k=>{const p=S.phases[k],n=p.c.length,rc=p.c.filter(c=>c.rec).length,pc=n?Math.round(rc/n*100):0,cp=p.du?chipFor(p.du):null;
+ const pend=Array.isArray(d.req)?d.req.map(r=>({...r,pe:r.r-r.c})).filter(r=>r.pe>0).sort((a,b)=>b.pe-a.pe).slice(0,5):[];
+ const pendHtml=pend.length?pend.map(r=>{const v=rv(r);return`<div class="pr"><div class="prt"><b>${esc(r.t)}</b><span class="chip ${v.cl}">${v.pe} pend.</span></div><div class="bar"><i style="width:${v.p}%"></i></div></div>`}).join(""):'<div class="empty" style="margin-top:12px">No hay solicitudes pendientes.</div>';
+ const cert=["pre","fin"].map(k=>{const p=S.phases[k],n=p&&p.c?p.c.length:0,rc=p&&p.c?p.c.filter(c=>c.rec).length:0,pc=n?Math.round(rc/n*100):0,cp=p&&p.du?chipFor(p.du):null;
   return`<button class="cert" onclick="go('${k}')"><div class="prt"><b>${k==="pre"?"Pre-Cierre":"Certificación Final"}</b>${cp?`<span class="chip ${cp[1]}">${cp[0]}</span>`:""}</div><div class="pb"><div class="bar"><i style="width:${pc}%"></i></div><span class="mu">${rc}/${n}</span></div></button>`}).join("");
  const cc=closeChip();
  return`<div class="row between" style="margin-bottom:16px"><div><h2>Resumen del periodo</h2><p class="mu">${cycTxt()} <span class="chip ${cc[1]}" style="margin-left:6px">${cc[0]}</span></p></div><div class="row"><button class="btn" onclick="eventDlg()">+ Evento</button><button class="btn pri" onclick="taskDlg()">+ Nueva tarea</button></div></div>
@@ -377,18 +396,23 @@ function tasksView(){
 <section class="card pad"><div class="row between"><div><h2>Objetivos del periodo</h2><p class="mu">Escriba una tarea por línea. Cada línea aparecerá como viñeta en el informe Word.</p></div><span class="chip ok" id="ns">Guardado ✓</span></div>
 <textarea rows="4" style="margin-top:12px" aria-label="Objetivos del periodo" placeholder="Ej.: Certificación de inventario pre-cierre." oninput="noteIn(this.value)">${esc(D().notes)}</textarea></section>
 <section><div class="row between" style="margin-bottom:12px"><div><h2>Tareas mensuales</h2><p class="mu">Arrastre las tarjetas o haga clic en una para editarla.</p></div><button class="btn pri" onclick="taskDlg()">+ Nueva tarea</button></div><div class="board"><div class="kb">${cols}</div></div></section>`}
-function renderKanban(){const d=D();renderRequests();COLS.forEach(([k])=>{const ts=d.tasks.filter(t=>t.col===k);$("#cnt-"+k).textContent=ts.length;$("#col-"+k).innerHTML=ts.length?ts.map(card).join(""):'<div class="empty">Arrastre tareas aquí</div>'})}
-function renderRequests(){$("#requests-container").innerHTML=D().req.map((r,i)=>{const v=rv(r);
+function renderKanban(){const d=D();renderRequests();COLS.forEach(([k])=>{const ts=Array.isArray(d.tasks)?d.tasks.filter(t=>t.col===k):[];$("#cnt-"+k).textContent=ts.length;$("#col-"+k).innerHTML=ts.length?ts.map(card).join(""):'<div class="empty">Arrastre tareas aquí</div>'})}
+function renderRequests(){const d=D();if(!Array.isArray(d.req)) d.req=[];$("#requests-container").innerHTML=d.req.map((r,i)=>{const v=rv(r);
  return`<div class="rq"><div><b>${esc(r.t)}</b><small>${esc(r.d)}</small></div><div class="pbw"><div class="pb"><div class="bar"><i id="bar${i}" style="width:${v.p}%"></i></div><span class="chip ${v.cl}" id="pc${i}">${r.r?v.p+"%":"—"}</span></div><small class="mu" id="pe${i}">${v.tx}</small></div>
 <div><span class="lbl">Recibidas</span>${stp(i,"r",r.r,r.t)}</div><div><span class="lbl">Completadas</span>${stp(i,"c",r.c,r.t)}</div></div>`}).join("");paint()}
 function rv(r){const p=r.r?Math.round(r.c/r.r*100):0,pe=r.r-r.c;return{p,pe,cl:!r.r?"":p>=90?"ok":p>=75?"wr":"er",tx:pe>0?pe+" pendiente"+(pe>1?"s":""):r.r?"Al día":"Sin solicitudes"}}
 function stp(i,f,v,t){const id=(f==="r"?"ir":"ic")+i,n=f==="r"?"Recibidas":"Completadas";return`<span class="stp"><button aria-label="Restar ${n.toLowerCase()}: ${esc(t)}" onclick="bump(${i},'${f}',-1)">−</button><input type="number" min="0" inputmode="numeric" id="${id}" value="${v}" aria-label="${n}: ${esc(t)}" onfocus="this.select()" onchange="setReq(${i},'${f}',this.value)"><button aria-label="Sumar ${n.toLowerCase()}: ${esc(t)}" onclick="bump(${i},'${f}',1)">+</button></span>`}
-function setReq(i,f,v){const r=D().req[i];r[f]=Math.max(0,parseInt(v)||0);if(r.c>r.r)r.c=r.r;save();paint()}
-function bump(i,f,n){setReq(i,f,D().req[i][f]+n)}
-function paint(){const d=D();let R=0,C=0;d.req.forEach((r,i)=>{R+=r.r;C+=r.c;const v=rv(r),c=$("#pc"+i);if(c){$("#bar"+i).style.width=v.p+"%";c.className="chip "+v.cl;c.textContent=r.r?v.p+"%":"—";$("#pe"+i).textContent=v.tx;$("#ir"+i).value=r.r;$("#ic"+i).value=r.c}});if($("#kR")){$("#kR").textContent=R;$("#kC").textContent=C}}
-let nt;function noteIn(v){D().notes=v;save();$("#ns").textContent="Guardando…";clearTimeout(nt);nt=setTimeout(()=>{const e=$("#ns");if(e)e.textContent="Guardado ✓"},500)}
-function card(t){const dn=t.col==="done",od=t.du&&t.du<today()&&!dn,dt=dn?(t.cd||t.du||t.s):(t.du||t.s);
- return`<article class="tk" role="button" tabindex="0" draggable="true" aria-label="Editar tarea: ${esc(t.t)}" onclick="taskDlg('${t.id}')" onkeydown="if(event.key==='Enter')taskDlg('${t.id}')" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')"><div class="meta"><span class="chip cat">${esc(t.cat)}</span>${t.pr==="H"?'<span class="chip er">Alta</span>':""}</div><div class="tt">${esc(t.t)}</div><div class="meta">${dt?`<span class="dt ${dn?"ok":od?"er":""}"${od?' title="Tarea vencida"':""}>${dn?I.check:I.clock} ${sh(dt)}</span>`:"<span></span>"}${t.d?`<span class="mi" title="Con detalles">${I.lines}</span>`:""}</div></article>`}
+function setReq(i,f,v){const d=D();if(!Array.isArray(d.req))d.req=[];const r=d.req[i];if(!r)return;r[f]=Math.max(0,parseInt(v)||0);if(r.c>r.r)r.c=r.r;save();paint()}
+function bump(i,f,n){const d=D();if(d.req && d.req[i])setReq(i,f,d.req[i][f]+n)}
+function paint(){const d=D();let R=0,C=0;if(Array.isArray(d.req))d.req.forEach((r,i)=>{R+=r.r;C+=r.c;const v=rv(r),c=$("#pc"+i);if(c){$("#bar"+i).style.width=v.p+"%";c.className="chip "+v.cl;c.textContent=r.r?v.p+"%":"—";$("#pe"+i).textContent=v.tx;$("#ir"+i).value=r.r;$("#ic"+i).value=r.c}});if($("#kR")){$("#kR").textContent=R;$("#kC").textContent=C}}
+let nt;function noteIn(v){const d=D();d.notes=v;save();$("#ns").textContent="Guardando…";clearTimeout(nt);nt=setTimeout(()=>{const e=$("#ns");if(e)e.textContent="Guardado ✓"},500)}
+function card(t){
+ const dn=t.col==="done";
+ const targetDate = dn ? (t.cd || t.du || t.s) : (t.du || t.s);
+ const od = targetDate && targetDate < today() && !dn;
+ const formattedDate = sh(targetDate);
+ return `<article class="tk" role="button" tabindex="0" draggable="true" aria-label="Editar tarea: ${esc(t.t)}" onclick="taskDlg('${t.id}')" onkeydown="if(event.key==='Enter')taskDlg('${t.id}')" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')"><div class="meta"><span class="chip cat">${esc(t.cat)}</span>${t.pr==="H"?'<span class="chip er">Alta</span>':""}</div><div class="tt">${esc(t.t)}</div><div class="meta">${formattedDate?`<span class="dt ${dn?"ok":od?"er":""}"${od?' title="Tarea vencida"':""}>${dn?I.check:I.clock} ${formattedDate}</span>`:"<span></span>"}${t.d?`<span class="mi" title="Con detalles">${I.lines}</span>`:""}</div></article>`;
+}
 function mv(id,c){const f=findTask(id);if(!f)return;f.t.col=c;f.t.cd=c==="done"?(f.t.cd||today()):"";save();render()}
 function drop(e,c){e.preventDefault();mv(e.dataTransfer.getData("text/plain"),c)}
 
@@ -407,14 +431,14 @@ function calendarView(){return`<section class="card pad"><div class="row between
 function calChg(n){calM+=n;if(calM>11){calM=0;calY++}if(calM<0){calM=11;calY--}render()}
 
 /* ---------- Pre-Cierre / Final ---------- */
-function phaseView(){const p=S.phases[tab],cp=chipFor(p.du);
+function phaseView(){const p=S.phases[tab]||{c:[],rem:[],s:"",du:""},cp=chipFor(p.du);
  return`<section class="card pad"><div class="row between"><div><h2>${tab==="pre"?"Certificación de inventario pre-cierre":"Certificación final de inventario"}</h2><p class="mu">Gestione el periodo y supervise a los custodios enlace.</p></div><div class="row"><span class="chip ${cp[1]}">${cp[0]}</span><button class="btn pri sm" onclick="preview()">Descargar informe</button></div></div>
 <div class="g2" style="max-width:440px;margin-top:14px"><label class="f">Fecha de inicio<input class="in" type="date" value="${p.s||""}" max="${p.du||""}" onchange="setPhaseDate('s',this.value)"></label><label class="f">Fecha de vencimiento<input class="in" type="date" value="${p.du||""}" min="${p.s||""}" onchange="setPhaseDate('du',this.value)"></label></div><div id="stats" style="margin-top:14px"></div></section>
-<details class="card pad" ${remOpen?"open":""} ontoggle="remOpen=this.open"><summary>Bitácora de recordatorios (${p.rem.length})</summary><div style="margin-top:10px">${p.rem.length?p.rem.map((r,i)=>`<div class="rem"><span><b>${fmt(r.d)}</b> · ${esc(r.to)} · <span class="mu">${esc(r.n)}</span></span><button class="ic" aria-label="Eliminar recordatorio" onclick="delRem(${i})">✕</button></div>`).join(""):'<p class="mu">No hay recordatorios registrados en esta fase.</p>'}<button class="btn sm" style="margin-top:10px" onclick="remDlg()">+ Registrar recordatorio</button></div></details>
+<details class="card pad" ${remOpen?"open":""} ontoggle="remOpen=this.open"><summary>Bitácora de recordatorios (${p.rem?p.rem.length:0})</summary><div style="margin-top:10px">${p.rem&&p.rem.length?p.rem.map((r,i)=>`<div class="rem"><span><b>${fmt(r.d)}</b> · ${esc(r.to)} · <span class="mu">${esc(r.n)}</span></span><button class="ic" aria-label="Eliminar recordatorio" onclick="delRem(${i})">✕</button></div>`).join(""):'<p class="mu">No hay recordatorios registrados en esta fase.</p>'}<button class="btn sm" style="margin-top:10px" onclick="remDlg()">+ Registrar recordatorio</button></div></details>
 <section class="card"><div class="tb"><input class="in" type="search" aria-label="Buscar custodio" placeholder="Buscar custodio…" value="${esc(q)}" oninput="q=this.value;rows()"><div class="seg" role="group" aria-label="Filtro"><button data-f="all" onclick="filt='all';rows()">Todos</button><button data-f="pend" onclick="filt='pend';rows()">Solo pendientes</button><button data-f="act" onclick="filt='act';rows()">Requiere acción</button></div><span class="mu" id="cnt"></span><button class="btn pri sm" style="margin-left:auto;display:inline-flex;gap:6px;align-items:center" onclick="addCust()">${I.plus} Añadir custodio</button></div>
 <div class="scr"><table><thead><tr><th>Custodio enlace</th><th class="c">Recibido</th><th class="c">Fecha recibido</th><th class="c">Fecha completado</th><th>Evaluación</th><th>Observaciones</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></section>`}
-function setPhaseDate(k,v){S.phases[tab][k]=v;save();render()}
-function rows(){const p=S.phases[tab],n=p.c.length,rc=p.c.filter(c=>c.rec).length,pct=n?Math.round(rc/n*100):0,ct=s=>p.c.filter(c=>c.rec&&c.st===s).length;
+function setPhaseDate(k,v){if(!S.phases[tab]) S.phases[tab]={c:[],rem:[]};S.phases[tab][k]=v;save();render()}
+function rows(){const p=S.phases[tab]||{c:[]};if(!Array.isArray(p.c)) p.c=[];const n=p.c.length,rc=p.c.filter(c=>c.rec).length,pct=n?Math.round(rc/n*100):0,ct=s=>p.c.filter(c=>c.rec&&c.st===s).length;
  $("#stats").innerHTML=`<div class="row between"><div><b style="font-size:26px">${rc}</b> <span class="mu">/ ${n} informes recibidos</span></div><b>${pct}%</b></div><div class="bar lg" style="margin:8px 0 12px"><i style="width:${pct}%"></i></div><div class="row" style="gap:8px"><span class="chip wr">${n-rc} pendientes</span><span class="chip in">${ct("En Revisión")} en revisión</span><span class="chip ok">${ct("Completado")} completados</span><span class="chip er">${ct("Requiere Acción")} requieren acción</span></div>`;
  document.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b.dataset.f===filt));
  const l=p.c.map((c,i)=>({c,i})).filter(({c})=>c.n.toLowerCase().includes(q.toLowerCase())&&(filt==="all"||(filt==="pend"&&!c.rec)||(filt==="act"&&c.st==="Requiere Acción")));
@@ -431,27 +455,30 @@ const opt=(a,s)=>a.map(x=>{const v=Array.isArray(x)?x[0]:x,l=Array.isArray(x)?x[
 function ask(msg,fn){modal("Confirmar",`<p style="margin:0">${msg}</p>`,fn,"Eliminar")}
 function taskDlg(id,col,pd){const d=D(),f0=id&&findTask(id),t=f0?f0.t:{t:"",cat:"General",pr:"M",col:col||"todo",s:pd||today(),du:pd||"",cd:"",d:""};
  modal(id?"Editar tarea":"Nueva tarea",`<label class="f">Título *<input class="in" name="t" required value="${esc(t.t)}"></label><div class="g2"><label class="f">Categoría<select class="sel" name="cat">${opt(CAT,t.cat)}</select></label><label class="f">Prioridad<select class="sel" name="pr">${opt([["H","Alta"],["M","Media"],["L","Baja"]],t.pr)}</select></label></div><div class="g2"><label class="f">Estatus<select class="sel" name="col">${opt(COLS,t.col)}</select></label><label class="f">Fecha de inicio<input class="in" type="date" name="s" value="${t.s}"></label></div><div class="g2"><label class="f">Fecha de vencimiento<input class="in" type="date" name="du" value="${t.du}"></label><label class="f">Fecha de completado<input class="in" type="date" name="cd" value="${t.cd||""}"></label></div><label class="f">Detalles<textarea name="d" rows="3">${esc(t.d)}</textarea></label>`,
- f=>{f.t=f.t.trim();f.cd=f.col==="done"?(f.cd||today()):"";if(f0)Object.assign(t,f);else d.tasks.push({id:"t"+Date.now(),...f});save();render();toast("Tarea guardada")},"Guardar",f0?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delTask('${id}')">Eliminar</button>`:"")}
-function delTask(id){ask("¿Desea eliminar esta tarea?",()=>{const f=findTask(id);if(f)f.c.tasks=f.c.tasks.filter(t=>t.id!==id);save();render()})}
-function eventDlg(id){const d=D();if(!d.events)d.events=[];const f0=id&&findEvent(id),ev=f0?f0.t:{t:"",d:selDay||today()};
+ f=>{f.t=f.t.trim();f.cd=f.col==="done"?(f.cd||today()):"";if(f0)Object.assign(t,f);else {if(!Array.isArray(d.tasks))d.tasks=[];d.tasks.push({id:"t"+Date.now(),...f});}save();render();toast("Tarea guardada")},"Guardar",f0?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delTask('${id}')">Eliminar</button>`:"")}
+function delTask(id){ask("¿Desea eliminar esta tarea?",()=>{const f=findTask(id);if(f&&Array.isArray(f.c.tasks))f.c.tasks=f.c.tasks.filter(t=>t.id!==id);save();render()})}
+function eventDlg(id){const d=D();if(!Array.isArray(d.events))d.events=[];const f0=id&&findEvent(id),ev=f0?f0.t:{t:"",d:selDay||today()};
  modal(id?"Editar evento":"Nuevo evento",`<label class="f">Título del evento *<input class="in" name="t" required value="${esc(ev.t)}"></label><label class="f">Fecha<input class="in" type="date" name="d" required value="${ev.d}"></label>`,f=>{f.t=f.t.trim();if(f0)Object.assign(ev,f);else d.events.push({id:"e"+Date.now(),...f});save();render();toast("Evento guardado")},"Guardar",f0?`<button type="button" class="btn" style="margin-right:auto;color:var(--er)" onclick="delEvent('${id}')">Eliminar</button>`:"")}
-function delEvent(id){ask("¿Desea eliminar este evento?",()=>{const f=findEvent(id);if(f)f.c.events=f.c.events.filter(e=>e.id!==id);save();render()})}
+function delEvent(id){ask("¿Desea eliminar este evento?",()=>{const f=findEvent(id);if(f&&Array.isArray(f.c.events))f.c.events=f.c.events.filter(e=>e.id!==id);save();render()})}
 function custDlg(i){const c=S.phases[tab].c[i];modal("Editar custodio",`<p style="margin:0"><b>${esc(c.n)}</b></p><div class="g2"><label class="f">Fecha recibido<input class="in" type="date" name="dr" value="${c.dr}"></label><label class="f">Fecha completado<input class="in" type="date" name="dc" value="${c.dc}"></label></div><label class="f">Observaciones<textarea name="ob" rows="3">${esc(c.ob)}</textarea></label>`,f=>{Object.assign(c,f);save();rows();toast("Cambios guardados")},"Actualizar")}
-function remDlg(){modal("Registrar recordatorio",`<label class="f">Destinatario<input class="in" name="to" required></label><label class="f">Fecha de envío<input class="in" type="date" name="d" required value="${today()}"></label><label class="f">Asunto / notas<textarea name="n" rows="3" required></textarea></label>`,f=>{S.phases[tab].rem.push(f);remOpen=true;save();render()})}
+function remDlg(){modal("Registrar recordatorio",`<label class="f">Destinatario<input class="in" name="to" required></label><label class="f">Fecha de envío<input class="in" type="date" name="d" required value="${today()}"></label><label class="f">Asunto / notas<textarea name="n" rows="3" required></textarea></label>`,f=>{if(!S.phases[tab].rem)S.phases[tab].rem=[];S.phases[tab].rem.push(f);remOpen=true;save();render()})}
 function delRem(i){ask("¿Eliminar este recordatorio?",()=>{S.phases[tab].rem.splice(i,1);save();render()})}
 function addCust(){modal("Añadir custodio",`<label class="f">Nombre del custodio *<input class="in" name="n" required autofocus></label><p id="err" class="mu" style="color:var(--er);margin:0"></p>`,f=>{const n=f.n.trim();if(!n)return false;if(S.phases[tab].c.some(c=>c.n.toLowerCase()===n.toLowerCase())){$("#err").textContent="Ese custodio ya existe.";return false}
- ["pre","fin"].forEach(k=>S.phases[k].c.push({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""}));q="";filt="all";save();render();const s=$(".scr");if(s)s.scrollTop=s.scrollHeight;toast("Custodio añadido")},"Añadir")}
-function remCust(i){const nm=S.phases[tab].c[i].n;ask(`¿Eliminar a <b>${esc(nm)}</b> de la lista de custodios? Se quitará de Pre-Cierre y de Certificación Final.`,()=>{["pre","fin"].forEach(k=>S.phases[k].c=S.phases[k].c.filter(c=>c.n!==nm));save();render();toast("Custodio eliminado")})}
+ ["pre","fin"].forEach(k=>{if(!S.phases[k])S.phases[k]={c:[],rem:[]};if(!Array.isArray(S.phases[k].c))S.phases[k].c=[];S.phases[k].c.push({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""})});q="";filt="all";save();render();const s=$(".scr");if(s)s.scrollTop=s.scrollHeight;toast("Custodio añadido")},"Añadir")}
+function remCust(i){const nm=S.phases[tab].c[i].n;ask(`¿Eliminar a <b>${esc(nm)}</b> de la lista de custodios? Se quitará de Pre-Cierre y de Certificación Final.`,()=>{["pre","fin"].forEach(k=>{if(S.phases[k]&&Array.isArray(S.phases[k].c))S.phases[k].c=S.phases[k].c.filter(c=>c.n!==nm)});save();render();toast("Custodio eliminado")})}
 
 /* ---------- Informe ---------- */
 const SAB=["De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.","Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.","Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.","De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.","Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales."];
 const QUOTE="“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.";
-function repData(){const d=D(),sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1,per="16 de "+MES[sm]+(sy!==cy.y?" de "+sy:"")+" al 15 de "+MES[cy.m]+" de "+cy.y;const ls=d.notes.split(/\r?\n/).filter(x=>x.trim());
- return{d,per,ls:ls.length?ls:["Gestiones generales de inventario y control de propiedad."],done:d.tasks.filter(t=>t.col==="done").map(t=>t.t+(t.s||t.cd||t.du?" ("+[t.s?"Inicio: "+fmt(t.s):"",(t.cd||t.du)?"Fin: "+fmt(t.cd||t.du):""].filter(Boolean).join(" - ")+")":"")+(t.d?" - "+t.d:""))}}
+function repData(){const d=D(),sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1,per="16 de "+MES[sm]+(sy!==cy.y?" de "+sy:"")+" al 15 de "+MES[cy.m]+" de "+cy.y;const notes=d.notes||"";const ls=notes.split(/\r?\n/).filter(x=>x.trim());
+ const tasks=Array.isArray(d.tasks)?d.tasks:[];
+ return{d,per,ls:ls.length?ls:["Gestiones generales de inventario y control de propiedad."],done:tasks.filter(t=>t.col==="done").map(t=>t.t+(t.s||t.cd||t.du?" ("+[t.s?"Inicio: "+fmt(t.s):"",(t.cd||t.du)?"Fin: "+fmt(t.cd||t.du):""].filter(Boolean).join(" - ")+")":"")+(t.d?" - "+t.d:""))}}
 const phTitle=()=>tab==="fin"?" — Certificación Final de Inventario":tab==="pre"?" — Certificación de Inventario Pre-Cierre":"";
 function reportHtml(){const{d,per,ls,done}=repData();
- return`<p style="text-align:center;font-family:Arial,sans-serif;opacity:.6">Universidad Interamericana de Puerto Rico<br>Recinto de Ponce<br><br>Decanato de Administración</p><p style="text-align:center"><b>Oficina de Propiedad${phTitle()}</b></p><p><i>Periodo: ${per}</i></p><p>Durante el periodo comprendido del ${per}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p><ul>${ls.map(l=>`<li>${esc(l)}</li>`).join("")}</ul><h4>Tareas mensuales completadas</h4><ul>${done.length?done.map(t=>`<li>${esc(t)}</li>`).join(""):"<li>No se registraron tareas adicionales completadas en este ciclo.</li>"}</ul><h4>Otros procesos relacionados</h4><table><tr><th align="left">Categoría de solicitud</th><th>Completadas / Recibidas</th><th>Cumplimiento</th></tr>${d.req.map(r=>`<tr><td>${esc(r.t)}</td><td align="center">${r.c} / ${r.r}</td><td align="center">${r.r?Math.round(r.c/r.r*100)+"%":"—"}</td></tr>`).join("")}</table><h4>Pequeños Grandes Saberes</h4><p>Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p><ul>${SAB.map(s=>`<li>${s}</li>`).join("")}</ul><p style="text-align:center;font-style:italic;color:#444;margin-top:16px">${QUOTE}</p><p style="color:#0d9488"><b>¡Estamos para servirles!</b></p><p><b>Greychel Ocasio Ortiz</b><br><i>Oficial de Propiedad</i><br>Directo: (787) 437-7064<br>Tel. (787) 284-1912, ext. 2005<br>Contacto: <a href="mailto:grocasio@ponce.inter.edu">grocasio@ponce.inter.edu</a> / <a href="mailto:propiedad@ponce.inter.edu">propiedad@ponce.inter.edu</a></p>`}
+ const reqs=Array.isArray(d.req)?d.req:[];
+ return`<p style="text-align:center;font-family:Arial,sans-serif;opacity:.6">Universidad Interamericana de Puerto Rico<br>Recinto de Ponce<br><br>Decanato de Administración</p><p style="text-align:center"><b>Oficina de Propiedad${phTitle()}</b></p><p><i>Periodo: ${per}</i></p><p>Durante el periodo comprendido del ${per}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p><ul>${ls.map(l=>`<li>${esc(l)}</li>`).join("")}</ul><h4>Tareas mensuales completadas</h4><ul>${done.length?done.map(t=>`<li>${esc(t)}</li>`).join(""):"<li>No se registraron tareas adicionales completadas en este ciclo.</li>"}</ul><h4>Otros procesos relacionados</h4><table><tr><th align="left">Categoría de solicitud</th><th>Completadas / Recibidas</th><th>Cumplimiento</th></tr>${reqs.map(r=>`<tr><td>${esc(r.t)}</td><td align="center">${r.c} / ${r.r}</td><td align="center">${r.r?Math.round(r.c/r.r*100)+"%":"—"}</td></tr>`).join("")}</table><h4>Pequeños Grandes Saberes</h4><p>Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p><ul>${SAB.map(s=>`<li>${s}</li>`).join("")}</ul><p style="text-align:center;font-style:italic;color:#444;margin-top:16px">${QUOTE}</p><p style="color:#0d9488"><b>¡Estamos para servirles!</b></p><p><b>Greychel Ocasio Ortiz</b><br><i>Oficial de Propiedad</i><br>Directo: (787) 437-7064<br>Tel. (787) 284-1912, ext. 2005<br>Contacto: <a href="mailto:grocasio@ponce.inter.edu">grocasio@ponce.inter.edu</a> / <a href="mailto:propiedad@ponce.inter.edu">propiedad@ponce.inter.edu</a></p>`}
 async function docxReport(){const{Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,AlignmentType,BorderStyle,Header,LevelFormat,ExternalHyperlink}=docx,{d,per,ls,done}=repData(),F="Times New Roman",T="0D9488",C=AlignmentType.CENTER;
+ const reqs=Array.isArray(d.req)?d.req:[];
  const tr=(t,o={})=>new TextRun({text:t,font:F,size:24,...o}),
  p=(t,o={},r={})=>new Paragraph({spacing:{after:120},...o,children:[tr(t,r)]}),
  bl=t=>new Paragraph({numbering:{reference:"b",level:0},spacing:{after:80},children:[tr(t)]}),
@@ -462,7 +489,7 @@ async function docxReport(){const{Document,Packer,Paragraph,TextRun,Table,TableR
  no={style:BorderStyle.NONE,size:0,color:"FFFFFF"},ln={style:BorderStyle.SINGLE,size:4,color:"CBD5E1"},hd={style:BorderStyle.SINGLE,size:12,color:"000000"},W=[4680,2340,2340],
  cell=(t,i,b,o)=>new TableCell({width:{size:W[i],type:WidthType.DXA},margins:{top:60,bottom:60,left:120,right:120},borders:{top:no,left:no,right:no,bottom:b},children:[new Paragraph({alignment:i?C:undefined,children:[tr(t,o)]})]}),
  row=(a,b,o)=>new TableRow({children:a.map((t,i)=>cell(t,i,b,o))}),
- rows=[row(["Categoría de Solicitud","Completadas / Recibidas","Cumplimiento"],hd,{bold:true}),...d.req.map(r=>row([r.t,r.c+" / "+r.r,r.r?Math.round(r.c/r.r*100)+"%":"—"],ln))];
+ rows=[row(["Categoría de Solicitud","Completadas / Recibidas","Cumplimiento"],hd,{bold:true}),...reqs.map(r=>row([r.t,r.c+" / "+r.r,r.r?Math.round(r.c/r.r*100)+"%":"—"],ln))];
  const doc=new Document({styles:{default:{document:{run:{font:F,size:24}}}},numbering:{config:[{reference:"b",levels:[{level:0,format:LevelFormat.BULLET,text:"•",alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:720,hanging:360}}}}]}]},
  sections:[{properties:{page:{size:{width:12240,height:15840},margin:{top:1440,right:1440,bottom:1440,left:1440}}},
  headers:{default:new Header({children:[hn("Universidad Interamericana de Puerto Rico"),hn("Recinto de Ponce"),hn(""),hn("Decanato de Administración")]})},
@@ -482,24 +509,24 @@ $("#calb").innerHTML=I.cal;
 document.addEventListener("click",e=>{if(!e.composedPath().includes($("#cyc")))closePop()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop()});
 
-// No se dibuja la aplicación hasta completar la lectura inicial de Supabase.
 (async function initApp(){
-  const connected=await loadFromSupabase();
-  if(!connected){
-    // Se permite abrir la interfaz, pero no se simula que los cambios se guardaron.
-    // La persistencia permanece desactivada hasta recuperar una conexión válida.
+  try {
+    await loadFromSupabase();
+  } catch (err) {
+    console.error("Initialization error:", err);
+  } finally {
+    try {
+      D();
+    } catch (e) {
+      console.error("Error initializing local state data:", e);
+    }
     render();
-    return;
   }
-  D();
-  render();
 })();
 
-// Intenta completar cualquier escritura pendiente antes de cerrar o abandonar la página.
 window.addEventListener("beforeunload",()=>{
   if(dbReady && Object.keys(S.cycles||{}).length){
     const rows=Object.entries(S.cycles).map(([key,cycleData])=>({cycle_key:"cycle_"+key,payload:{cycle_data:cycleData,phases:S.phases||null},updated_at:new Date().toISOString()}));
-    // La operación se inicia como respaldo; el guardado normal ocurre automáticamente.
     supabaseClient.from("property_cycles").upsert(rows,{onConflict:"cycle_key"});
   }
 });
