@@ -264,22 +264,6 @@ function cycTxt(){const sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1;return"16 "+MES[sm
 
 function mkPhase(demo,s,du){return{c:NAMES.map((n,i)=>{const r=demo&&i<24;return{n,rec:r,dr:r?"2026-10-"+pad(8+i%17):"",dc:r&&i%3===0?"2026-10-26":"",st:r?(i%3===0?"Completado":i===5?"Requiere Acción":"En Revisión"):"No Evaluado",ob:i===5?"Faltan 3 equipos por verificar.":""}}),rem:demo?[{d:"2026-10-20",to:"Todos los custodios",n:"Recordatorio de entrega del informe de pre-cierre."}]:[],s:s||"",du:du||""}}
 function D(){
- // Validate the structure of previously saved cycle data
-const cycle = S.cycles[k];
-
-if (!Array.isArray(cycle.req)) {
-  cycle.req = REQ.map(r => ({
-    t: r[0],
-    d: r[1],
-    r: 0,
-    c: 0
-  }));
-}
-
-if (!Array.isArray(cycle.tasks)) cycle.tasks = [];
-if (!Array.isArray(cycle.events)) cycle.events = [];
-if (typeof cycle.notes !== "string") cycle.notes = "";
- // v
  const k=cy.y+"_"+cy.m;
  if(!S.cycles[k]){const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;
   S.cycles[k]={req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",
