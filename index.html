@@ -114,6 +114,7 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 @media(max-width:900px){.dgrid{grid-template-columns:1fr}}
 @media(max-width:760px){.rq{grid-template-columns:1fr 1fr}.rq>:first-child,.rq>.pbw{grid-column:1/-1}.cyc .mid{min-width:150px}.cal-table td{height:95px;padding:4px}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 </head>
 <body>
@@ -158,9 +159,82 @@ const COLS=[["backlog","Pendiente"],["todo","Por hacer"],["prog","En progreso"],
 const ST=["No Evaluado","En Revisión","Completado","Requiere Acción"];
 const CAT=["Equipos","Inventario","Reparación","Disposición","General"];
 
+// ==========================================
+// SUPABASE: CONFIGURACIÓN Y PERSISTENCIA
+// ==========================================
+const SUPABASE_URL = "https://ncyazwagpqefdlkykdkz.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jeWF6d2FncHFlZmRsa3lrZGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5OTA1MDYsImV4cCI6MjEwODU2NjUwNn0.Bx4DrpCxthOgbUb9M6kdfTy_c1qEunseLnb28YNeP9A";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 let tab="dash",filt="all",q="",remOpen=false,S={cycles:{},phases:null};
-try{S=JSON.parse(localStorage.getItem("pv7")||"")||S}catch(e){}
-function save(){try{localStorage.setItem("pv7",JSON.stringify(S))}catch(e){}}
+let dbReady=false,saveTimer=null,saveQueue=Promise.resolve(),lastSaveError="";
+
+// Cada ciclo se guarda como una fila en property_cycles. El campo payload
+// conserva los datos del ciclo y las fases de certificación.
+async function loadFromSupabase(){
+  try{
+    const {data,error}=await supabaseClient.from("property_cycles").select("cycle_key,payload");
+    if(error) throw error;
+    const loadedCycles={};
+    let loadedPhases=null;
+    (data||[]).forEach(row=>{
+      if(!row || !row.cycle_key || !row.payload) return;
+      const key=String(row.cycle_key).replace(/^cycle_/,"");
+      const payload=row.payload;
+      if(payload && typeof payload==="object"){
+        const cycleData=payload.cycle_data || payload;
+        if(cycleData.req || cycleData.tasks || cycleData.events || cycleData.notes!==undefined){
+          const clean={...cycleData};
+          delete clean.phases; delete clean.cycle_data;
+          loadedCycles[key]=clean;
+        }
+        if(payload.phases) loadedPhases=payload.phases;
+      }
+    });
+    S.cycles=loadedCycles;
+    if(loadedPhases && loadedPhases.pre && loadedPhases.fin) S.phases=loadedPhases;
+    dbReady=true;
+    lastSaveError="";
+    return true;
+  }catch(error){
+    console.error("Error al cargar datos de Supabase:",error);
+    dbReady=false;
+    toast("No se pudieron cargar los datos de Supabase. Verifique la conexión y los permisos.");
+    return false;
+  }
+}
+
+function save(){
+  if(!dbReady) return;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    saveQueue=saveQueue.then(persistAllCycles).catch(error=>{
+      console.error("Error al guardar en Supabase:",error);
+      lastSaveError=error?.message||String(error);
+      toast("Error al guardar en Supabase. Sus cambios podrían no haberse guardado.");
+    });
+  },350);
+}
+
+async function persistAllCycles(){
+  const entries=Object.entries(S.cycles||{});
+  if(!entries.length) return;
+  const rows=entries.map(([key,cycleData])=>({
+    cycle_key:"cycle_"+key,
+    payload:{cycle_data:cycleData,phases:S.phases||null},
+    updated_at:new Date().toISOString()
+  }));
+  const {error}=await supabaseClient.from("property_cycles").upsert(rows,{onConflict:"cycle_key"});
+  if(error) throw error;
+  lastSaveError="";
+  toast("Cambios guardados en Supabase.");
+}
+
+async function flushSave(){
+  clearTimeout(saveTimer);
+  saveQueue=saveQueue.then(persistAllCycles);
+  return saveQueue;
+}
 const esc=t=>String(t??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const pad=n=>String(n).padStart(2,"0");
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
@@ -407,7 +481,28 @@ function preview(){const h=reportHtml();modal("Vista previa del informe",`<div c
 $("#calb").innerHTML=I.cal;
 document.addEventListener("click",e=>{if(!e.composedPath().includes($("#cyc")))closePop()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePop()});
-render();
+
+// No se dibuja la aplicación hasta completar la lectura inicial de Supabase.
+(async function initApp(){
+  const connected=await loadFromSupabase();
+  if(!connected){
+    // Se permite abrir la interfaz, pero no se simula que los cambios se guardaron.
+    // La persistencia permanece desactivada hasta recuperar una conexión válida.
+    render();
+    return;
+  }
+  D();
+  render();
+})();
+
+// Intenta completar cualquier escritura pendiente antes de cerrar o abandonar la página.
+window.addEventListener("beforeunload",()=>{
+  if(dbReady && Object.keys(S.cycles||{}).length){
+    const rows=Object.entries(S.cycles).map(([key,cycleData])=>({cycle_key:"cycle_"+key,payload:{cycle_data:cycleData,phases:S.phases||null},updated_at:new Date().toISOString()}));
+    // La operación se inicia como respaldo; el guardado normal ocurre automáticamente.
+    supabaseClient.from("property_cycles").upsert(rows,{onConflict:"cycle_key"});
+  }
+});
 </script>
 </body>
 </html>
