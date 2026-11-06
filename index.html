@@ -32,7 +32,8 @@ h1{font-size:17px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0
 .tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 16px;cursor:pointer;font-weight:600;color:var(--tx2);white-space:nowrap}
 .tabs button[aria-selected=true]{color:var(--tx);border-color:var(--ac)}
 .card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;margin-bottom:18px}.pad{padding:18px}
-.chip{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--sf2);color:var(--tx2);flex-shrink:1;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip{display:inline-flex;align-items:center;justify-content:center;gap:4px;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--sf2);color:var(--tx2);flex-shrink:1;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+h3 .chip, .agh .chip { width: 24px; height: 24px; padding: 0; border-radius: 50%; font-size: 11px; }
 .chip.ok{background:var(--okb);color:var(--ok)}.chip.wr{background:var(--wrb);color:var(--wr)}.chip.er{background:var(--erb);color:var(--er)}.chip.in{background:var(--inb);color:var(--in)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
 .kpi{background:var(--sf2);border-radius:12px;padding:12px 14px}.kpi span{font-size:12px;color:var(--tx2);display:block}.kpi b{font-size:24px}
@@ -45,7 +46,7 @@ h1{font-size:17px;margin:0}h2{font-size:18px;margin:0}h3{font-size:15px;margin:0
 .lbl{font-size:12px;color:var(--tx2);display:block;margin-bottom:2px}.pb{display:flex;align-items:center;gap:10px}.pb .bar{flex:1}
 .board{background:var(--ac);background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 38%,var(--sf)),color-mix(in srgb,var(--ac) 22%,var(--sf)));border-radius:18px;padding:16px;overflow-x:auto}.kb{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,1fr);gap:14px;align-items:start}
 .col{background:var(--sf2);border-radius:14px;padding:10px;border:2px solid transparent}.col.over{border-color:var(--ac)}
-.col h3{display:flex;justify-content:space-between;padding:4px 6px 10px}
+.col h3{display:flex;justify-content:space-between;align-items:center;padding:4px 6px 10px}
 .empty{border:2px dashed var(--bd);border-radius:10px;padding:18px;text-align:center;color:var(--tx2);font-size:13px}
 .tk{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 2px rgba(9,30,66,.25);font-weight:500;min-height:110px;height:auto;display:flex;flex-direction:column;justify-content:space-between;gap:6px}.tt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}.tk:hover{border-color:var(--ac)}
 .meta{display:flex;gap:8px;align-items:center;justify-content:space-between;min-width:0}.cat{display:inline-block;max-width:150px;overflow:hidden;text-overflow:ellipsis}.mi{color:var(--tx2);display:inline-flex}
@@ -89,7 +90,7 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 .ring span{width:44px;height:44px;border-radius:50%;background:var(--sf);display:grid;place-items:center;font-weight:700;font-size:12.5px}
 .dgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:18px;align-items:start}
 .agh{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--tx2)}
-.ag{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--bd);padding:10px 4px;cursor:pointer}.ag:hover{background:var(--sf2)}
+.ag{display:flex;align-items:center;gap:10px;min-width:0;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--bd);padding:10px 4px;cursor:pointer}.ag:hover{background:var(--sf2)}
 .agt{flex:1;min-width:0;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.agt small{display:block;color:var(--tx2);font-weight:400;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pd{width:9px;height:9px;border-radius:50%;flex:none}.pH{background:var(--er)}.pM{background:var(--wr)}.pL{background:var(--ok)}.pE{background:var(--in)}
 .pr{margin-top:14px}.prt{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
@@ -102,12 +103,12 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 /* Próximas actividades */
 .up-hd{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;margin-bottom:12px;color:var(--tx)}
 .up-hd svg{color:var(--ac);width:18px;height:18px;flex:none}
-.up-item{display:flex;align-items:center;gap:14px;width:100%;min-width:0;max-width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:12px;padding:10px 8px;cursor:pointer;transition:.15s;min-width:0}
+.up-item{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:12px;padding:10px 8px;cursor:pointer;transition:.15s;max-width:100%;min-width:0}
 .up-item+.up-item{border-top:1px solid var(--bd);border-radius:0;padding-top:12px;margin-top:4px}
 .up-item:hover{background:var(--sf2);border-radius:12px}
 .up-ic{width:38px;height:38px;border-radius:10px;background:var(--sf2);color:var(--tx);display:grid;place-items:center;flex:none}
 .up-ic svg{width:19px;height:19px}
-.up-tx{flex:1;min-width:0;overflow:hidden;}
+.up-tx{flex:1;min-width:0;overflow:hidden}
 .up-tx b{display:block;font-size:14.5px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .up-tx small{display:block;color:var(--tx2);font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .up-arr{color:var(--tx2);font-size:18px;line-height:1;padding-left:4px}
@@ -329,14 +330,21 @@ function render(){closePop();D();head();$("#view").innerHTML=tab==="dash"?dashbo
  if(tab==="pre"||tab==="fin")rows();if(tab==="tasks")renderKanban()}
 
 /* ---------- Dashboard ---------- */
-const agRow=(t,txt,cl)=>`<button class="ag" onclick="taskDlg('${t.id}')"><i class="pd p${t.pr}"></i><span class="agt">${esc(t.t)}<small>${esc(t.cat)}</small></span><span class="chip ${cl||""}">${txt}</span></button>`;
+const agRow = (t, txt, cl) => {
+ const prText = t.pr === "H" ? "Alta" : t.pr === "M" ? "Media" : "Baja";
+ return `<button class="ag" onclick="taskDlg('${t.id}')">
+  <i class="pd p${t.pr}"></i>
+  <span class="agt">${esc(t.t)}<small>${esc(t.cat)} · Prioridad: ${prText}</small></span>
+  <span class="chip ${cl||""}">${esc(txt)}</span>
+ </button>`;
+};
 const evRow=e=>`<button class="ag" onclick="eventDlg('${e.id}')"><i class="pd pE"></i><span class="agt">${esc(e.t)}<small>Evento</small></span></button>`;
 function miniCal(){
  const y=calY,m=calM,first=(new Date(y,m,1).getDay()+6)%7,tot=new Date(y,m+1,0).getDate(),tod=today(),{tasks,events}=allItems();
  let cells="";for(let i=0;i<first;i++)cells+="<span></span>";
  for(let d=1;d<=tot;d++){const ds=y+"-"+pad(m+1)+"-"+pad(d),tk=tasks.some(t=>t.du?t.du===ds:t.s===ds),ev=events.some(e=>e.d===ds);
   cells+=`<button class="mc-d${ds===tod?" today":""}${ds===selDay?" sel":""}" aria-label="${d} de ${MES[m]}" onclick="selectDay('${ds}')"><span>${d}</span><i class="dots">${tk?"<b></b>":""}${ev?'<b class="de"></b>':""}</i></button>`}
- const dayRows=tasks.filter(t=>t.du?t.du===selDay:t.s===selDay).map(t=>agRow(t,colName(t.col),t.col==="done"?"ok":"")).concat(events.filter(e=>e.d===selDay).map(evRow));
+ const dayRows=tasks.filter(t=>t.du?t.du===selDay:t.s===selDay).map(t=>agRow(t,t.t,t.col==="done"?"ok":"")).concat(events.filter(e=>e.d===selDay).map(evRow));
  return`<section class="card pad"><div class="row between"><h3>${cap(MES[m])} ${y}</h3><div class="row" style="gap:6px"><button class="ic bd" aria-label="Mes anterior" onclick="calChg(-1)">‹</button><button class="ic bd" aria-label="Mes siguiente" onclick="calChg(1)">›</button></div></div>
 <div class="mc">${["L","M","X","J","V","S","D"].map(x=>`<span class="mc-h">${x}</span>`).join("")}${cells}</div>
 <div class="dayhd"><b>${dayName(selDay)}</b><button class="btn sm" onclick="taskDlg(null,'todo','${selDay}')">+ Tarea</button></div>${dayRows.join("")||'<p class="mu">Sin tareas ni eventos este día.</p>'}</section>`}
@@ -364,18 +372,11 @@ function dashboardView(){
  const d=D(),tod=today(),{tasks,events}=allItems();
  let R=0,C=0;if(Array.isArray(d.req)) d.req.forEach(r=>{R+=r.r;C+=r.c});const rate=R?Math.round(C/R*100):0;
  const mt=Array.isArray(d.tasks)?d.tasks.length:0,md=Array.isArray(d.tasks)?d.tasks.filter(t=>t.col==="done").length:0,mp=mt?Math.round(md/mt*100):0;
- const open=tasks.filter(t=>t.col!=="done"),byDu=(a,b)=>a.du<b.du?-1:a.du>b.du?1:0;
- const over=open.filter(t=>t.du&&t.du<tod).sort(byDu);
- const hoy=open.filter(t=>(t.du===tod||(!t.du&&t.s===tod))&&!over.includes(t));
- const sem=open.filter(t=>t.du&&diff(t.du)>0&&diff(t.du)<=7&&!hoy.includes(t)).sort(byDu);
- const sec=(t,cl,rs)=>rs.length?`<h4 class="agh">${t}<span class="chip ${cl}">${rs.length}</span></h4>${rs.join("")}`:"";
- const hoyRows=hoy.map(t=>agRow(t,"Hoy","in")).concat(events.filter(e=>e.d===tod).map(evRow));
- const ag=sec("Vencidas","er",over.map(t=>agRow(t,rel(t.du),"er")))+sec("Hoy","in",hoyRows)+sec("Próximos 7 días","",sem.map(t=>agRow(t,rel(t.du))));
- const pend=Array.isArray(d.req)?d.req.map(r=>({...r,pe:r.r-r.c})).filter(r=>r.pe>0).sort((a,b)=>b.pe-a.pe).slice(0,5):[];
- const pendHtml=pend.length?pend.map(r=>{const v=rv(r);return`<div class="pr"><div class="prt"><b>${esc(r.t)}</b><span class="chip ${v.cl}">${v.pe} pend.</span></div><div class="bar"><i style="width:${v.p}%"></i></div></div>`}).join(""):'<div class="empty" style="margin-top:12px">No hay solicitudes pendientes.</div>';
  const cert=["pre","fin"].map(k=>{const p=S.phases[k],n=p&&p.c?p.c.length:0,rc=p&&p.c?p.c.filter(c=>c.rec).length:0,pc=n?Math.round(rc/n*100):0,cp=p&&p.du?chipFor(p.du):null;
   return`<button class="cert" onclick="go('${k}')"><div class="prt"><b>${k==="pre"?"Pre-Cierre":"Certificación Final"}</b>${cp?`<span class="chip ${cp[1]}">${cp[0]}</span>`:""}</div><div class="pb"><div class="bar"><i style="width:${pc}%"></i></div><span class="mu">${rc}/${n}</span></div></button>`}).join("");
  const cc=closeChip();
+ const pend=Array.isArray(d.req)?d.req.map(r=>({...r,pe:r.r-r.c})).filter(r=>r.pe>0).sort((a,b)=>b.pe-a.pe).slice(0,5):[];
+ const pendHtml=pend.length?pend.map(r=>{const v=rv(r);return`<div class="pr"><div class="prt"><b>${esc(r.t)}</b><span class="chip ${v.cl}">${v.pe} pend.</span></div><div class="bar"><i style="width:${v.p}%"></i></div></div>`}).join(""):'<div class="empty" style="margin-top:12px">No hay solicitudes pendientes.</div>';
  return`<div class="row between" style="margin-bottom:16px"><div><h2>Resumen del periodo</h2><p class="mu">${cycTxt()} <span class="chip ${cc[1]}" style="margin-left:6px">${cc[0]}</span></p></div><div class="row"><button class="btn" onclick="eventDlg()">+ Evento</button><button class="btn pri" onclick="taskDlg()">+ Nueva tarea</button></div></div>
 <div class="kpis4">
 <div class="kpi2"><div><span class="kl">Solicitudes recibidas</span><b class="kn">${R}</b><small class="mu">${R-C} por completar</small></div><div class="kic">${I.lines}</div></div>
@@ -383,7 +384,6 @@ function dashboardView(){
 <div class="kpi2"><div><span class="kl">Cumplimiento</span><b class="kn">${R?rate+"%":"—"}</b><small class="mu">solicitudes</small></div><div class="ring" style="--p:${rate}"><span>${rate}%</span></div></div>
 <div class="kpi2"><div><span class="kl">Tareas del ciclo</span><b class="kn">${md}/${mt}</b><small class="mu">completadas</small></div><div class="ring" style="--p:${mp}"><span>${mp}%</span></div></div></div>
 <div class="dgrid"><div>
-<section class="card pad"><div class="row between"><h3>Agenda</h3><button class="btn sm" onclick="go('tasks')">Ver tareas →</button></div>${ag||'<div class="empty" style="margin-top:12px">Todo al día. No hay tareas vencidas ni próximas.</div>'}</section>
 <section class="card pad"><div class="row between"><h3>Solicitudes por atender</h3><button class="btn sm" onclick="go('tasks')">Actualizar</button></div>${pendHtml}</section>
 ${upcomingCard()}</div>
 <div>${miniCal()}<section class="card pad"><h3>Certificaciones de inventario</h3>${cert}</section></div></div>`}
