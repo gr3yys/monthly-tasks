@@ -38,7 +38,7 @@ h3 .chip, .agh .chip { width: 24px; height: 24px; padding: 0; border-radius: 50%
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
 .kpi{background:var(--sf2);border-radius:12px;padding:12px 14px}.kpi span{font-size:12px;color:var(--tx2);display:block}.kpi b{font-size:24px}
 .bar{height:8px;background:var(--sf2);border-radius:99px;overflow:hidden;border:1px solid var(--bd)}.bar i{display:block;height:100%;background:var(--ac);border-radius:99px}.bar.lg{height:12px}
-.rq{display:grid;grid-template-columns:minmax(200px,1.4fr) minmax(190px,1fr) auto auto;gap:14px;align-items:center;padding:12px 4px;border-top:1px solid var(--bd)}
+.rq{display:grid;grid-template-columns:minmax(200px,1.4fr) minmax(190px,1fr) auto auto auto;gap:14px;align-items:center;padding:12px 4px;border-top:1px solid var(--bd)}
 .rq small{display:block;color:var(--tx2);font-size:12.5px}
 .stp{display:inline-flex;align-items:center;gap:2px;background:var(--sf2);border-radius:10px;padding:2px}
 .stp button{width:30px;height:30px;border-radius:8px;background:var(--sf);cursor:pointer;font-size:17px;font-weight:700;border:1px solid var(--bd)}.stp button:hover{background:var(--bd)}
@@ -69,6 +69,7 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}label.f{font-size:12.5px;font-weight:600;color:var(--tx2);display:grid;gap:4px}
 .paper{background:#fff;color:#000;font:13.5px/1.5 "Times New Roman",serif;padding:28px;border:1px solid var(--bd);border-radius:6px}.paper h4{margin:14px 0 4px}.paper table{min-width:0;font-size:13px}.paper td,.paper th{padding:3px 6px;background:none;position:static}
 .toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--sf);border:1px solid var(--ac);border-radius:12px;padding:10px 16px;font-weight:600;opacity:0;transform:translateY(20px);transition:.25s;z-index:60}.toast.on{opacity:1;transform:none}
+.lgt{min-width:0;font-size:13px}.lgt td,.lgt th{padding:6px 8px}.lgt input[type=date]{width:auto;padding:3px 6px;font-size:12.5px}
 /* Calendario completo */
 .cal-table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:14px;border:1px solid var(--bd);border-radius:12px;overflow:hidden;min-width:0}
 .cal-table th{background:var(--sf2);text-align:center;font-size:12px;font-weight:700;color:var(--tx2);padding:10px 0;text-transform:uppercase;border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);position:static}
@@ -100,6 +101,27 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 .mc-d:hover{background:var(--sf2)}.mc-d.today{border-color:var(--ac);color:var(--ac)}.mc-d.sel{background:var(--ac);color:var(--acx);border-color:var(--ac)}
 .dots{display:flex;gap:3px;height:5px}.dots b{width:5px;height:5px;border-radius:50%;background:var(--ac);display:block}.dots b.de{background:var(--wr)}.mc-d.sel .dots b{background:var(--acx)}
 .dayhd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:14px 0 4px;padding-top:14px;border-top:1px solid var(--bd)}
+/* Próximas actividades: aprovecha el espacio y muestra el detalle registrado */
+.up-card{min-height:330px;display:flex;flex-direction:column}
+.up-hd{margin-bottom:14px}
+.up-count{margin-left:auto;font-size:11px;font-weight:700;color:var(--tx2);background:var(--sf2);border-radius:99px;padding:4px 9px}
+.up-list{display:flex;flex-direction:column;gap:7px;flex:1}
+.up-item{align-items:flex-start;padding:12px 10px;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;gap:12px}
+.up-item+.up-item{border:1px solid var(--bd);border-radius:12px;margin-top:0;padding-top:12px}
+.up-item:hover{border-color:var(--ac)}
+.up-ic{margin-top:2px;background:var(--sf);color:var(--ac)}
+.up-tx b{white-space:normal;line-height:1.35}
+.up-tx small{white-space:normal;line-height:1.4}
+.up-tx em{display:block;color:var(--tx2);font-size:12px;font-style:normal;line-height:1.4;margin-top:5px;white-space:normal;overflow-wrap:anywhere}
+.up-empty{display:flex;align-items:center;gap:14px;min-height:170px;padding:20px;background:var(--sf2);border:1px dashed var(--bd);border-radius:12px;color:var(--tx2)}
+.up-empty b{color:var(--tx)}.up-empty p{font-size:13px;margin:4px 0 12px;line-height:1.5}
+.up-empty-icon{width:44px;height:44px;display:grid;place-items:center;flex:none;border-radius:12px;background:var(--sf);color:var(--ac)}
+.up-more{align-self:flex-start;margin-top:10px}
+.dash-side{display:flex;flex-direction:column;gap:0;min-width:0}
+.dash-side>.card{margin-bottom:18px}
+.cert-card{margin-top:0}
+.cert-card .cert:first-of-type{margin-top:12px}
+@media(max-width:900px){.up-card{min-height:0}.dash-side{gap:0}}
 /* Próximas actividades */
 .up-hd{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;margin-bottom:12px;color:var(--tx)}
 .up-hd svg{color:var(--ac);width:18px;height:18px;flex:none}
@@ -118,6 +140,193 @@ dialog{border:1px solid var(--bd);border-radius:16px;background:var(--sf);color:
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style id="visual-redesign">
+/* ── Modernización visual: conserva la lógica y los datos existentes ── */
+:root{
+  --bg:#f3f6fa;--sf:#ffffff;--sf2:#f6f8fb;--bd:#e3e9f0;
+  --tx:#17243a;--tx2:#68778d;--ac:#087f8c;--acx:#ffffff;
+  --ok:#16845b;--okb:#e5f5ed;--wr:#a96812;--wrb:#fff4df;
+  --er:#bd4052;--erb:#fff0f1;--in:#3568b5;--inb:#edf3ff;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#101722;--sf:#182333;--sf2:#202e40;--bd:#304055;
+  --tx:#e8eef6;--tx2:#a5b3c5;--ac:#54c4c4;--acx:#10212b;
+  --ok:#5bd3a0;--okb:#183b35;--wr:#f0bd68;--wrb:#3b3020;
+  --er:#ff8996;--erb:#3d252d;--in:#8eb8ff;--inb:#20334f;
+  color-scheme:dark;
+}
+@media(prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){
+  --bg:#101722;--sf:#182333;--sf2:#202e40;--bd:#304055;
+  --tx:#e8eef6;--tx2:#a5b3c5;--ac:#54c4c4;--acx:#10212b;
+  --ok:#5bd3a0;--okb:#183b35;--wr:#f0bd68;--wrb:#3b3020;
+  --er:#ff8996;--erb:#3d252d;--in:#8eb8ff;--inb:#20334f;
+  color-scheme:dark;
+ }
+}
+html{scroll-behavior:smooth}
+body{font-family:Inter,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx);letter-spacing:-.012em}
+.top{background:var(--sf);border-bottom:1px solid var(--bd);box-shadow:0 5px 22px rgba(21,39,63,.055)}
+.top>.wrap{max-width:1380px;padding:18px 30px 14px;gap:18px}
+.brand{gap:14px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(145deg,#0b8790,#15546d);box-shadow:0 7px 16px rgba(8,127,140,.2);font-size:22px}
+.brand h1{font-size:17px;font-weight:750;letter-spacing:-.035em;color:var(--tx)}
+.brand .mu{font-size:12px;margin-top:3px;letter-spacing:.01em}
+.cyc{background:var(--sf2);border:1px solid var(--bd);border-radius:13px;padding:5px}
+.cyc .mid{min-width:205px}
+.cyc b{font-size:13px;font-weight:750}
+.cyc small{font-size:11px}
+.ic{transition:background .16s ease,color .16s ease}
+.ic.bd{background:var(--sf);border-color:var(--bd)}
+.btn{border-radius:10px;padding:9px 14px;font-weight:650;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.pri{background:linear-gradient(135deg,#087f8c,#126477);border-color:#087f8c;box-shadow:0 5px 13px rgba(8,127,140,.16)}
+.tabs{max-width:1380px;padding:0 30px;gap:7px}
+.tabs button{border:0;border-radius:9px 9px 0 0;padding:12px 17px 11px;font-size:13px;font-weight:700;position:relative}
+.tabs button[aria-selected=true]{color:var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--sf))}
+.tabs button[aria-selected=true]:after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:3px;border-radius:5px 5px 0 0;background:var(--ac)}
+.wrap{max-width:1380px;padding-left:30px;padding-right:30px}
+main.wrap{padding-top:28px;padding-bottom:34px;min-height:calc(100vh - 190px)}
+h2{font-size:20px;font-weight:760;letter-spacing:-.035em}
+h3{font-size:14px;font-weight:750;letter-spacing:-.015em}
+.mu{color:var(--tx2);font-size:12.5px}
+.card{border:1px solid var(--bd);border-radius:17px;box-shadow:0 5px 20px rgba(25,45,70,.035);margin-bottom:18px;overflow:hidden}
+.pad{padding:21px}
+.kpi2{border:1px solid var(--bd);border-radius:15px;padding:17px;background:var(--sf);box-shadow:0 3px 12px rgba(25,45,70,.025);min-width:0}
+.kl{font-size:11.5px;text-transform:uppercase;letter-spacing:.055em;font-weight:750;color:var(--tx2)}
+.kn{font-size:30px;font-weight:780;letter-spacing:-.055em;margin-top:4px}
+.kic{width:44px;height:44px;border-radius:13px;background:color-mix(in srgb,var(--ac) 10%,var(--sf2))}
+.ring{width:56px;height:56px}
+.ring span{width:43px;height:43px;font-size:11px}
+.kpis4{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.dgrid{grid-template-columns:minmax(0,1.35fr) minmax(310px,.9fr);gap:18px}
+.dgrid>.card,.dgrid>div{min-width:0}
+.pr{margin-top:16px}
+.prt b{font-size:13px}
+.bar{height:7px;border:0;background:var(--sf2)}
+.bar i{background:linear-gradient(90deg,var(--ac),color-mix(in srgb,var(--ac) 55%,#74c8bd))}
+.cert{background:var(--sf2);border:1px solid transparent;border-radius:12px;padding:13px 14px}
+.cert:hover{border-color:var(--ac);outline:0}
+.up-hd{font-size:14px;font-weight:750;margin-bottom:9px}
+.up-item{padding:12px 8px;gap:12px}
+.up-ic{background:color-mix(in srgb,var(--ac) 9%,var(--sf2));color:var(--ac);border-radius:12px}
+.up-tx b{font-size:13.5px}
+.up-tx small{font-size:11.5px}
+.chip{font-size:11px;padding:4px 9px;font-weight:700;letter-spacing:.005em}
+.ag{padding:12px 5px}
+.agt{font-size:13px}
+.agt small{font-size:11.5px}
+.mc{gap:5px}
+.mc-h{font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+.mc-d{border-radius:9px;font-size:12px}
+.mc-d.today{font-weight:800}
+.dayhd{font-size:12px}
+.board{background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 10%,var(--sf)),color-mix(in srgb,var(--ac) 4%,var(--sf)));border:1px solid var(--bd);padding:14px;border-radius:17px;overflow-x:auto}
+.kb{grid-auto-columns:minmax(245px,1fr);gap:12px}
+.col{background:var(--sf2);border:1px solid var(--bd);border-radius:13px;padding:11px;min-width:0}
+.col h3{padding:4px 5px 12px}
+.tk{border:1px solid var(--bd);border-radius:12px;padding:12px;min-height:112px;box-shadow:0 2px 6px rgba(25,45,70,.045);transition:border-color .15s,transform .15s,box-shadow .15s}
+.tk:hover{border-color:var(--ac);transform:translateY(-2px);box-shadow:0 7px 16px rgba(25,45,70,.08)}
+.tt{font-size:13px;line-height:1.4}
+.add{border:1px dashed var(--bd);justify-content:center;margin-top:7px}
+.add:hover{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 7%,var(--sf))}
+.rq{grid-template-columns:minmax(190px,1.4fr) minmax(150px,1fr) auto auto auto;gap:11px;padding:14px 4px}
+.rq b{font-size:13px}
+.rq small{font-size:11.5px}
+.stp{border:1px solid var(--bd);border-radius:9px}
+.stp button{border:0;background:var(--sf2);width:28px;height:29px}
+.stp input{width:42px;font-size:12px}
+.sel,.in,textarea{border:1px solid var(--bd);border-radius:10px;background:var(--sf);padding:9px 11px}
+textarea{min-height:90px}
+.tb{padding:14px 18px}
+.seg{border-radius:10px}
+.seg button{font-weight:650}
+.seg button.on{background:var(--ac)}
+.scr{border-radius:10px}
+table{font-size:13px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.045em;color:var(--tx2)}
+td{font-size:12.5px}
+.cal-table{border-radius:13px}
+.cal-table th{font-size:10px;letter-spacing:.07em;padding:12px 0}
+.cal-table td{height:116px;padding:8px;border-color:var(--bd)}
+.cal-day-num{font-size:12px}
+.cal-ev{font-size:10.5px;padding:3px 5px;border-radius:5px}
+.paper{border-radius:10px}
+dialog{border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.25)}
+.mh{padding:17px 21px}
+.mb{padding:20px 21px}
+.mf{padding:15px 21px}
+.toast{border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);font-size:13px}
+footer.wrap{padding-top:10px;padding-bottom:24px;font-size:11px}
+@media(max-width:1100px){
+ .kpis4{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .dgrid{grid-template-columns:minmax(0,1fr) minmax(280px,.85fr)}
+ .top>.wrap{padding-left:22px;padding-right:22px}
+ .tabs{padding-left:22px;padding-right:22px}
+ .wrap{padding-left:22px;padding-right:22px}
+}
+@media(max-width:900px){
+ .dgrid{grid-template-columns:1fr}
+ .kpis4{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ .top>.wrap{padding:13px 15px;gap:12px}
+ .top>.wrap>.brand{flex:1 1 100%}
+ .top>.wrap>.cycw{justify-content:flex-start;flex:1}
+ .top>.wrap>.row:last-child{margin-left:auto}
+ .brand h1{font-size:15px}
+ .logo{width:42px;height:42px}
+ .tabs{padding:0 12px}
+ .tabs button{padding:11px 12px;font-size:12px}
+ .wrap{padding-left:14px;padding-right:14px}
+ main.wrap{padding-top:18px}
+ .pad{padding:16px}
+ .kpis4{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .kpi2{padding:12px;gap:7px}
+ .kn{font-size:25px}
+ .kic{width:38px;height:38px}
+ .ring{width:48px;height:48px}
+ .ring span{width:37px;height:37px}
+ .rq{grid-template-columns:1fr 1fr}
+ .rq>:first-child,.rq>.pbw{grid-column:1/-1}
+ .cyc .mid{min-width:130px}
+ .cal-table td{height:88px;padding:4px}
+ .cal-events{max-height:56px}
+}
+@media(max-width:430px){
+ .kpis4{grid-template-columns:1fr 1fr}
+ .kpi2{align-items:flex-start}
+ .kic{display:none}
+ .up-item{gap:8px;padding-left:2px;padding-right:2px}
+ .up-item .chip{max-width:95px;white-space:normal;text-align:center}
+ .cyc .mid{min-width:112px}
+ .btn{padding:8px 10px;font-size:12px}
+}
+</style>
+
+<style id="dashboard-layout-adjustments">
+.up-card{min-height:330px;display:flex;flex-direction:column}
+.up-hd{margin-bottom:14px}
+.up-count{margin-left:auto;font-size:11px;font-weight:700;color:var(--tx2);background:var(--sf2);border-radius:99px;padding:4px 9px}
+.up-list{display:flex;flex-direction:column;gap:7px;flex:1}
+.up-item{align-items:flex-start;padding:12px 10px;background:var(--sf2);border:1px solid var(--bd);border-radius:12px;gap:12px}
+.up-item+.up-item{border:1px solid var(--bd);border-radius:12px;margin-top:0;padding-top:12px}
+.up-item:hover{border-color:var(--ac)}
+.up-ic{margin-top:2px;background:var(--sf);color:var(--ac)}
+.up-tx b{white-space:normal;line-height:1.35}
+.up-tx small{white-space:normal;line-height:1.4}
+.up-tx em{display:block;color:var(--tx2);font-size:12px;font-style:normal;line-height:1.4;margin-top:5px;white-space:normal;overflow-wrap:anywhere}
+.up-empty{display:flex;align-items:center;gap:14px;min-height:170px;padding:20px;background:var(--sf2);border:1px dashed var(--bd);border-radius:12px;color:var(--tx2)}
+.up-empty b{color:var(--tx)}.up-empty p{font-size:13px;margin:4px 0 12px;line-height:1.5}
+.up-empty-icon{width:44px;height:44px;display:grid;place-items:center;flex:none;border-radius:12px;background:var(--sf);color:var(--ac)}
+.up-more{align-self:flex-start;margin-top:10px}
+.dash-side{display:flex;flex-direction:column;gap:0;min-width:0}
+.dash-side>.card{margin-bottom:18px}
+.cert-card{margin-top:0}
+.cert-card .cert:first-of-type{margin-top:12px}
+@media(max-width:900px){.up-card{min-height:0}.dash-side{gap:0}}
+</style>
 </head>
 <body>
 <div class="top">
@@ -258,6 +467,10 @@ const I={
 const sh=s=>{if(!s||typeof s!=="string"||!s.includes("-"))return"";const p=s.split("-");if(p.length<3)return s;return +p[2]+" "+(MES[+p[1]-1]?.slice(0,3)||"")};
 const fmt=s=>{if(!s)return"—";const[a,b,c]=s.split("-");return c+"/"+b+"/"+a};
 const colName=k=>(COLS.find(c=>c[0]===k)||[0,k])[1];
+/* Totales efectivos = conteo rapido (r,c) + documentos del registro (log) */
+const eff=r=>{const L=Array.isArray(r.log)?r.log:[];return{r:(r.r||0)+L.length,c:(r.c||0)+L.filter(x=>x.dp).length}};
+const logDays=x=>x.dp&&x.dr?Math.round((new Date(x.dp+"T00:00:00")-new Date(x.dr+"T00:00:00"))/864e5):null;
+const avgDays=L=>{const a=L.map(logDays).filter(v=>v!==null);return a.length?Math.round(a.reduce((t,v)=>t+v,0)/a.length*10)/10:null};
 const diff=ds=>Math.round((new Date(ds+"T00:00:00")-new Date(today()+"T00:00:00"))/864e5);
 const rel=ds=>{const d=diff(ds);return d===0?"Hoy":d===1?"Mañana":d===-1?"Ayer":d>0?"En "+d+" días":"Hace "+(-d)+" días"};
 const dayName=ds=>cap(new Date(ds+"T00:00:00").toLocaleDateString("es-PR",{weekday:"long",day:"numeric",month:"long"}));
@@ -270,7 +483,7 @@ function D(){
  if(!S.cycles[k]){
   const c=curCycle(),demo=c.y===cy.y&&c.m===cy.m&&!Object.keys(S.cycles).length;
   S.cycles[k]={
-   req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0})),
+   req:REQ.map((r,i)=>({t:r[0],d:r[1],r:demo?DEMO[i][0]:0,c:demo?DEMO[i][1]:0,log:[]})),
    notes:demo?"Certificación de inventario pre-cierre.\nSeguimiento a solicitudes de etiquetas y transferencias.":"",
    tasks:demo?[{id:"t1",t:"Actualizar etiquetas de la Biblioteca",cat:"Inventario",pr:"H",col:"prog",s:"2026-10-19",du:"2026-10-23",d:"Pendiente de recibir 12 etiquetas."},{id:"t2",t:"Cotización de disposición de equipos",cat:"Disposición",pr:"M",col:"todo",s:"2026-10-28",du:"2026-11-06",d:""},{id:"t3",t:"Recoger equipos decomisados",cat:"Equipos",pr:"M",col:"backlog",s:"",du:"2026-11-12",d:"Coordinar con Mantenimiento."},{id:"t4",t:"Enviar recordatorio a custodios",cat:"General",pr:"L",col:"done",s:"2026-10-20",du:"2026-10-22",cd:"2026-10-21",d:""},{id:"t5",t:"Verificar inventario del Laboratorio",cat:"Inventario",pr:"H",col:"todo",s:"2026-10-29",du:"2026-10-29",d:""}]:[],
    events:demo?[{id:"e1",t:"Reunión con custodios",d:"2026-11-03"}]:[]
@@ -278,7 +491,8 @@ function D(){
   save();
  } else {
   const cyc = S.cycles[k];
-  if(!Array.isArray(cyc.req)) cyc.req=REQ.map((r,i)=>({t:r[0],d:r[1],r:0,c:0}));
+  if(!Array.isArray(cyc.req)) cyc.req=REQ.map((r,i)=>({t:r[0],d:r[1],r:0,c:0,log:[]}));
+  cyc.req.forEach(r=>{if(!Array.isArray(r.log))r.log=[]});
   if(!Array.isArray(cyc.tasks)) cyc.tasks=[];
   if(!Array.isArray(cyc.events)) cyc.events=[];
   if(typeof cyc.notes!=="string") cyc.notes="";
@@ -351,60 +565,61 @@ function miniCal(){
 function selectDay(ds){selDay=ds;render()}
 
 function upcomingCard(){
- const {events}=allItems(),tod=today(),items=[];
- [["pre","Certificación de Pre-Cierre"],["fin","Certificación Final"]].forEach(([k,lbl])=>{
-  const p=S.phases[k];
-  if(p&&p.c&&(p.s||p.du)){
-   const rc=p.c.filter(c=>c.rec).length,n=p.c.length,pct=n?Math.round(rc/n*100):0,cp=p.du?chipFor(p.du):["En curso","in"];
-   const fTxt=[p.s?"Inicio: "+sh(p.s):"",p.du?"Vence: "+sh(p.du):""].filter(Boolean).join(" · ");
-   items.push(`<button class="up-item" onclick="go('${k}')"><div class="up-ic">${I.calDots}</div><div class="up-tx"><b>${lbl}</b><small>${fTxt} · ${rc}/${n} recibidos (${pct}%)</small></div><span class="chip ${cp[1]}">${cp[0]}</span><span class="up-arr">›</span></button>`);
-  }
+ const {events,tasks}=allItems(),tod=today(),items=[];
+ // Eventos registrados: fecha, tipo de actividad y acceso directo para editar.
+ events.filter(e=>e.d>=tod).sort((a,b)=>a.d.localeCompare(b.d)).forEach(e=>{
+  items.push({date:e.d,html:`<button class="up-item" onclick="eventDlg('${e.id}')"><div class="up-ic">${I.calDots}</div><div class="up-tx"><b>${esc(e.t)}</b><small>Actividad programada · ${sh(e.d)}</small><em>Evento registrado en el calendario</em></div><span class="chip ${diff(e.d)===0?'er':diff(e.d)<=5?'wr':'in'}">${rel(e.d)}</span><span class="up-arr">›</span></button>`});
  });
- events.filter(e=>e.d>=tod).sort((a,b)=>a.d<b.d?-1:1).slice(0,3).forEach(e=>{
-  const d=diff(e.d),cl=d===0?"er":d<=5?"wr":"in";
-  items.push(`<button class="up-item" onclick="eventDlg('${e.id}')"><div class="up-ic">${I.calDots}</div><div class="up-tx"><b>${esc(e.t)}</b><small>${sh(e.d)} · Orientación / Actividad programada</small></div><span class="chip ${cl}">${rel(e.d)}</span><span class="up-arr">›</span></button>`);
+ // Tareas pendientes con fecha de inicio o vencimiento próxima.
+ tasks.filter(t=>t.col!=="done"&&(t.du||t.s)).forEach(t=>{
+  const date=t.du||t.s,priority=t.pr==="H"?"Alta":t.pr==="M"?"Media":"Baja",cp=chipFor(date);
+  const status=(COLS.find(x=>x[0]===t.col)||["","Pendiente"])[1];
+  const detail=(t.d||"").trim();
+  items.push({date,html:`<button class="up-item" onclick="taskDlg('${t.id}')"><div class="up-ic">${I.check}</div><div class="up-tx"><b>${esc(t.t)}</b><small>${esc(t.cat||"General")} · ${status} · Prioridad ${priority} · ${t.du?"Vence":"Inicia"}: ${sh(date)}</small>${detail?`<em>${esc(detail)}</em>`:`<em>Abra la actividad para consultar o actualizar sus detalles</em>`}</div><span class="chip ${cp[1]}">${cp[0]}</span><span class="up-arr">›</span></button>`});
  });
- const fallback=`<button class="up-item" onclick="go('cal')"><div class="up-ic">${I.calDots}</div><div class="up-tx"><b>Orientaciones y certificaciones</b><small>Mostrar fecha, actividad y estado si hay datos registrados.</small></div><span class="up-arr">›</span></button>`;
- return`<section class="card pad"><div class="up-hd">${I.calClock}<span>Próximas actividades</span></div>${items.length?items.join(""):fallback}</section>`;
+ items.sort((a,b)=>a.date.localeCompare(b.date));
+ const shown=items.slice(0,6);
+ const content=shown.length?shown.map(x=>x.html).join(""):`<div class="up-empty"><div class="up-empty-icon">${I.calCheck||I.calClock}</div><div><b>No hay actividades próximas registradas</b><p>Cuando añada eventos al calendario o tareas con fecha de inicio o vencimiento, aparecerán aquí con sus detalles.</p><button class="btn sm" onclick="eventDlg()">+ Programar actividad</button> <button class="btn sm" onclick="taskDlg()">+ Crear tarea</button></div></div>`;
+ const more=items.length>6?`<button class="btn sm up-more" onclick="go('cal')">Ver calendario y ${items.length-6} actividad(es) más</button>`:"";
+ return`<section class="card pad up-card"><div class="up-hd">${I.calClock}<span>Próximas actividades</span><span class="up-count">${items.length} ${items.length===1?"actividad":"actividades"}</span></div><div class="up-list">${content}</div>${more}</section>`;
 }
-
 function dashboardView(){
  const d=D(),tod=today(),{tasks,events}=allItems();
- let R=0,C=0;if(Array.isArray(d.req)) d.req.forEach(r=>{R+=r.r;C+=r.c});const rate=R?Math.round(C/R*100):0;
+ let R=0,C=0;if(Array.isArray(d.req)) d.req.forEach(r=>{const e=eff(r);R+=e.r;C+=e.c});const rate=R?Math.round(C/R*100):0;
  const mt=Array.isArray(d.tasks)?d.tasks.length:0,md=Array.isArray(d.tasks)?d.tasks.filter(t=>t.col==="done").length:0,mp=mt?Math.round(md/mt*100):0;
  const cert=["pre","fin"].map(k=>{const p=S.phases[k],n=p&&p.c?p.c.length:0,rc=p&&p.c?p.c.filter(c=>c.rec).length:0,pc=n?Math.round(rc/n*100):0,cp=p&&p.du?chipFor(p.du):null;
   return`<button class="cert" onclick="go('${k}')"><div class="prt"><b>${k==="pre"?"Pre-Cierre":"Certificación Final"}</b>${cp?`<span class="chip ${cp[1]}">${cp[0]}</span>`:""}</div><div class="pb"><div class="bar"><i style="width:${pc}%"></i></div><span class="mu">${rc}/${n}</span></div></button>`}).join("");
- const cc=closeChip();
- const pend=Array.isArray(d.req)?d.req.map(r=>({...r,pe:r.r-r.c})).filter(r=>r.pe>0).sort((a,b)=>b.pe-a.pe).slice(0,5):[];
+ const cc=closeChip();const allL=Array.isArray(d.req)?d.req.flatMap(r=>r.log||[]):[],av=avgDays(allL);
+ const pend=Array.isArray(d.req)?d.req.map(r=>({...r,pe:eff(r).r-eff(r).c})).filter(r=>r.pe>0).sort((a,b)=>b.pe-a.pe).slice(0,5):[];
  const pendHtml=pend.length?pend.map(r=>{const v=rv(r);return`<div class="pr"><div class="prt"><b>${esc(r.t)}</b><span class="chip ${v.cl}">${v.pe} pend.</span></div><div class="bar"><i style="width:${v.p}%"></i></div></div>`}).join(""):'<div class="empty" style="margin-top:12px">No hay solicitudes pendientes.</div>';
  return`<div class="row between" style="margin-bottom:16px"><div><h2>Resumen del periodo</h2><p class="mu">${cycTxt()} <span class="chip ${cc[1]}" style="margin-left:6px">${cc[0]}</span></p></div><div class="row"><button class="btn" onclick="eventDlg()">+ Evento</button><button class="btn pri" onclick="taskDlg()">+ Nueva tarea</button></div></div>
 <div class="kpis4">
 <div class="kpi2"><div><span class="kl">Solicitudes recibidas</span><b class="kn">${R}</b><small class="mu">${R-C} por completar</small></div><div class="kic">${I.lines}</div></div>
 <div class="kpi2"><div><span class="kl">Completadas</span><b class="kn" style="color:var(--ok)">${C}</b><small class="mu">en este ciclo</small></div><div class="kic ok">${I.check}</div></div>
 <div class="kpi2"><div><span class="kl">Cumplimiento</span><b class="kn">${R?rate+"%":"—"}</b><small class="mu">solicitudes</small></div><div class="ring" style="--p:${rate}"><span>${rate}%</span></div></div>
-<div class="kpi2"><div><span class="kl">Tareas del ciclo</span><b class="kn">${md}/${mt}</b><small class="mu">completadas</small></div><div class="ring" style="--p:${mp}"><span>${mp}%</span></div></div></div>
+<div class="kpi2"><div><span class="kl">Tareas del ciclo</span><b class="kn">${md}/${mt}</b><small class="mu">completadas</small></div><div class="ring" style="--p:${mp}"><span>${mp}%</span></div></div><div class="kpi2"><div><span class="kl">Días promedio de proceso</span><b class="kn">${av===null?"—":av}</b><small class="mu">${allL.filter(x=>x.dp).length} documentos con fecha procesado</small></div><div class="kic">${I.clock}</div></div></div>
 <div class="dgrid"><div>
 <section class="card pad"><div class="row between"><h3>Solicitudes por atender</h3><button class="btn sm" onclick="go('tasks')">Actualizar</button></div>${pendHtml}</section>
 ${upcomingCard()}</div>
-${miniCal()}<section class="card pad"><h3>Certificaciones de inventario</h3>${cert}</section></div>`}
+<div class="dash-side">${miniCal()}<section class="card pad cert-card"><h3>Certificaciones de inventario</h3>${cert}</section></div></div>`}
 
 /* ---------- Tareas ---------- */
 function tasksView(){
  const cols=COLS.map(([k,l])=>`<div class="col" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="drop(event,'${k}')"><h3>${l}<span class="chip" id="cnt-${k}">0</span></h3><div id="col-${k}"></div><button class="add" onclick="taskDlg(null,'${k}')">${I.plus} Añadir tarea</button></div>`).join("");
- return`<section class="card pad"><div class="row between"><div><h2>Cumplimiento de solicitudes</h2><p class="mu">Solicitudes recibidas y trabajadas durante este periodo.</p></div></div>
+ return`<section class="card pad"><div class="row between"><div><h2>Cumplimiento de solicitudes</h2><p class="mu">Use los contadores para conteos rápidos, o abra «Registro» para anotar cada documento (ID, fecha recibido y fecha procesado). Ambos se suman.</p></div><button class="btn sm" onclick="exportLogExcel()">Descargar registro (.xlsx)</button></div>
 <div class="kpis"><div class="kpi"><span>Total recibidas</span><b id="kR">0</b></div><div class="kpi"><span>Total completadas</span><b id="kC" style="color:var(--ok)">0</b></div></div><div id="requests-container"></div></section>
 <section class="card pad"><div class="row between"><div><h2>Objetivos del periodo</h2><p class="mu">Escriba una tarea por línea. Cada línea aparecerá como viñeta en el informe Word.</p></div><span class="chip ok" id="ns">Guardado ✓</span></div>
 <textarea rows="4" style="margin-top:12px" aria-label="Objetivos del periodo" placeholder="Ej.: Certificación de inventario pre-cierre." oninput="noteIn(this.value)">${esc(D().notes)}</textarea></section>
 <section><div class="row between" style="margin-bottom:12px"><div><h2>Tareas mensuales</h2><p class="mu">Arrastre las tarjetas o haga clic en una para editarla.</p></div><button class="btn pri" onclick="taskDlg()">+ Nueva tarea</button></div><div class="board"><div class="kb">${cols}</div></div></section>`}
 function renderKanban(){const d=D();renderRequests();COLS.forEach(([k])=>{const ts=Array.isArray(d.tasks)?d.tasks.filter(t=>t.col===k):[];$("#cnt-"+k).textContent=ts.length;$("#col-"+k).innerHTML=ts.length?ts.map(card).join(""):'<div class="empty">Arrastre tareas aquí</div>'})}
-function renderRequests(){const d=D();if(!Array.isArray(d.req)) d.req=[];$("#requests-container").innerHTML=d.req.map((r,i)=>{const v=rv(r);
- return`<div class="rq"><div><b>${esc(r.t)}</b><small>${esc(r.d)}</small></div><div class="pbw"><div class="pb"><div class="bar"><i id="bar${i}" style="width:${v.p}%"></i></div><span class="chip ${v.cl}" id="pc${i}">${r.r?v.p+"%":"—"}</span></div><small class="mu" id="pe${i}">${v.tx}</small></div>
-<div><span class="lbl">Recibidas</span>${stp(i,"r",r.r,r.t)}</div><div><span class="lbl">Completadas</span>${stp(i,"c",r.c,r.t)}</div></div>`}).join("");paint()}
-function rv(r){const p=r.r?Math.round(r.c/r.r*100):0,pe=r.r-r.c;return{p,pe,cl:!r.r?"":p>=90?"ok":p>=75?"wr":"er",tx:pe>0?pe+" pendiente"+(pe>1?"s":""):r.r?"Al día":"Sin solicitudes"}}
+function renderRequests(){const d=D();if(!Array.isArray(d.req)) d.req=[];$("#requests-container").innerHTML=d.req.map((r,i)=>{const v=rv(r),L=r.log||[];
+ return`<div class="rq"><div><b>${esc(r.t)}</b><small>${esc(r.d)}</small></div><div class="pbw"><div class="pb"><div class="bar"><i id="bar${i}" style="width:${v.p}%"></i></div><span class="chip ${v.cl}" id="pc${i}">${v.e.r?v.p+"%":"—"}</span></div><small class="mu" id="pe${i}">${v.tx}</small></div>
+<div><span class="lbl">Recibidas</span>${stp(i,"r",r.r,r.t)}</div><div><span class="lbl">Completadas</span>${stp(i,"c",r.c,r.t)}</div><div><span class="lbl">Con ID</span><button class="btn sm" id="lg${i}" onclick="reqDlg(${i})">Registro (${L.length})</button></div></div>`}).join("");paint()}
+function rv(r){const e=eff(r),p=e.r?Math.round(e.c/e.r*100):0,pe=e.r-e.c;return{e,p,pe,cl:!e.r?"":p>=90?"ok":p>=75?"wr":"er",tx:(pe>0?pe+" pendiente"+(pe>1?"s":""):e.r?"Al día":"Sin solicitudes")+(e.r?" · "+e.c+"/"+e.r:"")}}
 function stp(i,f,v,t){const id=(f==="r"?"ir":"ic")+i,n=f==="r"?"Recibidas":"Completadas";return`<span class="stp"><button aria-label="Restar ${n.toLowerCase()}: ${esc(t)}" onclick="bump(${i},'${f}',-1)">−</button><input type="number" min="0" inputmode="numeric" id="${id}" value="${v}" aria-label="${n}: ${esc(t)}" onfocus="this.select()" onchange="setReq(${i},'${f}',this.value)"><button aria-label="Sumar ${n.toLowerCase()}: ${esc(t)}" onclick="bump(${i},'${f}',1)">+</button></span>`}
 function setReq(i,f,v){const d=D();if(!Array.isArray(d.req))d.req=[];const r=d.req[i];if(!r)return;r[f]=Math.max(0,parseInt(v)||0);if(r.c>r.r)r.c=r.r;save();paint()}
 function bump(i,f,n){const d=D();if(d.req && d.req[i])setReq(i,f,d.req[i][f]+n)}
-function paint(){const d=D();let R=0,C=0;if(Array.isArray(d.req))d.req.forEach((r,i)=>{R+=r.r;C+=r.c;const v=rv(r),c=$("#pc"+i);if(c){$("#bar"+i).style.width=v.p+"%";c.className="chip "+v.cl;c.textContent=r.r?v.p+"%":"—";$("#pe"+i).textContent=v.tx;$("#ir"+i).value=r.r;$("#ic"+i).value=r.c}});if($("#kR")){$("#kR").textContent=R;$("#kC").textContent=C}}
+function paint(){const d=D();let R=0,C=0;if(Array.isArray(d.req))d.req.forEach((r,i)=>{const v=rv(r);R+=v.e.r;C+=v.e.c;const c=$("#pc"+i);if(c){$("#bar"+i).style.width=v.p+"%";c.className="chip "+v.cl;c.textContent=v.e.r?v.p+"%":"—";$("#pe"+i).textContent=v.tx;$("#ir"+i).value=r.r;$("#ic"+i).value=r.c;const b=$("#lg"+i);if(b)b.textContent="Registro ("+(r.log||[]).length+")"}});if($("#kR")){$("#kR").textContent=R;$("#kC").textContent=C}}
 let nt;function noteIn(v){const d=D();d.notes=v;save();$("#ns").textContent="Guardando…";clearTimeout(nt);nt=setTimeout(()=>{const e=$("#ns");if(e)e.textContent="Guardado ✓"},500)}
 function card(t){
  const dn=t.col==="done";
@@ -467,7 +682,7 @@ function exportCustodiansExcel(){
 
 /* ---------- Modales ---------- */
 const dlg=$("#dlg");
-function modal(title,body,ok,lbl,extra){if(dlg.open)dlg.close();dlg.innerHTML=`<form><div class="mh"><h3>${title}</h3><button type="button" class="ic" aria-label="Cerrar" onclick="dlg.close()">✕</button></div><div class="mb">${body}</div><div class="mf">${extra||""}<button type="button" class="btn" onclick="dlg.close()">Cancelar</button><button class="btn pri">${lbl||"Guardar"}</button></div></form>`;
+function modal(title,body,ok,lbl,extra,cl){if(dlg.open)dlg.close();dlg.style.width="";dlg.innerHTML=`<form><div class="mh"><h3>${title}</h3><button type="button" class="ic" aria-label="Cerrar" onclick="dlg.close()">✕</button></div><div class="mb">${body}</div><div class="mf">${extra||""}<button type="button" class="btn" onclick="dlg.close()">${cl||"Cancelar"}</button><button class="btn pri">${lbl||"Guardar"}</button></div></form>`;
  dlg.querySelector("form").onsubmit=e=>{e.preventDefault();if(ok(Object.fromEntries(new FormData(e.target)))!==false)dlg.close()};dlg.showModal()}
 const opt=(a,s)=>a.map(x=>{const v=Array.isArray(x)?x[0]:x,l=Array.isArray(x)?x[1]:x;return`<option value="${v}" ${v===s?"selected":""}>${l}</option>`}).join("");
 function ask(msg,fn){modal("Confirmar",`<p style="margin:0">${msg}</p>`,fn,"Eliminar")}
@@ -485,6 +700,50 @@ function addCust(){modal("Añadir custodio",`<label class="f">Nombre del custodi
  ["pre","fin"].forEach(k=>{if(!S.phases[k])S.phases[k]={c:[],rem:[]};if(!Array.isArray(S.phases[k].c))S.phases[k].c=[];S.phases[k].c.push({n,rec:false,dr:"",dc:"",st:"No Evaluado",ob:""})});q="";filt="all";save();render();const s=$(".scr");if(s)s.scrollTop=s.scrollHeight;toast("Custodio añadido")},"Añadir")}
 function remCust(i){const nm=S.phases[tab].c[i].n;ask(`¿Eliminar a <b>${esc(nm)}</b> de la lista de custodios? Se quitará de Pre-Cierre y de Certificación Final.`,()=>{["pre","fin"].forEach(k=>{if(S.phases[k]&&Array.isArray(S.phases[k].c))S.phases[k].c=S.phases[k].c.filter(c=>c.n!==nm)});save();render();toast("Custodio eliminado")})}
 
+/* ---------- Registro de documentos (ID · recibido · procesado) ---------- */
+function refReq(){if($("#requests-container"))renderRequests()}
+function reqDlg(i){const d=D(),r=d.req&&d.req[i];if(!r)return;if(!Array.isArray(r.log))r.log=[];
+ const L=r.log,av=avgDays(L),pend=L.filter(x=>!x.dp).length;
+ const rowsH=L.map((x,j)=>({x,j})).reverse().map(({x,j})=>{const n=logDays(x);
+  return`<tr><td><b>${esc(x.id)}</b></td><td><input class="in" type="date" value="${x.dr||""}" aria-label="Fecha recibido ${esc(x.id)}" onchange="setLog(${i},${j},'dr',this.value)"></td><td><input class="in" type="date" value="${x.dp||""}" aria-label="Fecha procesado ${esc(x.id)}" onchange="setLog(${i},${j},'dp',this.value)"></td><td class="c">${n===null?"—":n}</td><td class="c" style="white-space:nowrap">${x.dp?"":`<button type="button" class="ic" title="Marcar procesado hoy" aria-label="Marcar procesado hoy ${esc(x.id)}" onclick="doneLog(${i},${j})">${I.check}</button>`}<button type="button" class="ic" aria-label="Eliminar ${esc(x.id)}" onclick="delLog(${i},${j})">${I.trash}</button></td></tr>`}).join("");
+ modal("Registro: "+esc(r.t),`<p class="mu" style="margin:0">${L.length} documentos · ${pend} pendientes${av===null?"":" · promedio "+av+" días"}</p>
+<label class="f">ID(s): pegue uno o varios, separados por línea, coma o espacio<textarea name="ids" rows="3" placeholder="Ej.: 10234 10235 10236"></textarea></label>
+<div class="g2"><label class="f">Fecha recibido<input class="in" type="date" name="dr" value="${today()}"></label><label class="f">Fecha procesado (opcional)<input class="in" type="date" name="dp"></label></div>
+<p id="err" class="mu" style="color:var(--er);margin:0"></p>
+${L.length?`<div class="scr" style="max-height:300px"><table class="lgt"><thead><tr><th>ID</th><th>Recibido</th><th>Procesado</th><th class="c">Días</th><th></th></tr></thead><tbody>${rowsH}</tbody></table></div>`:'<div class="empty">Aún no hay documentos registrados.</div>'}`,
+ f=>{const ids=[...new Set((f.ids||"").split(/[\s,;]+/).map(x=>x.trim()).filter(Boolean))];if(!ids.length)return false;
+  const dr=f.dr||today(),dp=f.dp||"";
+  if(dp&&dp<dr){$("#err").textContent="La fecha procesado no puede ser anterior a la fecha recibido.";return false}
+  const have=new Set(L.map(x=>String(x.id).toLowerCase())),add=ids.filter(x=>!have.has(x.toLowerCase())),dup=ids.length-add.length;
+  add.forEach(x=>L.push({id:x,dr,dp}));
+  if(add.length){save();refReq()}
+  reqDlg(i);const q=n=>dlg.querySelector("[name="+n+"]");q("dr").value=dr;q("dp").value=dp;
+  const m=$("#err");m.style.color=dup?"var(--wr)":"var(--ok)";
+  m.textContent=add.length+(add.length===1?" documento agregado":" documentos agregados")+(dup?" · "+dup+(dup===1?" duplicado omitido":" duplicados omitidos"):"");
+  return false},
+ "Agregar",L.some(x=>!x.dp)?`<button type="button" class="btn" style="margin-right:auto" onclick="doneAll(${i})">Procesar pendientes</button>`:"","Cerrar");
+ dlg.style.width="min(760px,96vw)"}
+function reqRedo(i){const q=n=>dlg.querySelector("[name="+n+"]"),sc=dlg.querySelector(".scr"),top=sc?sc.scrollTop:0,
+ sv=q("ids")?{ids:q("ids").value,dr:q("dr").value,dp:q("dp").value}:null;
+ reqDlg(i);if(sv){q("ids").value=sv.ids;q("dr").value=sv.dr;q("dp").value=sv.dp}
+ const n=dlg.querySelector(".scr");if(n)n.scrollTop=top}
+function setLog(i,j,k,v){const x=D().req[i].log[j];if(!x)return;if(k==="dr"&&!v){reqRedo(i);return}
+ const old=x[k];x[k]=v;
+ if(x.dp&&x.dr&&x.dp<x.dr){x[k]=old;toast("La fecha procesado no puede ser anterior a la recibida.")}else save();
+ refReq();reqRedo(i)}
+function doneLog(i,j){const x=D().req[i].log[j];if(!x)return;const t=today();x.dp=t<x.dr?x.dr:t;save();refReq();reqRedo(i)}
+function delLog(i,j){const L=D().req[i].log;if(!L[j]||!confirm("¿Eliminar el documento "+L[j].id+" del registro?"))return;L.splice(j,1);save();refReq();reqRedo(i)}
+function doneAll(i){const L=D().req[i].log,p=L.filter(x=>!x.dp),dq=dlg.querySelector("[name=dp]"),date=(dq&&dq.value)||today();
+ if(!p.length||!confirm("¿Marcar "+p.length+" documento(s) pendiente(s) como procesados el "+fmt(date)+"?"))return;
+ p.forEach(x=>{x.dp=date<x.dr?x.dr:date});save();refReq();reqRedo(i)}
+function exportLogExcel(){const out=[];
+ Object.keys(S.cycles).sort((a,b)=>{const[ay,am]=a.split("_").map(Number),[by,bm]=b.split("_").map(Number);return ay-by||am-bm}).forEach(k=>{
+  const[y,m]=k.split("_").map(Number),c=S.cycles[k];if(!c||!Array.isArray(c.req))return;
+  c.req.forEach(r=>(r.log||[]).forEach(x=>out.push({"Ciclo":cap(MES[m])+" "+y,"Categoría":r.t,"ID":x.id,"Fecha recibido":x.dr||"","Fecha procesado":x.dp||"","Días":logDays(x)??"","Estatus":x.dp?"Procesado":"Pendiente"})))});
+ if(!out.length){toast("No hay documentos en el registro.");return}
+ const ws=XLSX.utils.json_to_sheet(out),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Registro");
+ XLSX.writeFile(wb,"Registro_documentos.xlsx");toast("Archivo .xlsx descargado exitosamente")}
+
 /* ---------- Informe ---------- */
 const SAB=["De solicitar una compra de equipo y recibirlo, debe comunicar al custodio enlace de su área para que realice el debido registro de la propiedad.","Cualquier movimiento de localidad actual del equipo custodiado debe ser comunicado.","Cualquier cambio en el nombre de la localidad (ej. movimientos de oficina) para mantener actualizado el sistema.","De contar con un equipo deteriorado, roto, defectuoso u obsoleto, debe comunicarlo para evaluar la alternativa de disposición de este.","Para el uso de equipo fuera de las facilidades del recinto, deben completar la Solicitud de Uso de Propiedad en Gestiones Oficiales."];
 const QUOTE="“El éxito en el control del inventario depende de la comunicación y el compromiso de cada uno; juntos mantenemos el orden y la eficiencia”.";
@@ -493,10 +752,10 @@ function repData(){const d=D(),sm=cy.m?cy.m-1:11,sy=cy.m?cy.y:cy.y-1,per="16 de 
  return{d,per,ls:ls.length?ls:["Gestiones generales de inventario y control de propiedad."],done:tasks.filter(t=>t.col==="done").map(t=>t.t+(t.s||t.cd||t.du?" ("+[t.s?"Inicio: "+fmt(t.s):"",(t.cd||t.du)?"Fin: "+fmt(t.cd||t.du):""].filter(Boolean).join(" - ")+")":"")+(t.d?" - "+t.d:""))}}
 const phTitle=()=>tab==="fin"?" — Certificación Final de Inventario":tab==="pre"?" — Certificación de Inventario Pre-Cierre":"";
 function reportHtml(){const{d,per,ls,done}=repData();
- const reqs=Array.isArray(d.req)?d.req:[];
+ const reqs=Array.isArray(d.req)?d.req.map(x=>({...x,...eff(x)})):[];
  return`<p style="text-align:center;font-family:Arial,sans-serif;opacity:.6">Universidad Interamericana de Puerto Rico<br>Recinto de Ponce<br><br>Decanato de Administración</p><p style="text-align:center"><b>Oficina de Propiedad${phTitle()}</b></p><p><i>Periodo: ${per}</i></p><p>Durante el periodo comprendido del ${per}, la Oficina de Propiedad enfocó sus gestiones en las siguientes labores:</p><ul>${ls.map(l=>`<li>${esc(l)}</li>`).join("")}</ul><h4>Tareas mensuales completadas</h4><ul>${done.length?done.map(t=>`<li>${esc(t)}</li>`).join(""):"<li>No se registraron tareas adicionales completadas en este ciclo.</li>"}</ul><h4>Otros procesos relacionados</h4><table><tr><th align="left">Categoría de solicitud</th><th>Completadas / Recibidas</th><th>Cumplimiento</th></tr>${reqs.map(r=>`<tr><td>${esc(r.t)}</td><td align="center">${r.c} / ${r.r}</td><td align="center">${r.r?Math.round(r.c/r.r*100)+"%":"—"}</td></tr>`).join("")}</table><h4>Pequeños Grandes Saberes</h4><p>Es importante que para mantener un adecuado control en la propiedad de la Universidad todos deban colaborar de la siguiente manera:</p><ul>${SAB.map(s=>`<li>${s}</li>`).join("")}</ul><p style="text-align:center;font-style:italic;color:#444;margin-top:16px">${QUOTE}</p><p style="color:#0d9488"><b>¡Estamos para servirles!</b></p><p><b>Greychel Ocasio Ortiz</b><br><i>Oficial de Propiedad</i><br>Directo: (787) 437-7064<br>Tel. (787) 284-1912, ext. 2005<br>Contacto: <a href="mailto:grocasio@ponce.inter.edu">grocasio@ponce.inter.edu</a> / <a href="mailto:propiedad@ponce.inter.edu">propiedad@ponce.inter.edu</a></p>`}
 async function docxReport(){const{Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,AlignmentType,BorderStyle,Header,LevelFormat,ExternalHyperlink}=docx,{d,per,ls,done}=repData(),F="Times New Roman",T="0D9488",C=AlignmentType.CENTER;
- const reqs=Array.isArray(d.req)?d.req:[];
+ const reqs=Array.isArray(d.req)?d.req.map(x=>({...x,...eff(x)})):[];
  const tr=(t,o={})=>new TextRun({text:t,font:F,size:24,...o}),
  p=(t,o={},r={})=>new Paragraph({spacing:{after:120},...o,children:[tr(t,r)]}),
  bl=t=>new Paragraph({numbering:{reference:"b",level:0},spacing:{after:80},children:[tr(t)]}),
